@@ -27,4 +27,4 @@ clean:
 	@make clean -sC libmx
 	@rm -rf $(INC) $(SRC) ./obj
 
-reinstall: uninstall install
+reinstall: uninstall install uninstall
