@@ -10,9 +10,23 @@ int lsh_exit(char **args);
 /*
 Список встроенных команд, за которыми следуют соответствующие функции
 */
-char *builtin_str[] = {"cd", "help", "exit"};
+char *builtin_str[] = {"cd", "pwd", "help", "exit"};
 
-int (*builtin_func[]) (char **) = {&lsh_cd, &lsh_help, &lsh_exit};
+int (*builtin_func[]) (char **) = {&lsh_cd, &ush_pwd, &lsh_help, &lsh_exit};
+
+int ush_pwd(char **args) {
+    char *link = mx_strnew(readlink(getenv("PWD"), NULL, 0));
+    if (link) {}
+    printf("%zd\n", readlink(getenv("PWD"), NULL, 0));
+    printf("%s\n", args[1]);
+    if (args[1] == NULL)
+        printf("%s\n", getenv("PWD"));
+    else if (strcmp(args[1], "-L"))
+        printf("%s\n", getenv("PWD"));
+    else if (strcmp(args[1], "-P"))
+        printf("%s\n", getenv("PWD"));
+    return 1;
+}
 
 int lsh_launch(char **args) {
     pid_t pid, wpid;
