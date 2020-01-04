@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define LSH_RL_BUFSIZE 1024
-#define LSH_TOK_BUFSIZE 64
-#define LSH_TOK_DELIM " \t\r\n\a"
+#define USH_RL_BUFSIZE 1024
+#define USH_TOK_BUFSIZE 64
+#define USH_TOK_DELIM " \t\r\n\a"
 #define GRN	"\x1B[32m"
 #define RESET "\x1B[0m"
 
@@ -23,13 +23,13 @@ typedef struct s_info {
 }			t_info;
 
 int ush_pwd(char **args);
-int lsh_execute(char **args);
-int lsh_cd(char **args);
-int lsh_help(char **args);
-int lsh_exit(char **args);
-char *lsh_read_line(void);
-void lsh_loop(t_info *info_sh);
-char **lsh_split_line(char *line);
-int lsh_launch(char **args);
+int ush_execute(char **args);
+int ush_cd(char **args);
+int ush_help(char **args);
+int ush_exit(char **args);
+char *ush_read_line(void);
+void ush_loop(t_info *info_sh);
+char **ush_split_line(char *line);
+int ush_launch(char **args);
 
 #endif
