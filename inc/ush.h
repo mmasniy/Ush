@@ -14,22 +14,22 @@
 #define GRN	"\x1B[32m"
 #define RESET "\x1B[0m"
 
-typedef struct s_info {
-	int		argc;
-	char	**argv;
-	// char	**env;
-	// char	*builtin_str;
-	// int		(*builtin_func[]) (char **);
-}			t_info;
+typedef struct	s_info {
+	char 		**env;
+	char 		**builtin_str;
+	int			(**builtin_func) (char **, struct s_info *);
+	int			num_of_func;
+} 				t_info;
 
-int ush_pwd(char **args);
-int ush_execute(char **args);
-int ush_cd(char **args);
-int ush_help(char **args);
-int ush_exit(char **args);
+t_info *mx_info_start(t_info *info, char **environ);
+int ush_pwd(char **args, t_info *info);
+int ush_execute(char **args, t_info *info);
+int ush_cd(char **args, t_info *info);
+int ush_help(char **args, t_info *info);
+int ush_exit(char **args, t_info *info);
 char *ush_read_line(void);
 void ush_loop(t_info *info_sh);
 char **ush_split_line(char *line);
-int ush_launch(char **args);
+int ush_launch(char **args, t_info *info);
 
 #endif
