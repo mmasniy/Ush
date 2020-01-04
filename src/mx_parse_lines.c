@@ -5,12 +5,11 @@ char **ush_split_line(char *line) {
 	int position = 0;
 	char **tokens = malloc(bufsize * sizeof(char*));
 	char *token;
-
+	
 	if (!tokens) {
 		fprintf(stderr, "Ush: allocation error\n");
 		exit(EXIT_FAILURE);
 	}
-	
 	token = strtok(line, USH_TOK_DELIM);
 	while (token != NULL) {
 		tokens[position] = token;

@@ -17,7 +17,7 @@
 typedef struct	s_info {
 	char 		**env;
 	char 		**builtin_str;
-	int			(**builtin_func) (char **, struct s_info *);
+	int			(**builtin_func) (char **, struct s_info *info);
 	int			num_of_func;
 } 				t_info;
 
