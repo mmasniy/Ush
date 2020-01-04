@@ -141,7 +141,7 @@ install:
 	@cp $(addprefix inc/, $(INC)) .
 	@clang $(CFLAGS) -c $(SRC)
 	@ar rcs $(NAME) $(OBJ)
-	@mkdir obj
+	@mkdir -p obj
 	@mv $(OBJ) ./obj
 
 uninstall: clean
