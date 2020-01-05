@@ -3,6 +3,7 @@
 int ush_pwd(t_info *info) {
     char *link = NULL;
     char *pwd = NULL;
+    //struct stat buff;
 
     if (info->args[1] == NULL || strcmp(info->args[1], "-L") == 0) {
         pwd = strdup(getcwd(NULL,0));
@@ -23,13 +24,16 @@ int ush_pwd(t_info *info) {
 }
 
 int ush_cd(t_info *info) {
+	int dir = 0;
+
 	if ((!info->args[1] || strcmp(info->args[1], "~") == 0))
     	chdir(getenv("HOME"));
 	else if (strcmp(info->args[1], "-") == 0)
     	chdir(getenv("OLDPWD"));
-    else if (chdir(info->args[1]) != 0)
+    else if ((dir = chdir(info->args[1])) == 0)
+    	mx_update_pwd(info);
+    else
         perror("ush");
-    mx_update_pwd(info);
 	return 1;
 }
 

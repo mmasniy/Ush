@@ -7,12 +7,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define USH_RL_BUFSIZE 1024
 #define USH_TOK_BUFSIZE 64
 #define USH_TOK_DELIM " \t\r\n\a"
 #define GRN	"\x1B[32m"
 #define RESET "\x1B[0m"
+
+#define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 
 typedef struct	s_info {
 	char 		**env_o;
@@ -33,5 +36,7 @@ char *ush_read_line(void);
 void ush_loop(t_info *info_sh);
 char **ush_split_line(char *line);
 int ush_launch(t_info *info);
+
+void mx_update_pwd(t_info *info);
 
 #endif
