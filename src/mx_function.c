@@ -1,15 +1,14 @@
 #include "ush.h"
 
-int ush_pwd(char **args, t_info *info) {
+int ush_pwd(t_info *info) {
     char *link = NULL;
     char *pwd = NULL;
 
-    if (info) {}
-    if (args[1] == NULL || strcmp(args[1], "-L") == 0) {
+    if (info->args[1] == NULL || strcmp(info->args[1], "-L") == 0) {
         pwd = strdup(getcwd(NULL,0));
         printf("%s\n", pwd);
     }
-    else if (strcmp(args[1], "-P") == 0) {
+    else if (strcmp(info->args[1], "-P") == 0) {
         if ((readlink(getcwd(NULL,0), NULL, 0)) > 0) {
             link = strdup(getcwd(NULL,0));
             printf("%s\n", link);
@@ -23,21 +22,20 @@ int ush_pwd(char **args, t_info *info) {
     return 1;
 }
 
-int ush_cd(char **args, t_info *info) {
-	if (info) {}
-	if ((!args[1] || strcmp(args[1], "~") == 0))
+int ush_cd(t_info *info) {
+	if ((!info->args[1] || strcmp(info->args[1], "~") == 0))
     	chdir(getenv("HOME"));
-	else if (strcmp(args[1], "-") == 0)
+	else if (strcmp(info->args[1], "-") == 0)
     	chdir(getenv("OLDPWD"));
-    else if (chdir(args[1]) != 0)
+    else if (chdir(info->args[1]) != 0)
         perror("ush");
+    mx_update_pwd(info);
 	return 1;
 }
 
-int ush_help(char **args, t_info *info) {
+int ush_help(t_info *info) {
 	int i;
 
-	if (args) {}
 	for (i = 0; i < info->num_of_func; i++) {
 	   printf("  %s\n", info->builtin_str[i]);
 	}
@@ -46,7 +44,7 @@ int ush_help(char **args, t_info *info) {
 	return 1;
 }
 
-int ush_exit(char **args, t_info *info) {
-    if (args && info) {}
+int ush_exit(t_info *info) {
+    if (info) {}
 	   return 0;
 }

@@ -1,29 +1,28 @@
 #include "ush.h"
 
-int ush_execute(char **args, t_info *info) {
+int ush_execute(t_info *info) {
 	int i;
 
-	if (args[0] == NULL)
+	if (info->args[0] == NULL)
 	   return 1;
 	for (i = 0; i < info->num_of_func; i++) {
-	   if (strcmp(args[0], info->builtin_str[i]) == 0) {
-  		    return (*info->builtin_func[i])(args, info);
+	   if (strcmp(info->args[0], info->builtin_str[i]) == 0) {
+  		    return (*info->builtin_func[i])(info);
 	   }
 	}
 
-	return ush_launch(args, info);
+	return ush_launch(info);
 }
 
-int ush_launch(char **args, t_info *info) {
+int ush_launch(t_info *info) {
 	pid_t pid;
 	pid_t wpid;
 	int status;
 
-	if (info) {}
 	pid = fork();
 	if (pid == 0) {
 		// Child process
-		if (execvp(args[0], args) == -1)
+		if (execvp(info->args[0], info->args) == -1)
 			perror("ush");
 		exit(EXIT_FAILURE);
 	}

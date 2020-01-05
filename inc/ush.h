@@ -15,21 +15,23 @@
 #define RESET "\x1B[0m"
 
 typedef struct	s_info {
-	char 		**env;
+	char 		**env_o;
+	char 		**env_c;
+	char		**args;
 	char 		**builtin_str;
-	int			(**builtin_func) (char **, struct s_info *info);
+	int			(**builtin_func) (struct s_info *info);
 	int			num_of_func;
 } 				t_info;
 
 t_info *mx_info_start(t_info *info, char **environ);
-int ush_pwd(char **args, t_info *info);
-int ush_execute(char **args, t_info *info);
-int ush_cd(char **args, t_info *info);
-int ush_help(char **args, t_info *info);
-int ush_exit(char **args, t_info *info);
+int ush_pwd(t_info *info);
+int ush_execute(t_info *info);
+int ush_cd(t_info *info);
+int ush_help(t_info *info);
+int ush_exit(t_info *info);
 char *ush_read_line(void);
 void ush_loop(t_info *info_sh);
 char **ush_split_line(char *line);
-int ush_launch(char **args, t_info *info);
+int ush_launch(t_info *info);
 
 #endif
