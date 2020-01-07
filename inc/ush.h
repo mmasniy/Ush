@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <sys/stat.h>
 
 #define USH_RL_BUFSIZE 1024
@@ -38,5 +39,6 @@ char **ush_split_line(char *line);
 int ush_launch(t_info *info);
 
 void mx_update_pwd(t_info *info);
+int mx_element_search(char **env_c, char *pwd);
 
 #endif
