@@ -6,7 +6,7 @@ SRC = *.c
 
 OBJ = *.o
 
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g -fsanitize=address
+CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic# -g -fsanitize=address
 
 all: install clean
 

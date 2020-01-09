@@ -22,13 +22,18 @@ int ush_launch(t_info *info) {
 	pid = fork();
 	if (pid == 0) {
 		// Child process
-		if (execvp(info->args[0], info->args) == -1)
-			perror("ush");
+		if (execvp(info->args[0], info->args) == -1) {
+			mx_printerr(RED);
+			perror(USH);
+			mx_printerr(RESET);
+		}
 		exit(EXIT_FAILURE);
 	}
 	else if (pid < 0) {
 		// Error forking
-		perror("ush");
+		mx_printerr(RED);
+		perror(USH);
+		mx_printerr(RESET);
 	} 
 	else {
 	// Parent process
