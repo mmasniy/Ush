@@ -10,7 +10,7 @@ int ush_execute(t_info *info) {
   		    return (*info->builtin_func[i])(info);
 	   }
 	}
-
+	//mx_del_strarr(&info->args);
 	return ush_launch(info);
 }
 

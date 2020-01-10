@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <sys/stat.h>
 #include <termios.h>
+#include <dirent.h>
 
 #define USH "\ru$h> "
 
@@ -64,6 +65,8 @@ typedef struct	s_info {
 	char 		**builtin_str;
 	int			(**builtin_func) (struct s_info *info);
 	int			num_of_func;
+	char		*PWD;
+	char		*OLDPWD;
 
 	struct termios origin_termios;
 	bool ctrl_d;
@@ -81,6 +84,9 @@ void mx_error_message(char *str);
 
 void mx_winsize(t_info *info);
 
+
+
+
 // mx_print_ush.c
 void mx_print_ush();
 
@@ -92,6 +98,7 @@ bool mx_origin_termios(t_info *info, int fd);
 void mx_sigio_handler(int sigio);
 
 void mx_info_start(t_info *info, char **environ);
+bool check_link(char *argv);
 int ush_pwd(t_info *info);
 int ush_execute(t_info *info);
 int ush_cd(t_info *info);
@@ -102,7 +109,8 @@ void ush_loop(t_info *info_sh);
 char **ush_split_line(char *line);
 int ush_launch(t_info *info);
 
+char *mx_format_pwd(char *pwd);
 void mx_update_pwd(t_info *info);
-int mx_element_search(char **env_c, char *pwd);
+int mx_el(char **env_c, char *pwd);
 
 #endif

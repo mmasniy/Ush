@@ -11,10 +11,10 @@ void run_shell(t_info *info) {
 		mx_custom_termios(info, STDIN_FILENO);
 		line = ush_read_line(info);
 		mx_origin_termios(info, STDIN_FILENO);
-		info->args = ush_split_line(line);
+		info->args = mx_strsplit(line, ' ');
 		status = ush_execute(info);
 		free(line);
-		free(info->args);
+		mx_del_strarr(&info->args);
 		info->ctrl_d = 0;
 		info->ctrl_c = 0;
 	}

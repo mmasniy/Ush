@@ -16,6 +16,8 @@ void mx_info_start(t_info *info, char **environ) {
 	info->env_c[j] = NULL;
 	info->num_of_func = num;
 	info->args = NULL;
+	info->PWD = NULL;
+	info->OLDPWD = NULL;
 }
 
 // static void builtin_functions(t_info *info) {
