@@ -56,6 +56,11 @@ enum e_keys{
 	ESC = 27,
 	CTRL_CLOSE_BRACKET = 29,
 	BACKSPACE = 127,
+	UP = 1001,
+	DOWN = 1002,
+	LEFT = 1003,
+	RIGHT = 1004,
+	EXTRA_SYM = 10000,
 };
 
 typedef struct	s_info {
@@ -84,8 +89,8 @@ void mx_error_message(char *str);
 
 void mx_winsize(t_info *info);
 
-
-
+// mx_print_char_loop.c
+void mx_print_char_loop(char c, int len);
 
 // mx_print_ush.c
 void mx_print_ush();
