@@ -18,4 +18,6 @@ void mx_info_start(t_info *info, char **environ) {
 	info->args = NULL;
 	info->PWD = NULL;
 	info->OLDPWD = NULL;
+	info->history_pack = (t_history_pack *)malloc(sizeof(t_history_pack));
+	mx_memset(info->history_pack, 0, sizeof(info->history_pack));
 }

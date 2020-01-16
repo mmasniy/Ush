@@ -9,11 +9,18 @@ void run_shell(t_info *info) {
 	while (status) {
 		mx_print_ush();
 		mx_custom_termios(info, STDIN_FILENO);
-		line = ush_read_line(info);
+		line = mx_ush_read_line(info);
 		mx_origin_termios(info, STDIN_FILENO);
+		mx_check_history(info, line);
 		info->args = mx_strsplit(line, ' ');
-		status = ush_execute(info);
-		free(line);
+		status = mx_ush_execute(info);
+		if (malloc_size(line))
+			free(line);
+		// for (t_history *tmp = info->history_pack->history; tmp; tmp = tmp->next) {
+		// 	printf("tmp->data: %s\n", tmp->data);
+		// }
+		if (info->ctrl_c)
+			exit(0);
 		mx_del_strarr(&info->args);
 		info->ctrl_d = 0;
 		info->ctrl_c = 0;
@@ -21,9 +28,9 @@ void run_shell(t_info *info) {
 }
 
 int main(int argc, char **argv, char **environ) {
-	char *builtin_str[] = {"pwd", "cd", "help", "exit", NULL};
-	int (*builtin_func[]) (t_info *) = {&ush_pwd
-		, &ush_cd, &ush_help, &ush_exit};
+	char *builtin_str[] = {"pwd", "cd", "help", "exit", "history", NULL};
+	int (*builtin_func[]) (t_info *) = {&mx_ush_pwd
+		, &mx_ush_cd, &mx_ush_help, &mx_ush_exit, &mx_history};
 	t_info *info = (t_info *)malloc(sizeof(t_info));
 
 	(void)argc;

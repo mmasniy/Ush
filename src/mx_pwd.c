@@ -2,7 +2,7 @@
 
 static void update_link(char *buff, char *pwd);
 
-int ush_pwd(t_info *info) {
+int mx_ush_pwd(t_info *info) {
     char *pwd = NULL;
     char *buff = mx_strnew(USH_RL_BUFSIZE);
 

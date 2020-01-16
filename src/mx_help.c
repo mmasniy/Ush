@@ -1,6 +1,6 @@
 #include "ush.h"
 
-int ush_help(t_info *info) {
+int mx_ush_help(t_info *info) {
 	int i;
 
 	for (i = 0; i < info->num_of_func; i++) {

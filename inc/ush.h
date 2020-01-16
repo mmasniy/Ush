@@ -21,6 +21,9 @@
 #define RED   			"\x1B[31m"
 #define GRN				"\x1B[32m"
 #define RESET 			"\x1B[0m"
+#define YEL   		"\x1B[33m"
+#define BLU   		"\x1B[34m"
+#define MAG   		"\x1B[35m"
 
 #define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 
@@ -63,6 +66,20 @@ enum e_keys{
 	EXTRA_SYM = 10000,
 };
 
+typedef struct s_history {
+	// int id;
+	char *data;
+	struct s_history *prev;
+	struct s_history *next;
+}				t_history;
+
+typedef struct s_history_pack {
+	int total_num;
+	struct s_history *pos;
+	struct s_history *last;
+	struct s_history *history;
+}				t_history_pack;
+
 typedef struct	s_info {
 	char 		**env_o;
 	char 		**env_c;
@@ -72,11 +89,11 @@ typedef struct	s_info {
 	int			num_of_func;
 	char		*PWD;
 	char		*OLDPWD;
-
+	struct s_history_pack *history_pack;
 	struct termios origin_termios;
+	int history_pos;
 	bool ctrl_d;
 	bool ctrl_c;
-	struct t_list *com_history;
 	int winsize;
 } 				t_info;
 
@@ -86,6 +103,9 @@ char **mx_arr_copy(char **array);
 
 bool mx_str_head(const char *where, const char *what);
 void mx_error_message(char *str);
+
+// mx_print_history.c
+int mx_history(t_info *info);
 
 void mx_winsize(t_info *info);
 
@@ -102,17 +122,24 @@ bool mx_origin_termios(t_info *info, int fd);
 // mx_sigio_handler.c
 void mx_sigio_handler(int sigio);
 
+// mx_history.c
+t_history *mx_create_new_history(char *data);
+void mx_push_history_front(t_history **lst, void *data);
+void mx_pop_history_front(t_history **head);
+void mx_pop_history_back(t_history **head);
+void mx_check_history(t_info *info, char *line);
+
 void mx_info_start(t_info *info, char **environ);
 bool check_link(char *argv);
-int ush_pwd(t_info *info);
-int ush_execute(t_info *info);
-int ush_cd(t_info *info);
-int ush_help(t_info *info);
-int ush_exit(t_info *info);
-char *ush_read_line(t_info *info);
-void ush_loop(t_info *info_sh);
-char **ush_split_line(char *line);
-int ush_launch(t_info *info);
+int mx_ush_pwd(t_info *info);
+int mx_ush_execute(t_info *info);
+int mx_ush_cd(t_info *info);
+int mx_ush_help(t_info *info);
+int mx_ush_exit(t_info *info);
+char *mx_ush_read_line(t_info *info);
+void mx_ush_loop(t_info *info_sh);
+char **mx_ush_split_line(char *line);
+int mx_ush_launch(t_info *info);
 
 char *mx_format_pwd(char *pwd);
 void mx_update_pwd(t_info *info);

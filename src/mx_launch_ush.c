@@ -1,6 +1,6 @@
 #include "ush.h"
 
-int ush_execute(t_info *info) {
+int mx_ush_execute(t_info *info) {
 	int i;
 
 	if (info->args[0] == NULL)
@@ -11,10 +11,10 @@ int ush_execute(t_info *info) {
 	   }
 	}
 	//mx_del_strarr(&info->args);
-	return ush_launch(info);
+	return mx_ush_launch(info);
 }
 
-int ush_launch(t_info *info) {
+int mx_ush_launch(t_info *info) {
 	pid_t pid;
 	pid_t wpid;
 	int status;

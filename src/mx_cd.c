@@ -3,7 +3,7 @@
 static char *f_oldpwd(char *pwd);
 static void update_env(t_info *st, char *pwd, char *old_pwd);
 
-int ush_cd(t_info *st) {
+int mx_ush_cd(t_info *st) {
     DIR             *dp;
     if ((dp = opendir(st->args[1])) == NULL) {
         perror("ush");
