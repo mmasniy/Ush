@@ -3,29 +3,30 @@
 static char *f_oldpwd(char *pwd);
 static void update_env(t_info *st, char *pwd, char *old_pwd);
 
-int mx_ush_cd(t_info *st) {
-    DIR             *dp;
+int mx_ush_cd(t_info *st, t_process *p) {
+    if (p) {}
+    DIR *dp;
     if ((dp = opendir(st->args[1])) == NULL) {
         perror("ush");
         return 1;
     }
     st->OLDPWD = mx_strdup(st->env_c[mx_el(st->env_c, "PWD=")]);
-	if ((!st->args[1] || strcmp(st->args[1], "~") == 0)) {
+    if ((!st->args[1] || strcmp(st->args[1], "~") == 0)) {
         st->PWD = mx_strdup(getenv("HOME"));
         chdir(st->PWD);
     }
-	else if (strcmp(st->args[1], "-") == 0) {
-    	st->PWD = f_oldpwd(st->env_c[mx_el(st->env_c, "OLDPWD=")]);
+    else if (strcmp(st->args[1], "-") == 0) {
+        st->PWD = f_oldpwd(st->env_c[mx_el(st->env_c, "OLDPWD=")]);
         chdir(st->PWD);
     }
     else if ((chdir(st->args[1])) == 0) {
-    	mx_update_pwd(st);
+        mx_update_pwd(st);
         st->PWD = mx_format_pwd(st->env_c[mx_el(st->env_c, "PWD=")]);
     }
     update_env(st, st->PWD, st->OLDPWD);
     mx_strdel(&st->PWD);
     mx_strdel(&st->OLDPWD);
-	return 1;
+    return 1;
 }
 
 static char *f_oldpwd(char *pwd) {
