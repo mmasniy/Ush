@@ -1,11 +1,12 @@
 NAME = ush
+
 INC = ush.h
 
 SRC = *.c
 
 OBJ = *.o
 
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g -fsanitize=address
+CFLAGS = -std=c11# -Wall -Wextra -Werror -Wpedantic# -g -fsanitize=address
 
 all: install clean
 
@@ -24,9 +25,6 @@ uninstall: clean
 
 clean:
 	@make clean -sC libmx
-	@rm -rf $(INC)
-	@rm -rf $(SRC)
-	@rm -rf $(OBJ)
-	@rm -rf ./obj
+	@rm -rf $(INC) $(SRC) ./obj
 
-reinstall: uninstall install
+reinstall: uninstall install uninstall

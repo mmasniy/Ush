@@ -207,6 +207,10 @@ typedef struct	s_info {
 
 // mx_arrow_keys_for_read_line.c
 void mx_arrows_exec(t_info *info, char **buffer, int *position, char c);
+void mx_change_hry(t_info *info, int *pos, char **buffer, t_history *link);
+
+// mx_line_hot_key.c
+void mx_line_hot_key(t_info *info, char **buffer, int *position, char *c);
 
 // mx_str_char_in_str.c
 bool mx_str_char_in_str(char *where, char *what);

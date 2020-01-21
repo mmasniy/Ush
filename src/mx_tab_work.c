@@ -4,7 +4,8 @@ static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d);
 static void check_if_that_folder(t_info *info, char *what_check
     , DIR *f, struct dirent *d);
 static void functions_search(t_info *info, char *what_check);
-static void create_new_tab_list(t_info *info, char *what_check, char *buffer);
+static void create_new_tab_list(t_info *info, char *what_check,
+    char **buffer, int *position);
 
 void mx_tab_work(t_info *info, char **buffer, int *position) {
     int pos = *position - 1;
@@ -26,7 +27,7 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
         *position += mx_strlen(info->tab_pos->data);
     }
     else //////// Create new
-        create_new_tab_list(info, what_check, *buffer);
+        create_new_tab_list(info, what_check, buffer, position);
 }
 
 static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {
@@ -67,7 +68,7 @@ static void check_if_that_folder(t_info *info, char *what_check
     }
 }
 
-static void create_new_tab_list(t_info *info, char *what_check, char *buffer) {
+static void create_new_tab_list(t_info *info, char *what_check, char **buffer, int *position) {
     DIR *f = NULL;
     struct dirent *d = NULL;
 
@@ -79,11 +80,13 @@ static void create_new_tab_list(t_info *info, char *what_check, char *buffer) {
         check_if_that_folder(info, what_check, f, d);
         closedir(f);
     }
-    else if (mx_str_char_in_str(buffer, " \t\r\n\f\v")) { // check if that is file in folder
+    else if (mx_str_char_in_str(*buffer, " \t\r\n\f\v")) { // check if that is file in folder
         check_for_file(info, what_check, f, d);
     }
     functions_search(info, what_check);
     info->tab_pos = info->tab_list;
+    if (info->tab_list)
+        mx_tab_work(info, buffer, position);
 }
 
 static void functions_search(t_info *info, char *what_check) {

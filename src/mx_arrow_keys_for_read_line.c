@@ -1,7 +1,5 @@
 #include "ush.h"
 
-static void change_hry(t_info *info, int *pos, char **buffer,
-    t_history *link);
 static void key_up(t_info *info, char **buffer, int *position);
 static void key_down(t_info *info, char **buffer, int *position);
 
@@ -26,7 +24,7 @@ void mx_arrows_exec(t_info *info, char **buffer, int *position, char c) {
     }
 }
 
-static void change_hry(t_info *info, int *pos, char **buffer,
+void mx_change_hry(t_info *info, int *pos, char **buffer,
     t_history *link) {
     free(info->history_pack->pos->data);
     info->history_pack->pos->data = mx_strdup(*buffer);
@@ -46,7 +44,7 @@ static void key_up(t_info *info, char **buffer, int *position) {
         int pos = *position - 1;
         bool exist = 0;
 
-        if (pos >= 0) {
+        if (pos >= 0 && mx_strcmp(*buffer, info->history_pack->pos->data)) {
             int len = 1;
             char *what_check = NULL;
 
@@ -56,12 +54,12 @@ static void key_up(t_info *info, char **buffer, int *position) {
                 search; search = search->next)
                 if (mx_str_head(search->data, what_check) == 0) {
                     exist = 1;
-                    change_hry(info, position, buffer, search);
+                    mx_change_hry(info, position, buffer, search);
                     break;
                 }
         }
         if (!exist)
-            change_hry(info, position, buffer, info->history_pack->pos->next);
+            mx_change_hry(info, position, buffer, info->history_pack->pos->next);
     }
 }
 
@@ -70,7 +68,7 @@ static void key_down(t_info *info, char **buffer, int *position) {
         int pos = *position - 1;
         bool exist = 0;
 
-        if (pos >= 0) {
+        if (pos >= 0 && mx_strcmp(*buffer, info->history_pack->pos->data)) {
             int len = 1;
             char *what_check = NULL;
 
@@ -81,12 +79,12 @@ static void key_down(t_info *info, char **buffer, int *position) {
                 search; search = search->prev) {
                 if (mx_str_head(search->data, what_check) == 0) {
                     exist = 1;
-                    change_hry(info, position, buffer, search);
+                    mx_change_hry(info, position, buffer, search);
                     break;
                 }
             }
         }
         if (!exist)
-            change_hry(info, position, buffer, info->history_pack->pos->prev);
+            mx_change_hry(info, position, buffer, info->history_pack->pos->prev);
     }
 }

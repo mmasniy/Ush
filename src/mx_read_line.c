@@ -1,11 +1,7 @@
 #include "ush.h"
 
 static int str_filter(t_info *info, char **str, int *position, char *c);
-static void home_end_page(t_info *info, char **buffer, int *position, char *c);
-
-// static int custom_str_len(char *str) {
-
-// }
+static void home_end_page(t_info *info, char **buf, int *position, char *c);
 
 char *mx_ush_read_line(t_info *info) {
     int bufsize = USH_RL_BUFSIZE;
@@ -85,17 +81,17 @@ void mx_print_line(t_info *info, char *buffer, int position) {
     mx_print_char_loop('\b', mx_strlen(buffer) - position);
 }
 
-static void home_end_page(t_info *info, char **buffer, int *position, char *c) {
+static void home_end_page(t_info *info, char **buf, int *position, char *c) {
     if (c[2] == 72)
         *position = 0;
     else if (c[2] == 70)
-        *position = mx_strlen(*buffer);
+        *position = mx_strlen(*buf);
     else if (c[2] == 53 && info->history_pack->pos)
         while (info->history_pack->pos->next)
-            mx_arrows_exec(info, buffer, position, 65);
+            mx_arrows_exec(info, buf, position, 65);
     else if (c[2] == 54 && info->history_pack->pos)
         while (info->history_pack->pos->prev)
-            mx_arrows_exec(info, buffer, position, 66);
+            mx_arrows_exec(info, buf, position, 66);
 }
 
 static int str_filter(t_info *info, char **buffer, int *position, char *c) {
@@ -109,14 +105,20 @@ static int str_filter(t_info *info, char **buffer, int *position, char *c) {
         mx_str_edit(info, *buffer, position, c);
     }
     else {
-        if (c[0] == TAB && *position > 0
-            && !mx_isspace((*buffer)[*position - 1]))
-            mx_tab_work(info, buffer, position);
-        else if (c[0] == CTRL_D)
-            info->ctrl_d = 1;
-        else if (c[0] == CTRL_C)
-            info->ctrl_c = 1;
+        mx_line_hot_key(info, buffer, position, c);
         return c[0];
     }
     return c[0] >= 32 && c[0] <= 127 ? 0 : c[0];
 }
+
+// else if (c[0] <= -46 && c[0] >= -48) { // Кирилиця
+//     int len = mx_strlen(*buffer);
+
+//     if (buffer[0])
+//         for (int i = len; i > *position; i--)
+//             (*buffer)[i] = (*buffer)[i - 1];
+//     (*buffer)[*position] = c[0];
+//     (*buffer)[*position + 1] = c[1];
+//     (*buffer)[len + 2] = '\0';
+//     (*position)+= 2;
+// }
