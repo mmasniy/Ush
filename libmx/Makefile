@@ -2,7 +2,8 @@ NAME = libmx.a
 
 INC = libmx.h
 
-SRC = mx_digits_num.c \
+SRC = \
+	mx_digits_num.c \
 	mx_binary_search.c \
 	mx_bubble_sort.c \
 	mx_count_substr.c \
@@ -67,7 +68,8 @@ SRC = mx_digits_num.c \
 	mx_isalpha.c \
 	mx_printerr.c
 
-OBJ = mx_digits_num.o \
+OBJ = \
+	mx_digits_num.o \
 	mx_binary_search.o \
 	mx_bubble_sort.o \
 	mx_count_substr.o \

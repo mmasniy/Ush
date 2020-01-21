@@ -5,12 +5,21 @@ static void mx_init_shell(char **environ, t_info *info);
 void run_shell(t_info *info) {
     char *line;
     int status = 1;
+    t_tok *tok = NULL;
 
     while (status || 1) {
         mx_custom_termios(info, STDIN_FILENO);
         line = mx_ush_read_line(info);
         mx_origin_termios(info, STDIN_FILENO);
         mx_check_history(info, line);
+        
+        /*
+        ** Занесение в лист токенов
+        */
+
+        if (mx_work_w_toks(line, &tok) < 0)
+            printf("error\n");
+        
         info->args = mx_strsplit(line, ' ');
         if (mx_strlen(line) > 0) {
             t_job *new_job = (t_job *) malloc(sizeof(t_job));  //create new job
@@ -28,6 +37,7 @@ void run_shell(t_info *info) {
         info->ctrl_d = 0;
         info->ctrl_c = 0;
         // printf("status = %d\n", status);
+        mx_free_toks(&tok);
     }
 }
 
