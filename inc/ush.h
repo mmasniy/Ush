@@ -69,6 +69,13 @@
 
 //*****
 
+/*
+** Defines for tokens
+*/
+
+#define MX_CHECK "-_/~.:\"\\"
+#define MX_CHECK2 "/-~'\".\\="
+#define TYPE "; | & &> <& &>> <<& < > << >> && ||"
 
 #define USH "\ru$h> "
 
@@ -78,9 +85,9 @@
 #define RED   			"\x1B[31m"
 #define GRN				"\x1B[32m"
 #define RESET 			"\x1B[0m"
-#define YEL   		"\x1B[33m"
-#define BLU   		"\x1B[34m"
-#define MAG   		"\x1B[35m"
+#define YEL   			"\x1B[33m"
+#define BLU   			"\x1B[34m"
+#define MAG   			"\x1B[35m"
 
 #define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 
@@ -122,6 +129,30 @@ enum e_keys{
 	RIGHT = 1004,
 	EXTRA_SYM = 10000,
 };
+
+/*
+** list of tokins
+*/
+
+typedef struct	s_tok {
+	int				type;
+	int				prio;
+	char			*token; // content
+	struct s_tok	*prev;
+	struct s_tok	*next;
+}					t_tok;
+
+/*
+** Tree of commands
+*/
+
+typedef struct	s_ast {
+	char			*name;
+	t_tok			token;
+	struct s_ast	*parent;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}					t_ast;
 
 typedef struct		s_process {
     char *fullpath;  //for execve
@@ -313,5 +344,26 @@ bool check_link(char *argv);
 char *mx_format_pwd(char *pwd);
 void mx_update_pwd(t_info *info);
 int mx_el(char **env_c, char *pwd);
+
+//mx_create_tok_list
+void mx_add_tok(t_tok **prev, char *cont, int size);
+void mx_free_toks(t_tok **tok);
+
+//mx_check_variable
+int mx_check_type(char *cont);
+int mx_check_priority(char *cont);
+
+//mx_work_with_tokens
+int mx_work_w_toks(char *line, t_tok **tok);
+
+//mx_size_function
+int mx_size_str(char *s, int f, int i);
+int mx_get_size_tok(char *s);
+int mx_size_tok(char *s, bool f, int i);
+
+//mx_redirect_[type].c
+int mx_redirect_int(char *s, int i);
+int mx_redirect_str(char *s, int i);
+
 
 #endif
