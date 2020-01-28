@@ -15,12 +15,12 @@ void mx_arrows_exec(t_info *info, char **buffer, int *position, char c) {
     else if (c == 67) {
         if (*position < mx_strlen(*buffer))
             (*position)++;
-        mx_print_line(info, *buffer, *position);
+        // mx_print_line(info, *buffer, *position);
     }
     else if (c == 68) {
         if (*position > 0)
             (*position)--;
-        mx_print_line(info, *buffer, *position);
+        // mx_print_line(info, *buffer, *position);
     }
 }
 
@@ -35,7 +35,7 @@ void mx_change_hry(t_info *info, int *pos, char **buffer,
     free(*buffer);
     *buffer = mx_strdup(info->history_pack->pos->data);
     *pos = mx_strlen(*buffer);
-    mx_print_ush();
+    mx_print_ush(info);
     mx_printstr(*buffer);
 }
 

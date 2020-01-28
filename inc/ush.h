@@ -79,15 +79,15 @@
 
 #define USH "\ru$h> "
 
-#define USH_RL_BUFSIZE 	1024
+#define USH_RL_BUFSIZE  1024
 #define USH_TOK_BUFSIZE 64
-#define USH_TOK_DELIM 	" \t\r\n\a"
-#define RED   			"\x1B[31m"
-#define GRN				"\x1B[32m"
-#define RESET 			"\x1B[0m"
-#define YEL   			"\x1B[33m"
-#define BLU   			"\x1B[34m"
-#define MAG   			"\x1B[35m"
+#define USH_TOK_DELIM   " \t\r\n\a"
+#define RED             "\x1B[31m"
+#define GRN             "\x1B[32m"
+#define RESET           "\x1B[0m"
+#define YEL             "\x1B[33m"
+#define BLU             "\x1B[34m"
+#define MAG             "\x1B[35m"
 
 #define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 
@@ -95,66 +95,73 @@
 
 #define EXIT_FAILURE 1
 #define TERM_ENV_NOT_EXIST "TERM variable in env not exist"
+#define ENV "usage: env [-iv] [-P utilpath] [-u name]\n[name=value ...] [utility [argument ...]]\n"
 
 // Structures
 
 enum e_keys{
-	CTRL_A = 1,
-	CTRL_B = 2,
-	CTRL_C = 3,
-	CTRL_D = 4,
-	CTRL_E = 5,
-	CTRL_F = 6,
-	CTRL_G = 7, // sound
-	CTRL_H = 8,
-	TAB = 9, // CTRL+I
-	CTRL_K = 11, // vertical tab
-	CTRL_L = 12, // new feed
-	ENTER = 13,
-	CTRL_N = 14,
-	CTRL_P = 16,
-	CTRL_R = 18,
-	CTRL_T = 20,
-	CTRL_Y = 25,
-	CTRL_U = 21,
-	CTRL_W = 23,
-	CTRL_X = 24,
-	CTRL_Z = 26,
-	ESC = 27,
-	CTRL_CLOSE_BRACKET = 29,
-	BACKSPACE = 127,
-	UP = 1001,
-	DOWN = 1002,
-	LEFT = 1003,
-	RIGHT = 1004,
-	EXTRA_SYM = 10000,
+    CTRL_A = 1,
+    CTRL_B = 2,
+    CTRL_C = 3,
+    CTRL_D = 4,
+    CTRL_E = 5,
+    CTRL_F = 6,
+    CTRL_G = 7, // sound
+    CTRL_H = 8,
+    TAB = 9, // CTRL+I
+    CTRL_K = 11, // vertical tab
+    CTRL_L = 12, // new feed
+    ENTER = 13,
+    CTRL_N = 14,
+    CTRL_P = 16,
+    CTRL_R = 18,
+    CTRL_T = 20,
+    CTRL_Y = 25,
+    CTRL_U = 21,
+    CTRL_W = 23,
+    CTRL_X = 24,
+    CTRL_Z = 26,
+    ESC = 27,
+    CTRL_CLOSE_BRACKET = 29,
+    BACKSPACE = 127,
+    UP = 1001,
+    DOWN = 1002,
+    LEFT = 1003,
+    RIGHT = 1004,
+    EXTRA_SYM = 10000,
 };
 
 /*
 ** list of tokins
 */
 
-typedef struct	s_tok {
-	int				type;
-	int				prio;
-	char			*token; // content
-	struct s_tok	*prev;
-	struct s_tok	*next;
-}					t_tok;
+typedef struct s_export {
+    char *key;
+    char *value;
+    struct s_export *next;
+} t_export;
+
+typedef struct  s_tok {
+    int             type;
+    int             prio;
+    char            *token; // content
+    struct s_tok    *prev;
+    struct s_tok    *next;
+}                   t_tok;
 
 /*
 ** Tree of commands
 */
 
-typedef struct	s_ast {
-	char			*name;
-	t_tok			token;
-	struct s_ast	*parent;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}					t_ast;
+typedef struct  s_ast {
+    char            *name;
+    t_tok           token;
+    struct s_ast    *parent;
+    struct s_ast    *left;
+    struct s_ast    *right;
+}                   t_ast;
 
-typedef struct		s_process {
+typedef struct      s_process {
     char *fullpath;  //for execve
     char **argv;
    // char **envp;
@@ -171,7 +178,7 @@ typedef struct		s_process {
     char completed;        // true if process has completed
     char stopped;          // true if process has stopped
     struct s_process *next;     // next process in pipeline
-//    t_ast			*ast;  //ast tree
+//    t_ast         *ast;  //ast tree
 } t_process;
 
 // A job is a pipeline of processes.
@@ -192,65 +199,94 @@ typedef struct s_job {
 } t_job;
 
 typedef struct s_history {
-	// int id;
-	char *data;
-	struct s_history *prev;
-	struct s_history *next;
-}				t_history;
+    // int id;
+    char *data;
+    struct s_history *prev;
+    struct s_history *next;
+}               t_history;
 
 typedef struct s_history_pack {
-	int total_num;
-	struct s_history *pos;
-	struct s_history *last;
-	struct s_history *history;
-}				t_history_pack;
+    int total_num;
+    struct s_history *pos;
+    struct s_history *last;
+    struct s_history *history;
+}               t_history_pack;
 
-typedef struct	s_info {
-	char 		**env_o;
-	char 		**env_c;
-	char		**args;
-	char 		**builtin_str;
-	int			(**builtin_func) (struct s_info *info, struct s_process *p);
-	int			num_of_func;
-	char		*PWD;
-	char		*OLDPWD;
-	struct s_history_pack *history_pack;
-	struct termios origin_termios;
-	int history_pos;
-	bool ctrl_d;
-	bool ctrl_c;
-	int winsize;
+typedef struct  s_info {
+    // char         **env_o;
+    // char         **env_c;
+    char        **args;
+    char        **builtin_str;
+    int         (**builtin_func) (struct s_info *info, struct s_process *p);
+    int         num_of_func;
+    char        *PWD;
+    char        *OLDPWD;
+    struct s_history_pack *history_pack;
+    struct termios origin_termios;
+    int history_pos;
+    bool ctrl_d;
+    bool ctrl_c;
+    int winsize;
 
-	t_job   *jobs[JOBS_NUMBER];     //arr jobs
-	pid_t shell_pgid;
+    t_job   *jobs[JOBS_NUMBER];     //arr jobs
+    pid_t shell_pgid;
 
-	// for working tab
-	struct s_history *tab_list;
-	struct s_history *tab_pos;
-	int max_number_job;
-	//
+    // for working tab
+    struct s_history *tab_list;
+    struct s_history *tab_pos;
+    int max_number_job;
+    //
+    unsigned int name_len;
 
-	char **paths;
+    char **paths;
+    struct s_export *to_export;
+    struct s_export *variables;
 
-} 				t_info;
+}               t_info;
 
 // Functions --------------------------------------------------------------|
+
+// mx_funcs_for_env.c
+t_export *mx_save_env_as_list(char **environ);
+char **mx_save_env_as_massive(t_export *env);
+int mx_check_to_execute(t_info *info, char **path, int position);
+
+// mx_funcs_for_env_2.c
+bool mx_check_args(t_export *env, char **args, int *flags, char **path);
+
+// mx_funcs_for_env_3.c
+int mx_check_variable_create(t_export *env, char **args, int pos, int *flags);
+
+// mx_work_with_environ.c
+t_export *mx_search_key_in_list(t_export *list, char *key);
+t_export *mx_create_new_export(char *key, char *value);
+void mx_push_export_back(t_export **list, char *key, char *value);
+void mx_pop_export_front(t_export **head);
+
+// mx_del_strarr_elem.c
+void mx_del_strarr_elem(char **str, int index);
+
+// mx_create_strarr.c
+char **mx_create_strarr(int num_of_elements);
+
+// mx_count_name_len.c
+void mx_count_name_len(t_info *info);
 
 // mx_arrow_keys_for_read_line.c
 void mx_arrows_exec(t_info *info, char **buffer, int *position, char c);
 void mx_change_hry(t_info *info, int *pos, char **buffer, t_history *link);
 
 // mx_line_hot_key.c
-void mx_line_hot_key(t_info *info, char **buffer, int *position, char *c);
+bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c);
 
 // mx_str_char_in_str.c
 bool mx_str_char_in_str(char *where, char *what);
 
-// mx_ush_fg.c
-int mx_fg(t_info *info, t_process *p);
-
 // mx_read_line.c
 char *mx_ush_read_line(t_info *info);
+
+// mx_funcs_for_read_line.c
+int mx_getchar();
 void mx_str_edit(t_info *info, char *buffer, int *position, char *c);
 void mx_print_line(t_info *info, char *buffer, int position);
 
@@ -266,7 +302,7 @@ int mx_jobs(t_info *info, t_process *p);
 // mx_launch_ush.c
 int mx_ush_execute(t_info *info, t_job *job);
 int mx_launch_process(t_info *info, int job_id
-	, t_process *p, int infile, int outfile, int errfile);
+    , t_process *p, int infile, int outfile, int errfile);
 
 // mx_work_with_process.c
 int mx_get_pgid_by_job_id(t_info *info, int job_id);
@@ -290,7 +326,7 @@ t_job *mx_create_job(t_info *info, char **args);
 
 // mx_save_PATH.c
 void mx_save_PATH(t_info *info, char *paths);
-char *mx_find_in_PATH(t_info *info, char *word, bool full);
+char *mx_find_in_PATH(char **paths, char *word, bool full);
 
 // mx_test.c
 int mx_test(t_info *info, t_process *p);
@@ -332,22 +368,26 @@ void mx_pop_history_back(t_history **head);
 void mx_check_history(t_info *info, char *line);
 
 // mx_info_prepare.c
-void mx_info_start(t_info *info, char **environ);
+void mx_info_start(t_info *info);
 
 // mx_ush_[Name].c
-int mx_ush_pwd(t_info *info, t_process *p);
-int mx_ush_cd(t_info *info, t_process *p);
+// int mx_ush_pwd(t_info *info, t_process *p);
+// int mx_ush_cd(t_info *info, t_process *p);
 int mx_ush_help(t_info *info, t_process *p);
 int mx_ush_exit(t_info *info, t_process *p);
+int mx_ush_env(t_info *info, t_process *p);
+int mx_fg(t_info *info, t_process *p);
+int mx_unset(t_info *info, t_process *p);
+int mx_export(t_info *info, t_process *p);
 
 void mx_ush_loop(t_info *info_sh);
 char **mx_ush_split_line(char *line);
 
 bool check_link(char *argv);
 
-char *mx_format_pwd(char *pwd);
-void mx_update_pwd(t_info *info);
-int mx_el(char **env_c, char *pwd);
+// char *mx_format_pwd(char *pwd);
+// void mx_update_pwd(t_info *info);
+// int mx_el(char **env_c, char *pwd);
 
 //mx_create_tok_list
 void mx_add_tok(t_tok **prev, char *cont, int size);

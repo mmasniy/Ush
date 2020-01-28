@@ -1,0 +1,71 @@
+#include "ush.h"
+
+static void print_error(char *arg);
+static bool check_arg(char *arg);
+static void del_elem_form_list(t_export **list, char *key);
+
+int mx_unset(t_info *info, t_process *p) {
+    if (p) {}
+    // printf("=================\n");
+    // for (t_export *tmp = info->variables; tmp; tmp = tmp->next)
+    //     printf("key = %s, value = %s\n", tmp->key, tmp->value);
+    // printf("=================\n");
+    // for (t_export *tmp = info->to_export; tmp; tmp = tmp->next)
+    //     printf("key = %s, value = %s\n", tmp->key, tmp->value);
+    // printf("=================\n");
+    if (info->args[1]) {
+        for (int i = 1; info->args[i]; i++) {
+            if (check_arg(info->args[i])) {
+                del_elem_form_list(&(info->to_export), info->args[i]);
+                del_elem_form_list(&(info->variables), info->args[i]);
+                unsetenv(info->args[i]);
+            }
+        }
+    }
+    return 0;
+}
+
+static void print_error(char *arg) {
+    mx_printerr("u$h: unset: `");
+    mx_printerr(arg);
+    mx_printerr("': not a valid identifier\n");
+}
+
+static bool check_arg(char *arg) {
+    if (!((arg[0] >= 65 && arg[0] <= 90) || (arg[0] >= 97 && arg[0] <= 122)
+        || arg[0] == 95)) {
+        print_error(arg);
+        return 0;
+    }
+    for (int i = 0; arg[i]; i++) {
+        if (!((arg[i] >= 48 && arg[i] <= 57) || (arg[i] >= 65 && arg[i] <= 90)
+            || (arg[i] >= 97 && arg[i] <= 122) || arg[0] == 95)) {
+            print_error(arg);
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void del_elem_form_list(t_export **list, char *key) {
+    if ((*list)->next)
+        for (t_export *tmp = *list; tmp->next; tmp = tmp->next) {
+            if (strcmp(tmp->next->key, key) == 0) {
+                t_export *tmp2 = tmp->next;
+
+                tmp->next = tmp->next->next;
+                mx_strdel(&(tmp2->key));
+                mx_strdel(&(tmp2->value));
+                tmp2->next = NULL;
+                free(tmp2);
+                break;
+            }
+        }
+    else
+        if (strcmp((*list)->key, key) == 0) {
+            mx_strdel(&((*list)->key));
+            mx_strdel(&((*list)->value));
+            free(*list);
+            *list = NULL;     
+        }
+}

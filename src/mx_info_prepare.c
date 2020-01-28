@@ -2,27 +2,28 @@
 
 static void init_continue(t_info *info);
 
-void mx_info_start(t_info *info, char **environ) {
+void mx_info_start(t_info *info) {
+    extern char **environ;
     int num = 0;
-    int count = 0;
-    int j = 0;
+    // int count = 0;
+    // int j = 0;
 
     for (int i = 0; info->builtin_str[i]; i++)
         num++;
-    info->env_o = environ;
-    for (int i = 0; info->env_o[i]; i++, count++);
+    // info->env_o = environ;
+    // for (int i = 0; info->env_o[i]; i++, count++);
 
-    info->env_c = (char **)malloc(sizeof(char *) * (count + 1));
-    for (; environ[j]; j++)
-        info->env_c[j] = mx_strdup(environ[j]);
-    info->env_c[j] = NULL;
+    // info->env_c = (char **)malloc(sizeof(char *) * (count + 1));
+    // for (; environ[j]; j++)
+    //     info->env_c[j] = mx_strdup(environ[j]);
+    // info->env_c[j] = NULL;
     info->num_of_func = num;
     info->args = NULL;
-    info->PWD = NULL;
     info->OLDPWD = NULL;
     info->history_pack = (t_history_pack *)malloc(sizeof(t_history_pack));
     mx_memset(info->history_pack, 0, sizeof(t_history_pack));
-
+    info->to_export = mx_save_env_as_list(environ);
+    info->variables = mx_save_env_as_list(environ);
     init_continue(info);
 }
 

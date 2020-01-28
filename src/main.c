@@ -1,6 +1,6 @@
 #include "ush.h"
 
-static void mx_init_shell(char **environ, t_info *info);
+static void mx_init_shell(t_info *info);
 
 void run_shell(t_info *info) {
     char *line;
@@ -8,6 +8,7 @@ void run_shell(t_info *info) {
     t_tok *tok = NULL;
 
     while (status || 1) {
+        mx_count_name_len(info);
         mx_custom_termios(info, STDIN_FILENO);
         line = mx_ush_read_line(info);
         mx_origin_termios(info, STDIN_FILENO);
@@ -41,10 +42,10 @@ void run_shell(t_info *info) {
     }
 }
 
-int main(int argc, char **argv, char **environ) {
-    char *builtin_str[] = {"pwd", "cd", "help", "exit", "history", "jobs", "fg", "test", NULL};
-    int (*builtin_func[]) (t_info *info, t_process *p) = {&mx_ush_pwd
-        , &mx_ush_cd, &mx_ush_help, &mx_ush_exit, &mx_history, &mx_jobs, &mx_fg, &mx_test};
+int main(int argc, char **argv) {
+    char *builtin_str[] = {/*"pwd", "cd",*/ "help", "exit", "history", "env", "unset", "export", "jobs", "fg", "test", NULL};
+    int (*builtin_func[]) (t_info *info, t_process *p) = {/*&mx_ush_pwd
+        , &mx_ush_cd, */&mx_ush_help, &mx_ush_exit, &mx_history, &mx_ush_env, &mx_unset, &mx_export, &mx_jobs, &mx_fg, &mx_test};
     t_info *info = (t_info *)malloc(sizeof(t_info));
 
     (void)argc;
@@ -56,25 +57,18 @@ int main(int argc, char **argv, char **environ) {
     memset(info, 0, sizeof(t_info));
     info->builtin_str = builtin_str;
     info->builtin_func = builtin_func;
-    mx_init_shell(environ, info);
+    mx_init_shell(info);
     run_shell(info);
     return 0;
 }
 
-static void mx_init_shell(char **environ, t_info *info) {
-    bool exist = 0;
-
-    for (int i = 0; environ[i]; i++) {
-        if (mx_str_head(environ[i], "TERM=") == 0) {
-            mx_info_start(info, environ);
-            exist = 1;
-        }
-        else if (mx_str_head(environ[i], "PATH=") == 0) {
-            mx_save_PATH(info, &(environ[i][5]));
-        }
+static void mx_init_shell(t_info *info) {
+    if (getenv("TERM"))
+        mx_info_start(info);
+    else {
+        mx_error_message(TERM_ENV_NOT_EXIST);
+        exit(EXIT_FAILURE);
     }
-    if (exist)
-        return;
-    mx_error_message(TERM_ENV_NOT_EXIST);
-    exit(EXIT_FAILURE);
+    mx_save_PATH(info, getenv("PATH"));
+    info->PWD = getenv("PWD");
 }

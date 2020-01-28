@@ -14,8 +14,8 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
 
     for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++);
     what_check = strndup(&(*buffer)[pos], len);
-    if (info->tab_list && info->tab_list->next
-    && !strcmp(what_check, info->tab_pos->data)) { ////// If exist
+    if (info->tab_list && info->tab_list->next &&
+    !strcmp(what_check, info->tab_pos->data)) { ////// If exist
         info->tab_pos = info->tab_pos->next;
         if (!info->tab_pos)
             info->tab_pos = info->tab_list->next;
@@ -85,7 +85,7 @@ static void create_new_tab_list(t_info *info, char *what_check, char **buffer, i
     }
     functions_search(info, what_check);
     info->tab_pos = info->tab_list;
-    if (info->tab_list)
+    if (info->tab_list && info->tab_list->next)
         mx_tab_work(info, buffer, position);
 }
 
@@ -98,7 +98,7 @@ static void functions_search(t_info *info, char *what_check) {
             mx_push_history_back(&info->tab_list, info->builtin_str[i]);
         }
     }
-    if ((binary_func = mx_find_in_PATH(info, what_check, 0))) {
+    if ((binary_func = mx_find_in_PATH(info->paths, what_check, 0))) {
         all_binary_func = mx_strsplit(binary_func, ':');
         for (int i = 0; all_binary_func[i]; i++)
             mx_push_history_back(&info->tab_list, all_binary_func[i]);

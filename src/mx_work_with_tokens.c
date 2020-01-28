@@ -19,13 +19,13 @@ int mx_work_w_toks(char *line, t_tok **tok) {
         i += size;
     }
     // Вывод красивый, чтобы было понятнее
-    printf("%slist: %s\n", GRN, RESET);
-    printf("%s---------------------------------------------%s\n", MAG, RESET);
-    for (t_tok *temp = *tok; temp; temp = temp->next) {
-         printf("%s%s%s ", YEL, temp->token, RESET);
-    }
-    printf("\n%s---------------------------------------------%s\n", MAG, RESET);
-    printf("\n");
+    // printf("%slist: %s\n", GRN, RESET);
+    // printf("%s---------------------------------------------%s\n", MAG, RESET);
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      printf("%s%s%s ", YEL, temp->token, RESET);
+    // }
+    // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
+    // printf("\n");
     mx_strdel(&tmp);
     return 1;
 }
