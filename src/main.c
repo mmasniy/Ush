@@ -6,6 +6,7 @@ void run_shell(t_info *info) {
     char *line;
     int status = 1;
     t_tok *tok = NULL;
+    t_ast *tree = NULL;
 
     while (status || 1) {
         mx_count_name_len(info);
@@ -13,14 +14,11 @@ void run_shell(t_info *info) {
         line = mx_ush_read_line(info);
         mx_origin_termios(info, STDIN_FILENO);
         mx_check_history(info, line);
-        
-        /*
-        ** Занесение в лист токенов
-        */
-
         if (mx_work_w_toks(line, &tok) < 0)
             printf("error\n");
         
+        tree = mx_start_tree(tok);
+
         info->args = mx_strsplit(line, ' ');
         if (mx_strlen(line) > 0) {
             t_job *new_job = (t_job *) malloc(sizeof(t_job));  //create new job
@@ -38,6 +36,7 @@ void run_shell(t_info *info) {
         info->ctrl_d = 0;
         info->ctrl_c = 0;
         // printf("status = %d\n", status);
+        mx_free_tree(tree);
         mx_free_toks(&tok);
     }
 }

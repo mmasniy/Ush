@@ -18,8 +18,8 @@ int mx_get_size_tok(char *s) {
 int mx_size_str(char *s, int f, int i) {
     if (f == 1)
         while (s[i] && (mx_isalpha(s[i]) || mx_isdigit(s[i])
-            || (mx_strchr(MX_CHECK,s[i]))))
-            i = i + (s[i] == '\\' || s[i] == '\"' ? 2 : 1); // внимательно проверь
+            || (mx_strchr(MX_CHECK2,s[i]))))
+            i = i + (s[i] == '\\' || s[i] == '\"' || s[i] == '\"' ? 2 : 1); // внимательно проверь
     else if (f == 2) {
         while (s[i + 1] != s[0])
             i++;
@@ -31,7 +31,7 @@ int mx_size_str(char *s, int f, int i) {
             i = i + (s[i] == '\\' || s[i] == '\"' ? 2 : 1);
         return i;
 }
-
+//mx_atoi(&s[i]) > -1 && mx_atoi(&s[i]) < 128)
 int mx_size_tok(char *s, bool f, int i) {
     if (f) {
         if (mx_isdigit(s[i]))
@@ -40,7 +40,7 @@ int mx_size_tok(char *s, bool f, int i) {
             return mx_redirect_int(s, 0);
         else
             while (s[i] && (mx_isdigit(s[i]) || mx_isalpha(s[i])
-                    || (mx_strchr(MX_CHECK,s[i]))))
+                    || (mx_strchr(MX_CHECK2,s[i]))))
                 i++;
         return i;
     }

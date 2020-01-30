@@ -154,9 +154,10 @@ typedef struct  s_tok {
 */
 
 typedef struct  s_ast {
-    char            *name;
+    char            **command;
     t_tok           token;
-    struct s_ast    *parent;
+    int             type;
+    struct s_ast    *father;
     struct s_ast    *left;
     struct s_ast    *right;
 }                   t_ast;
@@ -389,7 +390,7 @@ bool check_link(char *argv);
 // void mx_update_pwd(t_info *info);
 // int mx_el(char **env_c, char *pwd);
 
-//mx_create_tok_list
+// //mx_create_tok_list
 void mx_add_tok(t_tok **prev, char *cont, int size);
 void mx_free_toks(t_tok **tok);
 
@@ -409,5 +410,24 @@ int mx_size_tok(char *s, bool f, int i);
 int mx_redirect_int(char *s, int i);
 int mx_redirect_str(char *s, int i);
 
+//mx_work_with_tree.c
+int mx_check_op(int p);
+t_ast *mx_build_ast(t_tok *max);
+t_ast *mx_start_tree(t_tok *tok);
+t_ast *mx_create_leaf(t_tok *max, int side);
+
+
+//mx_trees_help_func.c
+void mx_free_tree(t_ast *tree);
+char **mx_merge_op(t_tok *max);
+t_ast *mx_create_ast(t_tok *max);
+char **mx_merge_command(t_tok *t);
+t_tok *mx_search_first(t_tok *tok);
+
+
+//delete
+void printKLP(t_ast* root);
+void mx_printf_strarr(char **str);
+void print_all(t_ast *tree, t_tok *tok);
 
 #endif
