@@ -7,7 +7,7 @@ t_ast *mx_start_tree(t_tok *tok) {
 	t_tok *tmp = mx_search_first(tok);
 	t_ast *tree = mx_create_ast(tmp);
 
-	if (tmp->prio == 10) {
+	if (tmp->prio == 10 || tmp->prio == 15) {
 		tree->command = mx_merge_command(tmp);
 	}
 	else if (mx_check_op(tmp->prio) == 1) {
@@ -34,7 +34,7 @@ t_ast *mx_create_leaf(t_tok *max, int side) {
 			next->type = 2;
 	}
 	else if (side == 0) {
-		while (max->prev && max->type == 0)
+		while (max->prev && (max->type == 0 || max->type == 1))
 			max = max->prev;
 		if (max->type == 2)
 			max = max->next;
@@ -50,7 +50,7 @@ t_ast *mx_build_ast(t_tok *max) {
 	t_tok *tmp = max;
 	t_ast *tree = mx_create_ast(tmp);
 
-	if (tmp->prio == 10)
+	if (tmp->prio == 10 || tmp->prio == 15)
 		tree->command = mx_merge_command(tmp);
 	if (mx_check_op(tmp->prio) == 1)
 		tree->command = mx_merge_op(tmp);
@@ -108,7 +108,14 @@ void mx_printf_strarr(char **str) {
 }
 
 void printKLP(t_ast* root) {
+    int i = 0;
+
     if (root) {
+    	if (i == 0)
+    		printf("%sFATHER:%s\n", MAG, RESET);
+    	else
+    		printf("%sCHILD:%s\n", MAG, RESET);
+    	i++;
     	printf("%scommand:%s\n", RED, RESET);
         mx_printf_strarr(root->command);
         printf("\n");

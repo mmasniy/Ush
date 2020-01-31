@@ -1,4 +1,7 @@
 #include "ush.h"
+int mx_check(char *token);
+
+void mx_check_file_in_or_out(t_tok *prev, t_tok *next);
 
 void mx_add_tok(t_tok **prev, char *cont, int size) {
     t_tok *new_tok = (t_tok*)malloc(sizeof(t_tok));
@@ -20,6 +23,7 @@ void mx_add_tok(t_tok **prev, char *cont, int size) {
     }
     else
         *prev = new_tok;
+    mx_check_file_in_or_out(new_tok->prev, new_tok);
 }
 
 void mx_free_toks(t_tok **tok) {
@@ -30,5 +34,11 @@ void mx_free_toks(t_tok **tok) {
         mx_strdel(&((*tok)->token));
         free(*tok);
         *tok = tmp;
+    }
+}
+
+void mx_check_file_in_or_out(t_tok *prev, t_tok *next) {
+    if (next && prev && mx_check(prev->token) != -1) {
+        next->prio = 15;
     }
 }

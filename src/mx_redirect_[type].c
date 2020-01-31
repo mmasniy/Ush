@@ -1,4 +1,6 @@
 #include "ush.h"
+int mx_check(char *token);
+int mx_print_error(char *error);
 
 int mx_redirect_int(char *s, int i) {
     if (mx_isdigit(s[i])) {
@@ -9,10 +11,7 @@ int mx_redirect_int(char *s, int i) {
             || (s[i] == s[i + 1] && (s[i] == '<' || s[i] == '>') && !s[i + 2]) // << || >>
             || (s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&' && !s[i + 3]) // >>&
             || ((s[i] == '<' || s[i] == '>') && s[i + 1] == '&' && !s[i + 2]))
-            {
-            printf("Error\n"); // поправить ошибку
-            return -1;
-        }
+            return mx_print_error(s);
         if ((s[i] == '>' || s[i] == '>') && s[i + 1] == '&')
             return i + 2;
         if (s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&')
@@ -35,10 +34,8 @@ int mx_redirect_str(char *s, int i) {
         || ((s[i] == '>' || s[i] == '<') && s[i + 1] == '&' && !s[i + 2])
         || (s[i] == s[i + 1] && (s[i] == '<' || s[i] == '>') && !s[i + 1])
         || (i != 0 && (s[i] == '<' && s[i] == '>') && s[i + 1] == '&')
-        || (i != 0 && s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&')) {
-        printf("Error\n"); // поправить ошибку
-        return -1;
-    }
+        || (i != 0 && s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&'))
+        return mx_print_error(s);
     if (s[i] == s[i + 1] && (s[i] == '<' || s[i] == '>'))
         return i + 2;
     if (s[i] == '<' || s[i] == '>')
@@ -49,7 +46,9 @@ int mx_redirect_str(char *s, int i) {
 int mx_check(char *token) {
     int p = mx_check_priority(token);
 
-    if (p == 3 || (p > 4 && p < 10))
+    if (p == 4 || p == 5 || (p > 7 && p < 10)
+        || (p > 10 && p < 14)
+        || (p > 15 && p < 21))
         return 1;
     return -1;
 }
