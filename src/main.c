@@ -17,8 +17,8 @@ void run_shell(t_info *info) {
         if (mx_work_w_toks(line, &tok) < 0)
             printf("error\n");
         
-        tree = mx_start_tree(tok);
-
+        // tree = mx_start_tree(tok);
+        tree = NULL;
         info->args = mx_strsplit(line, ' ');
         if (mx_strlen(line) > 0) {
             t_job *new_job = (t_job *) malloc(sizeof(t_job));  //create new job
@@ -42,9 +42,9 @@ void run_shell(t_info *info) {
 }
 
 int main(int argc, char **argv) {
-    char *builtin_str[] = {/*"pwd", "cd",*/ "help", "exit", "history", "env", "unset", "export", "jobs", "fg", "test", NULL};
-    int (*builtin_func[]) (t_info *info, t_process *p) = {/*&mx_ush_pwd
-        , &mx_ush_cd, */&mx_ush_help, &mx_ush_exit, &mx_history, &mx_ush_env, &mx_unset, &mx_export, &mx_jobs, &mx_fg, &mx_test};
+    char *builtin_str[] = {"pwd",/*"cd",*/ "help", "exit", "history", "env", "unset", "export", "jobs", "fg", "test", NULL};
+    int (*builtin_func[]) (t_info *info, t_process *p) = {&mx_ush_pwd
+        , /*&mx_ush_cd,*/ &mx_ush_help, &mx_ush_exit, &mx_history, &mx_ush_env, &mx_unset, &mx_export, &mx_jobs, &mx_fg, &mx_test};
     t_info *info = (t_info *)malloc(sizeof(t_info));
 
     (void)argc;

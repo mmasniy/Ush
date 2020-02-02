@@ -372,7 +372,7 @@ void mx_check_history(t_info *info, char *line);
 void mx_info_start(t_info *info);
 
 // mx_ush_[Name].c
-// int mx_ush_pwd(t_info *info, t_process *p);
+int mx_ush_pwd(t_info *info, t_process *p);
 // int mx_ush_cd(t_info *info, t_process *p);
 int mx_ush_help(t_info *info, t_process *p);
 int mx_ush_exit(t_info *info, t_process *p);
