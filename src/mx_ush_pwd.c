@@ -3,7 +3,7 @@
 void mx_printerr_char(char r);
 int mx_strlen_arr(char **argv);
 // static void update_link(char *buff, char *pwd);
-static char mx_search_bad_flag(char *flags);
+static void mx_search_bad_flag(char *flags);
 static int mx_chack_flag_for_pwd(t_info *i);
 
 int mx_ush_pwd(t_info *info, t_process *p) {
@@ -53,18 +53,17 @@ static int mx_chack_flag_for_pwd(t_info *i) {
 			return 1;
 		else if (mx_strcmp(i->args[1], "-LP") == 0
 			|| mx_strcmp(i->args[1], "-PL") == 0) {
-			printf("1\n");
+			// printf("1\n");
 			argv[0] = mx_strdup("pwd");
 			argv[1] = mx_strdup("-P");
-			printf("2\n");
+			// printf("2\n");
 			mx_del_strarr(&i->args);
 			i->args = argv;
-			printf("3\n");
+			// printf("3\n");
 		}
 		else {
-			mx_printerr("pwd: bad option: ");
-			mx_printerr_char(mx_search_bad_flag(i->args[1]));
-			mx_printerr("\n");
+			printf("1\n");
+			mx_search_bad_flag(i->args[1]);
 			return -1;
 		}
 	}
@@ -96,11 +95,21 @@ void mx_printerr_char(char r) {
 	write(2, &r, 1);
 }
 
-static char mx_search_bad_flag(char *flags) {
-	for (int i = 0; flags[i]; i++)
-		if (flags[i] != 'L' || flags[i] != 'P')
-			return flags[i];
-	return -1;
+static void mx_search_bad_flag(char *flags) {
+	int count = 0;
+
+	for (int i = 0; flags[i]; i++) {
+		if (flags[i] == '-')
+			count++;
+		if (!(flags[i] == 'L' || flags[i] == 'P' || flags[i] == '-')) {
+			mx_printerr("pwd: bad option: ");
+			mx_printerr_char(flags[i]);
+			mx_printerr("\n");
+			return ;
+		}
+	}
+	if (count > 1)
+		mx_printerr("pwd: bad option: -- \n");
 }
 
 // static void update_link(char *buff, char *pwd) {
