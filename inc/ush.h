@@ -214,8 +214,6 @@ typedef struct s_history_pack {
 }               t_history_pack;
 
 typedef struct  s_info {
-    // char         **env_o;
-    // char         **env_c;
     char        **args;
     char        **builtin_str;
     int         (**builtin_func) (struct s_info *info, struct s_process *p);
@@ -242,10 +240,27 @@ typedef struct  s_info {
     char **paths;
     struct s_export *to_export;
     struct s_export *variables;
+    struct s_export *shell_funcs;
 
 }               t_info;
 
 // Functions --------------------------------------------------------------|
+
+// mx_shell_functions.c
+void mx_shell_functions(t_info *info, char **line);
+
+// mx_search_and_change_tilde.c
+void mx_tilde_search(char **line, char *craft);
+
+// mx_find_key_and_insert_value.c
+void mx_insert_value(t_info *info, char **line, char *craft);
+
+// mx_save_key_value.c
+void mx_find_and_add_key_value(t_info *info, char **line, char *craft);
+
+// mx_parse_line.c
+void mx_search_slash(char **line);
+void mx_parse_line(t_info *info, char **line);
 
 // mx_funcs_for_env.c
 t_export *mx_save_env_as_list(char **environ);
@@ -341,9 +356,6 @@ bool mx_str_head(const char *where, const char *what);
 // mx_error_message.c
 void mx_error_message(char *str);
 
-// mx_print_history.c
-int mx_history(t_info *info, t_process *p);
-
 // mx_winsize.c
 void mx_winsize(t_info *info);
 
@@ -372,14 +384,17 @@ void mx_check_history(t_info *info, char *line);
 void mx_info_start(t_info *info);
 
 // mx_ush_[Name].c
-int mx_ush_pwd(t_info *info, t_process *p);
+// int mx_ush_pwd(t_info *info, t_process *p);
 // int mx_ush_cd(t_info *info, t_process *p);
+int mx_ush_history(t_info *info, t_process *p);
 int mx_ush_help(t_info *info, t_process *p);
 int mx_ush_exit(t_info *info, t_process *p);
 int mx_ush_env(t_info *info, t_process *p);
+int mx_ush_unset(t_info *info, t_process *p);
+int mx_ush_export(t_info *info, t_process *p);
+int mx_ush_which(t_info *info, t_process *p);
+int mx_ush_echo(t_info *info, t_process *p);
 int mx_fg(t_info *info, t_process *p);
-int mx_unset(t_info *info, t_process *p);
-int mx_export(t_info *info, t_process *p);
 
 void mx_ush_loop(t_info *info_sh);
 char **mx_ush_split_line(char *line);
@@ -390,7 +405,7 @@ bool check_link(char *argv);
 // void mx_update_pwd(t_info *info);
 // int mx_el(char **env_c, char *pwd);
 
-// //mx_create_tok_list
+//mx_create_tok_list
 void mx_add_tok(t_tok **prev, char *cont, int size);
 void mx_free_toks(t_tok **tok);
 

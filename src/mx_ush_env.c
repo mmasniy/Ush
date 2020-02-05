@@ -1,5 +1,47 @@
 #include "ush.h"
 
+static void print_env(char **env);
+static void exec_program(t_info *info, int pos, char **env, char *path);
+static void step_to_exec(t_info *info, char **path, int *fgs, t_export *env);
+
+int mx_ush_env(t_info *info, t_process *p) {
+    if (p) {}
+    extern char **environ;
+    int flags[4] = {0, 0, 0, 0};
+    char *path = NULL;
+
+    if (info->args[1]) {
+        t_export *env = mx_save_env_as_list(environ);
+
+        if (mx_check_args(env, info->args, flags, &path)) {
+            // printf("path = %s\n", path);
+            // printf("Ok: %d %d %d %d\n", flags[0], flags[1], flags[2], flags[3]);
+            step_to_exec(info, &path, flags, env);
+        }
+        else if (!flags[0] && !flags[1] && !flags[2]) {
+            char **env_massive = mx_save_env_as_massive(env);
+
+            // printf("path = %s\n", path);
+            // printf("Bad: %d %d %d %d\n", flags[0], flags[1], flags[2], flags[3]);
+            print_env(env_massive);
+            mx_del_strarr(&env_massive);
+        }
+        while (env)
+            mx_pop_export_front(&env);
+    }
+    else {
+        print_env(environ);
+    }
+    return 0;
+}
+
+static void print_env(char **env) {
+    for (int i = 0; env[i]; i++) {
+        mx_printstr(env[i]);
+        write(1, "\n", 1);
+    }
+}
+
 static void exec_program(t_info *info, int pos, char **env, char *path) {
     pid_t pid = fork();
 
@@ -42,42 +84,4 @@ static void step_to_exec(t_info *info, char **path, int *fgs, t_export *env) {
         mx_printerr(": No such file or directory\n");
     }
     mx_del_strarr(&env_massive);
-}
-
-static void print_env(char **env) {
-    for (int i = 0; env[i]; i++) {
-        mx_printstr(env[i]);
-        write(1, "\n", 1);
-    }
-}
-
-int mx_ush_env(t_info *info, t_process *p) {
-    if (p) {}
-    extern char **environ;
-    int flags[4] = {0, 0, 0, 0};
-    char *path = NULL;
-
-    if (info->args[1]) {
-        t_export *env = mx_save_env_as_list(environ);
-
-        if (mx_check_args(env, info->args, flags, &path)) {
-            // printf("path = %s\n", path);
-            // printf("Ok: %d %d %d %d\n", flags[0], flags[1], flags[2], flags[3]);
-            step_to_exec(info, &path, flags, env);
-        }
-        else if (!flags[0] && !flags[1] && !flags[2]) {
-            char **env_massive = mx_save_env_as_massive(env);
-
-            // printf("path = %s\n", path);
-            // printf("Bad: %d %d %d %d\n", flags[0], flags[1], flags[2], flags[3]);
-            print_env(env_massive);
-            mx_del_strarr(&env_massive);
-        }
-        while (env)
-            mx_pop_export_front(&env);
-    }
-    else {
-        print_env(environ);
-    }
-    return 0;
 }

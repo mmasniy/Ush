@@ -1,6 +1,6 @@
 #include "ush.h"
 
-int mx_history(t_info *info, t_process *p) {
+int mx_ush_history(t_info *info, t_process *p) {
     if (p) {}
     short num_of_history = 1;
     t_history *tmp = info->history_pack->history;

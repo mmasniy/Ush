@@ -12,21 +12,21 @@ int mx_ush_pwd(t_info *info, t_process *p) {
     // char *buff = mx_strnew(USH_RL_BUFSIZE);
 
     if (mx_chack_flag_for_pwd(info) != -1) {
-    	printf("cool\n");
-	    // pwd = mx_format_pwd(info->env_c[mx_el(info->env_c, "PWD=")]);
-	    // if (info->args[1] == NULL || strcmp(info->args[1], "-L") == 0) {
-	    //     printf("%s\n", pwd);
-	    // }
-	    // else if (strcmp(info->args[1], "-P") == 0) {
-	    //     if (check_link(pwd)) {
-	    //         readlink(pwd, buff, USH_RL_BUFSIZE);
-	    //         update_link(buff, pwd);
-	    //     }
-	    //     else
-	    //         printf("pwd = %s\n", pwd);
-	    // }
-	    // free(pwd);
-	}
+        printf("cool\n");
+        // pwd = mx_format_pwd(info->env_c[mx_el(info->env_c, "PWD=")]);
+        // if (info->args[1] == NULL || strcmp(info->args[1], "-L") == 0) {
+        //     printf("%s\n", pwd);
+        // }
+        // else if (strcmp(info->args[1], "-P") == 0) {
+        //     if (check_link(pwd)) {
+        //         readlink(pwd, buff, USH_RL_BUFSIZE);
+        //         update_link(buff, pwd);
+        //     }
+        //     else
+        //         printf("pwd = %s\n", pwd);
+        // }
+        // free(pwd);
+    }
     return 1;
 }
 
@@ -42,74 +42,74 @@ int mx_strlen_arr(char **argv) {
 }
 
 static int mx_chack_flag_for_pwd(t_info *i) {
-	char *argv[2]; //= NULL;
-	int flag = 0;
+    char *argv[2]; //= NULL;
+    int flag = 0;
 
-	if (mx_strlen_arr(i->args) == 1)
-		return 1;
-	if (mx_strlen_arr(i->args) < 3) {
-		if (mx_strcmp(i->args[1], "-L") == 0
-			|| mx_strcmp(i->args[1], "-P") == 0)
-			return 1;
-		else if (mx_strcmp(i->args[1], "-LP") == 0
-			|| mx_strcmp(i->args[1], "-PL") == 0) {
-			// printf("1\n");
-			argv[0] = mx_strdup("pwd");
-			argv[1] = mx_strdup("-P");
-			// printf("2\n");
-			mx_del_strarr(&i->args);
-			i->args = argv;
-			// printf("3\n");
-		}
-		else {
-			printf("1\n");
-			mx_search_bad_flag(i->args[1]);
-			return -1;
-		}
-	}
-	else if (mx_strlen_arr(i->args) > 2) {
-			for (int j = 0; i->args[j]; j++) {
-				if (!(mx_strcmp(i->args[1], "-L") == 0 ||
-					mx_strcmp(i->args[1], "-P") == 0)) {
-					flag = 1;
-					break;
-				}
-			}
-			if (flag == 0) {
-				argv[0] = mx_strdup("pwd");
-				argv[1] = mx_strdup("-P");
-				mx_del_strarr(&i->args);
-				i->args = argv;
-			}
-			else {
-				mx_printerr("pwd: bad option: ");
-				mx_printerr(i->args[1]);
-				mx_printerr("\n");
-				return -1;
-			}
-		}
-	return 1;
+    if (mx_strlen_arr(i->args) == 1)
+        return 1;
+    if (mx_strlen_arr(i->args) < 3) {
+        if (mx_strcmp(i->args[1], "-L") == 0
+            || mx_strcmp(i->args[1], "-P") == 0)
+            return 1;
+        else if (mx_strcmp(i->args[1], "-LP") == 0
+            || mx_strcmp(i->args[1], "-PL") == 0) {
+            // printf("1\n");
+            argv[0] = mx_strdup("pwd");
+            argv[1] = mx_strdup("-P");
+            // printf("2\n");
+            mx_del_strarr(&i->args);
+            i->args = argv;
+            // printf("3\n");
+        }
+        else {
+            printf("1\n");
+            mx_search_bad_flag(i->args[1]);
+            return -1;
+        }
+    }
+    else if (mx_strlen_arr(i->args) > 2) {
+            for (int j = 0; i->args[j]; j++) {
+                if (!(mx_strcmp(i->args[1], "-L") == 0 ||
+                    mx_strcmp(i->args[1], "-P") == 0)) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 0) {
+                argv[0] = mx_strdup("pwd");
+                argv[1] = mx_strdup("-P");
+                mx_del_strarr(&i->args);
+                i->args = argv;
+            }
+            else {
+                mx_printerr("pwd: bad option: ");
+                mx_printerr(i->args[1]);
+                mx_printerr("\n");
+                return -1;
+            }
+        }
+    return 1;
 }
 
 void mx_printerr_char(char r) {
-	write(2, &r, 1);
+    write(2, &r, 1);
 }
 
 static void mx_search_bad_flag(char *flags) {
-	int count = 0;
+    int count = 0;
 
-	for (int i = 0; flags[i]; i++) {
-		if (flags[i] == '-')
-			count++;
-		if (!(flags[i] == 'L' || flags[i] == 'P' || flags[i] == '-')) {
-			mx_printerr("pwd: bad option: ");
-			mx_printerr_char(flags[i]);
-			mx_printerr("\n");
-			return ;
-		}
-	}
-	if (count > 1)
-		mx_printerr("pwd: bad option: -- \n");
+    for (int i = 0; flags[i]; i++) {
+        if (flags[i] == '-')
+            count++;
+        if (!(flags[i] == 'L' || flags[i] == 'P' || flags[i] == '-')) {
+            mx_printerr("pwd: bad option: ");
+            mx_printerr_char(flags[i]);
+            mx_printerr("\n");
+            return ;
+        }
+    }
+    if (count > 1)
+        mx_printerr("pwd: bad option: -- \n");
 }
 
 // static void update_link(char *buff, char *pwd) {

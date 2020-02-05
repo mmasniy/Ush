@@ -9,7 +9,7 @@ bool mx_custom_termios(t_info *info, int fd) {
         return 0;
     raw = info->origin_termios;
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    raw.c_oflag &= ~(OPOST);
+    raw.c_oflag &= ~(OPOST); // with that baground process can print wrong
     raw.c_cflag |= (CS8);
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
     raw.c_cc[VMIN] = 1;

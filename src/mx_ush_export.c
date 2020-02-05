@@ -5,7 +5,7 @@ static bool check_arg(char *arg);
 static bool change_in_list(t_info *info, char *key, char *value, int j);
 static void go_export(t_info *info, char *key_value, char *key, char *value);
 
-int mx_export(t_info *info, t_process *p) {
+int mx_ush_export(t_info *info, t_process *p) {
 	if (p) {}
     if (info->args[1]) {
         char *key = NULL;
@@ -23,12 +23,6 @@ int mx_export(t_info *info, t_process *p) {
 	return 0;
 }
 
-static void print_error(char *arg) {
-    mx_printerr("u$h: export: `");
-    mx_printerr(arg);
-    mx_printerr("': not a valid identifier\n");
-}
-
 static bool check_arg(char *arg) {
     if (!((arg[0] >= 65 && arg[0] <= 90) || (arg[0] >= 97 && arg[0] <= 122)
         || arg[0] == 95 || arg[0] == 61)) {
@@ -44,6 +38,12 @@ static bool check_arg(char *arg) {
         }
     }
     return 1;
+}
+
+static void print_error(char *arg) {
+    mx_printerr("u$h: export: `");
+    mx_printerr(arg);
+    mx_printerr("': not a valid identifier\n");
 }
 
 static bool change_in_list(t_info *info, char *key, char *value, int j) {

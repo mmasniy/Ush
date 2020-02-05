@@ -1,6 +1,6 @@
 #include "ush.h"
 
-// static void del_sub(t_info *info, int count, int pos);
+// static  void del_sub(t_info *info, int count, int pos);
 
 // void mx_update_pwd(t_info *info) {
 //     int pos = 0;

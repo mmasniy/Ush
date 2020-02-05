@@ -4,7 +4,7 @@ static void print_error(char *arg);
 static bool check_arg(char *arg);
 static void del_elem_form_list(t_export **list, char *key);
 
-int mx_unset(t_info *info, t_process *p) {
+int mx_ush_unset(t_info *info, t_process *p) {
     if (p) {}
     // printf("=================\n");
     // for (t_export *tmp = info->variables; tmp; tmp = tmp->next)

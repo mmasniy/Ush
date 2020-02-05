@@ -6,6 +6,9 @@ t_job *mx_create_job(t_info *info, char **args) {
     new_job = (t_job *) malloc(sizeof(t_job));
     t_process *first_p = NULL;
 
+    if (!args[0])
+        args[0] = mx_strdup(" ");
+
 //    t_process *second_p = NULL;
     first_p = (t_process *) malloc(sizeof(t_process));
 //    second_p = (t_process *) malloc(sizeof(t_process));

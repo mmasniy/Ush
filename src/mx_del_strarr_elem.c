@@ -7,7 +7,6 @@ void mx_del_strarr_elem(char **str, int index) {
             int i = index;
 
             for (; str[i]; i++) {
-                // free(str[i]);
                 str[i] = str[i + 1];
             }
             free(tmp);

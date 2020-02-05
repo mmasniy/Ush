@@ -1,4 +1,5 @@
 #include "ush.h"
+
 int mx_check(char *token);
 
 void mx_check_file_in_or_out(t_tok *prev, t_tok *next);

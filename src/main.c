@@ -16,35 +16,34 @@ void run_shell(t_info *info) {
         mx_check_history(info, line);
         if (mx_work_w_toks(line, &tok) < 0)
             printf("error\n");
-        
-        // tree = mx_start_tree(tok);
         tree = NULL;
+        /*
+        ** Занесение в лист токенов
+        */
+        mx_parse_line(info, &line);
+
         info->args = mx_strsplit(line, ' ');
         if (mx_strlen(line) > 0) {
-            t_job *new_job = (t_job *) malloc(sizeof(t_job));  //create new job
+            t_job *new_job = (t_job *) malloc(sizeof(t_job)); //create new job
             new_job = mx_create_job(info, info->args);
             status = mx_ush_execute(info, new_job);
         }
         if (malloc_size(line))
             free(line);
-        // for (t_history *tmp = info->history_pack->history; tmp; tmp = tmp->next) {
-        //  printf("tmp->data: %s\n", tmp->data);
-        // }
         if (info->ctrl_c)
             exit(0);
         mx_del_strarr(&info->args);
         info->ctrl_d = 0;
         info->ctrl_c = 0;
-        // printf("status = %d\n", status);
         mx_free_tree(tree);
         mx_free_toks(&tok);
     }
 }
 
 int main(int argc, char **argv) {
-    char *builtin_str[] = {"pwd",/*"cd",*/ "help", "exit", "history", "env", "unset", "export", "jobs", "fg", "test", NULL};
-    int (*builtin_func[]) (t_info *info, t_process *p) = {&mx_ush_pwd
-        , /*&mx_ush_cd,*/ &mx_ush_help, &mx_ush_exit, &mx_history, &mx_ush_env, &mx_unset, &mx_export, &mx_jobs, &mx_fg, &mx_test};
+    char *builtin_str[] = {/*"pwd", "cd",*/ "help", "exit", "history", "env", "unset", "export", "which", "echo", "jobs", "fg", "test", NULL};
+    int (*builtin_func[]) (t_info *info, t_process *p) = {/*&mx_ush_pwd
+        , &mx_ush_cd, */&mx_ush_help, &mx_ush_exit, &mx_ush_history, &mx_ush_env, &mx_ush_unset, &mx_ush_export, &mx_ush_which, &mx_ush_echo, &mx_jobs, &mx_fg, &mx_test};
     t_info *info = (t_info *)malloc(sizeof(t_info));
 
     (void)argc;

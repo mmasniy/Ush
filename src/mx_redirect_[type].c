@@ -1,4 +1,5 @@
 #include "ush.h"
+
 int mx_check(char *token);
 int mx_print_error(char *error);
 
@@ -52,4 +53,3 @@ int mx_check(char *token) {
         return 1;
     return -1;
 }
-

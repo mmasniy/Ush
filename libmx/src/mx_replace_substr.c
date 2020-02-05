@@ -19,6 +19,6 @@ char *mx_replace_substr(const char *str
 			else
 				*to++ = *str++;
 		return newstr;
-		}
+	}
 	return NULL;
 }
