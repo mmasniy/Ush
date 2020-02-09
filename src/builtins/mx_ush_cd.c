@@ -12,6 +12,7 @@ int mx_ush_cd(t_info *info) {
     char *tmp = NULL;
 
     if (mx_check_cd_args(info, info->args, &flag, &argument)) {
+        final_pwd = strdup(argument);
         if ((!argument || strcmp(argument, "--") == 0)) {
             if (!getenv("HOME"))
                 return del_return(1, &old_pwd_now, &final_pwd, &argument);
@@ -23,17 +24,15 @@ int mx_ush_cd(t_info *info) {
             mx_del_and_set(&old_pwd_now, strdup(tmp));
             mx_strdel(&tmp);
         }
-        else {
-            mx_del_and_set(&final_pwd, strdup(argument)); // just argument
-        }
         if (!check_final_flags(flag, &final_pwd))
             return del_return(1, &old_pwd_now, &final_pwd, &argument);
         mx_del_and_set(&(info->oldpwd), strdup(info->pwd));
         mx_del_and_set(&(info->pwd), strdup(final_pwd));
         setenv("PWD", info->pwd, 1);
         setenv("OLDPWD", info->oldpwd, 1);
-        printf("getenv(PWD) = %s\n", getenv("PWD"));
-        printf("getenv(OLDPWD) = %s\n", getenv("OLDPWD"));
+        // printf("getenv(PWD) = %s\n", getenv("PWD"));
+        // printf("getenv(OLDPWD) = %s\n", getenv("OLDPWD"));
+        chdir(getenv("PWD"));
         return del_return(0, &old_pwd_now, &final_pwd, &argument);
     }
     else

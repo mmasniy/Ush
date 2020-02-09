@@ -1,8 +1,8 @@
 #include "../../inc/ush.h"
 
 static bool cd_error(char *arg, short error_type);
-static void parse_argument(char **arg);
-static bool find_argument(t_info *info, char **arg);
+static void parse_argument(char **arg, char flag);
+static bool find_argument(t_info *info, char **arg, char flag);
 static bool check_argument(t_info *info, char **arg, char *flag);
 
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
@@ -54,7 +54,7 @@ static bool cd_error(char *arg, short error_type) {
 }
 
 // mx_find_last_slash
-static void parse_argument(char **arg) {
+static void parse_argument(char **arg, char flag) {
     char *new_arg = NULL;
     char **split = mx_strsplit(*arg, '/');
 
@@ -62,9 +62,9 @@ static void parse_argument(char **arg) {
         mx_del_and_set(&new_arg, "/");
     for (int i = 0; split[i]; i++) {
         if (strcmp(split[i], ".") == 0)
-            continue;
+            mx_dots_for_path(&new_arg, flag, 0);
         else if (strcmp(split[i], "..") == 0)
-            mx_find_last_slash(&new_arg);
+            mx_dots_for_path(&new_arg, flag, 1);
         else
             mx_del_and_set(&new_arg, mx_strjoin(new_arg, split[i]));
         mx_del_and_set(&new_arg, mx_strjoin(new_arg, "/"));
@@ -77,7 +77,7 @@ static void parse_argument(char **arg) {
     mx_del_strarr(&split);
 }
 
-static bool find_argument(t_info *info, char **arg) {
+static bool find_argument(t_info *info, char **arg, char flag) {
     DIR *f = NULL;
     struct dirent *d = NULL;
     bool res = 0;
@@ -102,7 +102,7 @@ static bool find_argument(t_info *info, char **arg) {
         closedir(f);
     }
     if (res)
-        parse_argument(arg);
+        parse_argument(arg, flag);
     return res;
 }
 
@@ -110,7 +110,7 @@ static bool check_argument(t_info *info, char **arg, char *flag) {
     if (strcmp(*arg, "-") == 0 || strcmp(*arg, "--") == 0) {
         return 1;
     }
-    else if (find_argument(info, arg)) {
+    else if (find_argument(info, arg, *flag)) {
         char *path_without_links = mx_save_without_links(*arg);
 
         if (*flag == 's') {

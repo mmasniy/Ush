@@ -274,6 +274,7 @@ char *mx_del_and_set(char **str, char *new_str);
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
 
 // mx_funcs_for_cd_2.c
+void mx_dots_for_path(char **arg, char flag, bool up);
 void mx_find_last_slash(char **str);
 char *mx_del_and_set(char **str, char *new_str);
 char *mx_save_without_links(char *path);

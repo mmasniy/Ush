@@ -2,6 +2,36 @@
 
 static void save_link_path(char **res_line);
 
+void mx_dots_for_path(char **arg, char flag, bool up) {
+    if (flag == 'P') {
+        
+        for (int pos = strlen(*arg); pos > 0; pos--) {
+            if ((*arg)[pos] == '/') {
+                (*arg)[pos] = '\0';
+                if (readlink(*arg, NULL, 0) >= 0) {
+                    char *tmp = NULL;
+                    char *link = mx_strnew(1024);
+                    printf("*arg = %s\n", *arg);
+                    readlink(*arg, link, 1024);
+                    mx_find_last_slash(arg);
+                    printf("*arg = %s\n", *arg);
+                    tmp = mx_strjoin(*arg, "/");
+                    printf("tmp = %s\n", tmp);
+                    mx_del_and_set(arg, mx_strjoin(tmp
+                        , link));
+                    mx_strdel(&link);
+                    mx_strdel(&tmp);
+                    break;
+                }
+                else
+                    (*arg)[pos] = '/';
+            }
+        }
+    }
+    if (up)
+        mx_find_last_slash(arg);
+}
+
 char *mx_del_and_set(char **str, char *new_str) {
     mx_strdel(str);
     if (new_str)
@@ -15,7 +45,7 @@ void mx_find_last_slash(char **str) {
     char *craft = *str;
     char *new_str = NULL;
 
-    for (int i = strlen(craft) - 1; i > 1 && craft[i] == '/';) {
+    for (int i = strlen(craft) - 1; i > 1 && craft[i] == '/'; ) {
         craft[i] = '\0';
     }
     for (; mx_get_char_index(&(craft[pos]), '/') >= 0; pos++);
