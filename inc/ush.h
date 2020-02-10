@@ -329,6 +329,9 @@ char *mx_up_to_one(char *str);
 // mx_tab_work.c
 void mx_tab_work(t_info *info, char **buffer, int *position);
 
+// mx_funcs_for_tab.c
+void mx_replace_special_symbols(t_info *info);
+
 // mx_launch_ush.c
 int mx_ush_execute(t_info *info, t_job *job);
 int mx_launch_process(t_info *info, int job_id

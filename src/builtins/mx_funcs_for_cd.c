@@ -87,7 +87,7 @@ static bool find_argument(t_info *info, char **arg, char flag) {
         closedir(f);
         res = 1;
     }
-    else if ((f = opendir(info->pwd))) {
+    else if ((f = opendir(*arg))) {
         while ((d = readdir(f))) {
             if (mx_str_head(d->d_name, *arg) == 0) {
                 if ((info->pwd)[strlen(info->pwd) - 1] != '/')

@@ -3,13 +3,13 @@
 int mx_redirection(int type);
 void mx_reset_fd(int *fd);
 
-// int mx_start_function(t_info *info, char **tree) {
-//     // mx_del_strarr(info->args);
-//     info->args = tree;
-//     if (mx_check_buildin(info, 1) == -1)
-//         mx_execute_binary_file(info, tree);
-//     return 0;
-// }
+int mx_start_function(t_info *info, char **tree) {
+    // mx_del_strarr(info->args);
+    info->args = tree;
+    if (mx_check_buildin(info, 1) == -1)
+        mx_execute_binary_file(info, tree);
+    return 0;
+}
 
 
 void mx_printf_strarr(char **str) {
@@ -53,7 +53,7 @@ void mx_reset_fd(int *fd){
 
 int mx_tree_run(t_ast *tree, t_info *info, int f) {
     if (tree && tree->type == 10) {
-        f = mx_execute_binary_file(info, tree->command);
+        f = mx_start_function(info, tree->command);
     }
     else if (tree && tree->type == 3)
         mx_run_pipe(tree, info);

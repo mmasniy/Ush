@@ -48,6 +48,7 @@ SRCS = src/mx_work_with_process.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_tab_work.c \
+	src/all_for_read_line/mx_funcs_for_tab.c \
 	src/all_for_read_line/mx_read_line.c \
 	src/all_for_read_line/mx_print_ush.c \
 	src/all_for_read_line/mx_line_hot_key.c \
