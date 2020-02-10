@@ -18,7 +18,7 @@ void mx_printf_strarr(char **str) {
          // if (str[i + 1])
          //     printf("%s%s%s ",YEL, str[i], RESET);
          // else
-             printf("%s%s%s",YEL, str[i], RESET);
+             printf("%s%s%s ",YEL, str[i], RESET);
     }
     printf("%s]%s ",GRN, RESET);
 }

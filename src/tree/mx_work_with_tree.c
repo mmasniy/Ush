@@ -6,7 +6,6 @@ void printKLP(t_ast* root);
 t_ast *mx_start_tree(t_tok *tok) {
 	t_tok *tmp = mx_search_first(tok);
 	t_ast *tree = mx_create_ast(tmp);
-
 	if (tmp->prio == 10 || tmp->prio == 15) {
 		tree->command = mx_merge_command(tmp);
 	}
@@ -49,7 +48,6 @@ t_ast *mx_create_leaf(t_tok *max, int side) {
 t_ast *mx_build_ast(t_tok *max) {
 	t_tok *tmp = max;
 	t_ast *tree = mx_create_ast(tmp);
-
 	if (tmp->prio == 10 || tmp->prio == 15)
 		tree->command = mx_merge_command(tmp);
 	if (mx_check_op(tmp->prio) == 1)

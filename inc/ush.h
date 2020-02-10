@@ -419,7 +419,7 @@ char **mx_ush_split_line(char *line);
 
 //mx_create_tok_list
 void mx_add_tok(t_tok **prev, char *cont, int size);
-char *mx_check_red(char **content, int *size);
+char *mx_check_red(char *str, int *size);
 void mx_free_toks(t_tok **tok);
 void mx_check_file_in_or_out(t_tok *prev, t_tok *next);
 
