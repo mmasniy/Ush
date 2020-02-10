@@ -4,22 +4,11 @@ static void save_link_path(char **res_line);
 
 void mx_dots_for_path(char **arg, char flag, bool up) {
     if (flag == 'P') {
-        
         for (int pos = strlen(*arg); pos > 0; pos--) {
             if ((*arg)[pos] == '/') {
                 (*arg)[pos] = '\0';
                 if (readlink(*arg, NULL, 0) >= 0) {
-                    char *tmp = NULL;
-                    char *link = mx_strnew(1024);
-
-                    readlink(*arg, link, 1024);
-                    mx_find_last_slash(arg);
-
-                    tmp = mx_strjoin(*arg, "/");
-                    mx_del_and_set(arg, mx_strjoin(tmp
-                        , link));
-                    mx_strdel(&link);
-                    mx_strdel(&tmp);
+                    mx_change_link_for_dots_in_cd(arg);
                     break;
                 }
                 else

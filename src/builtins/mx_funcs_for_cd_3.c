@@ -1,5 +1,17 @@
 #include "../../inc/ush.h"
 
+void mx_change_link_for_dots_in_cd(char **arg) {
+    char *tmp = NULL;
+    char *link = mx_strnew(1024);
+
+    readlink(*arg, link, 1024);
+    mx_find_last_slash(arg);
+    tmp = mx_strjoin(*arg, "/");
+    mx_del_and_set(arg, mx_strjoin(tmp, link));
+    mx_strdel(&link);
+    mx_strdel(&tmp);
+}
+
 bool mx_cd_error(char *arg, short error_type) {
     if (error_type == 0)
         mx_printerr("cd: string not in pwd: ");

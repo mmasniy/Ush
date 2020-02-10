@@ -4,26 +4,32 @@ static bool check_final_flags(char flag, char **final_pwd);
 static bool del_return(bool res, char **old_pwd_now
     , char **final_pwd, char **argument);
 
+static bool change_all(char *argument, char **old_pwd_now, char **final_pwd) {
+    *final_pwd = strdup(argument);
+    if ((!argument || strcmp(argument, "--") == 0)) {
+        if (!getenv("HOME"))
+            return 1;
+        mx_del_and_set(final_pwd, getenv("HOME"));
+    }
+    else if (strcmp(argument, "-") == 0) {
+        char *tmp = strdup(*final_pwd);
+
+        mx_del_and_set(final_pwd, strdup(*old_pwd_now));
+        mx_del_and_set(old_pwd_now, strdup(tmp));
+        mx_strdel(&tmp);
+    }
+    return 0;
+}
+
 int mx_ush_cd(t_info *info) {
     char flag = '\0';
     char *argument = NULL;
     char *old_pwd_now = strdup(info->oldpwd);
     char *final_pwd = NULL;
-    char *tmp = NULL;
+    int return_value;
 
     if (mx_check_cd_args(info, info->args, &flag, &argument)) {
-        final_pwd = strdup(argument);
-        if ((!argument || strcmp(argument, "--") == 0)) {
-            if (!getenv("HOME"))
-                return del_return(1, &old_pwd_now, &final_pwd, &argument);
-            mx_del_and_set(&final_pwd, getenv("HOME"));
-        }
-        else if (strcmp(argument, "-") == 0) {
-            tmp = strdup(final_pwd);
-            mx_del_and_set(&final_pwd, strdup(old_pwd_now));
-            mx_del_and_set(&old_pwd_now, strdup(tmp));
-            mx_strdel(&tmp);
-        }
+        return_value = change_all(argument, &old_pwd_now, &final_pwd);
         if (!check_final_flags(flag, &final_pwd))
             return del_return(1, &old_pwd_now, &final_pwd, &argument);
         if (chdir(final_pwd) >= 0) {
@@ -32,9 +38,7 @@ int mx_ush_cd(t_info *info) {
             setenv("PWD", info->pwd, 1);
             setenv("OLDPWD", info->oldpwd, 1);
         }
-        // printf("getenv(PWD) = %s\n", getenv("PWD"));
-        // printf("getenv(OLDPWD) = %s\n", getenv("OLDPWD"));
-        return del_return(0, &old_pwd_now, &final_pwd, &argument);
+        return del_return(return_value, &old_pwd_now, &final_pwd, &argument);
     }
     else
         return del_return(1, &old_pwd_now, &final_pwd, &argument);

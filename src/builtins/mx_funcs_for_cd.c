@@ -9,7 +9,7 @@ bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
     bool flag_check = 1;
     int res;
 
-    for (int i = 1; args[i]; i++) {
+    for (int i = 1; args[i]; i++)
         if (flag_check && args[i][0] == '-' && strcmp(args[i], "-")) {
             if (!(res = mx_check_cd_flags(info, &find_flag, i, argument)))
                 return mx_cd_error(args[i], 0);
@@ -22,7 +22,6 @@ bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
             if (args[i + 1])
                 return mx_cd_error(args[i], 0);
         }
-    }
     if (!(*argument))
         return 1;
     return check_argument(info, argument, flag);
@@ -58,24 +57,18 @@ static bool find_argument(t_info *info, char **arg, char flag) {
     bool res = 0;
     char *tmp = NULL;
 
-    if ((*arg)[0] == '/' && (f = opendir(*arg))) {
-        closedir(f);
+    if ((*arg)[0] == '/' && (f = opendir(*arg)))
         res = 1;
-    }
-    else if ((f = opendir(info->pwd))) {
-        while ((d = readdir(f))) {
+    else if ((f = opendir(info->pwd)))
+        while ((d = readdir(f)))
             if (mx_str_head(d->d_name, *arg) == 0) {
-                if ((info->pwd)[strlen(info->pwd) - 1] != '/')
-                    tmp = mx_strjoin("/", *arg);
-                else
-                    tmp = strdup(*arg);
+                tmp = (info->pwd)[strlen(info->pwd) - 1] != '/'
+                ? mx_strjoin("/", *arg) : strdup(*arg);
                 mx_del_and_set(arg, mx_strjoin(info->pwd, tmp));
                 mx_strdel(&tmp);
                 res = 1;
             }
-        }
-        closedir(f);
-    }
+    f ? closedir(f) : 0;
     if (res)
         parse_argument(arg, flag);
     return res;

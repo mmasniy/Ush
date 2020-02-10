@@ -279,6 +279,7 @@ char *mx_del_and_set(char **str, char *new_str);
 char *mx_save_without_links(char *path);
 
 // mx_funcs_for_cd_3.c
+void mx_change_link_for_dots_in_cd(char **arg);
 bool mx_cd_error(char *arg, short error_type);
 int mx_check_cd_flags(t_info *info
     , char *find_flag, int i, char **argument);
