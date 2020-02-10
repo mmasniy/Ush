@@ -1,11 +1,13 @@
 #include "../../inc/ush.h"
 
+int mx_check(char *token);
+int mx_print_error(char *error);
+
 int mx_redirect_int(char *s, int i) {
-    printf("s = %s\n", s);
     if (mx_isdigit(s[i])) {
         while (mx_isdigit(s[i]))
             i++;
-        if ((s[i] == '<' && s[i + 1] == '<')  // <<
+        if ((s[i] == '<' && s[i + 1] == '<') // <<
             || ((s[i] == '<' || s[i] == '>') && !s[i + 1]) // < || > 
             || (s[i] == s[i + 1] && (s[i] == '<' || s[i] == '>') && !s[i + 2]) // << || >>
             || (s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&' && !s[i + 3]) // >>&

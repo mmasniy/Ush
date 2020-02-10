@@ -36,14 +36,12 @@ int mx_size_tok(char *s, bool f, int i) {
     if (f) {
         if (mx_isdigit(s[i]))
             i++;
-        if (s[i] == '>' || s[i] == '<'){
+        if (s[i] == '>' || s[i] == '<')
             return mx_redirect_int(s, 0);
-        }
-        else{
+        else
             while (s[i] && (mx_isdigit(s[i]) || mx_isalpha(s[i])
                     || (mx_strchr(MX_CHECK2,s[i]))))
                 i++;
-        }
         return i;
     }
     if (s[0] == '&' && s[1] && (s[1] == '<' || s[1] == '>'))

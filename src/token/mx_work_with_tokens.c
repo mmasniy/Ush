@@ -4,7 +4,6 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
     int i = 0;
     char *tmp;
-    // t_tok *copy = (*tok);
 
     if (!line)
         return 0;
@@ -19,8 +18,6 @@ int mx_work_w_toks(char *line, t_tok **tok) {
         }
         i += size;
     }
-    // printf("tok = %s\n", (*tok)->token);
-
     // Вывод красивый, чтобы было понятнее
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
@@ -37,6 +34,6 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // }
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
-    mx_strdel(&tmp);
+    // mx_strdel(&tmp);
     return 1;
 }

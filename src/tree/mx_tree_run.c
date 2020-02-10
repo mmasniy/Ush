@@ -1,19 +1,23 @@
 #include "../../inc/ush.h"
 
-int mx_start_function(t_info *info, char **tree) {
-    // mx_del_strarr(info->args);
-    info->args = tree;
-    if (mx_check_buildin(info, 1) == -1)
-        mx_execute_binary_file(info, tree);
-    return 0;
-}
+int mx_redirection(int type);
+void mx_reset_fd(int *fd);
+
+// int mx_start_function(t_info *info, char **tree) {
+//     // mx_del_strarr(info->args);
+//     info->args = tree;
+//     if (mx_check_buildin(info, 1) == -1)
+//         mx_execute_binary_file(info, tree);
+//     return 0;
+// }
+
 
 void mx_printf_strarr(char **str) {
     printf("%s[%s", GRN, RESET);
     for (int i = 0; str[i]; i++) {
-         if (str[i + 1])
-             printf("%s%s%s ",YEL, str[i], RESET);
-         else
+         // if (str[i + 1])
+         //     printf("%s%s%s ",YEL, str[i], RESET);
+         // else
              printf("%s%s%s",YEL, str[i], RESET);
     }
     printf("%s]%s ",GRN, RESET);
@@ -49,7 +53,7 @@ void mx_reset_fd(int *fd){
 
 int mx_tree_run(t_ast *tree, t_info *info, int f) {
     if (tree && tree->type == 10) {
-        f = mx_start_function(info, tree->command);
+        f = mx_execute_binary_file(info, tree->command);
     }
     else if (tree && tree->type == 3)
         mx_run_pipe(tree, info);
@@ -130,23 +134,6 @@ void mx_tok_to_tree(t_tok *tok, t_info *info) {
     mx_free_tree(tree);
 }
 
-int mx_get_fd(char **red) {
-    int fd;
-
-    if (!red || !red[0])
-        return -1;
-    fd = mx_atoi(red[0]);
-    return fd;
-}
-
-int mx_run_redirection(t_ast *t, t_info *i) {
-    if (t || i) {}
-    int fd;
-
-    fd = ((mx_get_fd(t->command)) == -1 ? -1 : mx_get_fd(t->command));
-    printf("fd = %d\n", fd);
-    return fd;
-}
 
 /*
     pipe - открывает для аргуманта fd[2] два дискриптора,
@@ -159,10 +146,4 @@ int mx_run_redirection(t_ast *t, t_info *i) {
     pid > 0 Ожидает завершения процесса с идентификатором, равным pid.
     pid == 0 Ожидает завершения любого дочернего процесса с тем же идентифи- катором группы процессов, что и у вызывающего процесса (группы процессов обсуждаются в разделе 9.4).
     pid < -1 Ожидает завершения любого дочернего процесса с идентификатором группы процессов, совпадающим с pid.
-    O_WRONLY - открывает файл на запись
-    O_CREAT - создает файл, если его еще нет, но еще нужно добавить 3й аргумент
-    в open - t_mode, права доступа к этому файлу
-    O_APPEND - для записи в конец файла
-    O_RDONLY - файл открывается на чтение
-    0600 - (- rw- --- ---) чтение и запись
 */
