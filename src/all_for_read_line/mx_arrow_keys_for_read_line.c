@@ -35,7 +35,7 @@ void mx_change_hry(t_info *info, int *pos, char **buffer,
     free(*buffer);
     *buffer = mx_strdup(info->history_pack->pos->data);
     *pos = mx_strlen(*buffer);
-    mx_print_ush(info);
+    mx_print_ush(info, USH);
     mx_printstr(*buffer);
 }
 

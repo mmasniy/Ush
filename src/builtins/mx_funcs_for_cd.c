@@ -1,6 +1,5 @@
 #include "../../inc/ush.h"
 
-static bool cd_error(char *arg, short error_type);
 static void parse_argument(char **arg, char flag);
 static bool find_argument(t_info *info, char **arg, char flag);
 static bool check_argument(t_info *info, char **arg, char *flag);
@@ -8,49 +7,25 @@ static bool check_argument(t_info *info, char **arg, char *flag);
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
     char find_flag = 0;
     bool flag_check = 1;
+    int res;
 
     for (int i = 1; args[i]; i++) {
         if (flag_check && args[i][0] == '-' && strcmp(args[i], "-")) {
-            for (int j = 1; args[i][j]; j++) {
-                if (args[i][j] == 'P')
-                    find_flag = 'P';
-                else if (args[i][j] == 's') {
-                    if (find_flag != 'P')
-                        find_flag = 's';
-                }
-                else {
-                    mx_strdel(argument);
-                    *argument = strdup(args[i]);
-                    if (args[i + 1] && strcmp(*argument, "--"))
-                        return cd_error(args[i], 0);
-                    flag_check = 0;
-                    break;
-                }
-            }
+            if (!(res = mx_check_cd_flags(info, &find_flag, i, argument)))
+                return mx_cd_error(args[i], 0);
+            flag_check = res == 2 ? 0 : 1;
             *flag = find_flag;
         }
         else {
             mx_strdel(argument);
             *argument = strdup(args[i]);
             if (args[i + 1])
-                return cd_error(args[i], 0);
+                return mx_cd_error(args[i], 0);
         }
     }
     if (!(*argument))
         return 1;
     return check_argument(info, argument, flag);
-}
-
-static bool cd_error(char *arg, short error_type) {
-    if (error_type == 0)
-        mx_printerr("cd: string not in pwd: ");
-    else if (error_type == 1)
-        mx_printerr("cd: not a directory: ");
-    else if (error_type == 2)
-        mx_printerr("cd: no such file or directory: ");
-    mx_printerr(arg);
-    write(2, "\n", 1);
-    return 0;
 }
 
 // mx_find_last_slash
@@ -87,7 +62,7 @@ static bool find_argument(t_info *info, char **arg, char flag) {
         closedir(f);
         res = 1;
     }
-    else if ((f = opendir(*arg))) {
+    else if ((f = opendir(info->pwd))) {
         while ((d = readdir(f))) {
             if (mx_str_head(d->d_name, *arg) == 0) {
                 if ((info->pwd)[strlen(info->pwd) - 1] != '/')
@@ -116,11 +91,11 @@ static bool check_argument(t_info *info, char **arg, char *flag) {
         if (*flag == 's') {
             if (strcmp(path_without_links, *arg)) {
                 mx_strdel(&path_without_links);
-                return cd_error(*arg, 1);
+                return mx_cd_error(*arg, 1);
             }
         }
         mx_strdel(&path_without_links);
         return 1;
     }
-    return cd_error(*arg, 2);
+    return mx_cd_error(*arg, 2);
 }

@@ -45,6 +45,7 @@ SRCS = src/mx_work_with_process.c \
 	src/builtins/mx_funcs_for_env_2.c \
 	src/builtins/mx_funcs_for_cd.c \
 	src/builtins/mx_funcs_for_cd_2.c \
+	src/builtins/mx_funcs_for_cd_3.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_tab_work.c \
@@ -53,7 +54,6 @@ SRCS = src/mx_work_with_process.c \
 	src/all_for_read_line/mx_print_ush.c \
 	src/all_for_read_line/mx_line_hot_key.c \
 	src/all_for_read_line/mx_funcs_for_read_line.c \
-	src/all_for_read_line/mx_count_name_len.c \
 	src/all_for_read_line/mx_arrow_keys_for_read_line.c \
 	\
 	src/token/mx_work_with_tokens.c \

@@ -67,7 +67,7 @@ static void ctrl_r(t_info *info, char **buffer, int *position) {
         t_history *result = NULL;
 
         print_posible_history(info, result);
-        mx_print_ush(info);
+        mx_print_ush(info, USH);
         while (1) {
             read(STDIN_FILENO, symbol, 4);
             if (symbol[0] == ENTER || symbol[0] == ESC ||

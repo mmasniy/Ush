@@ -41,7 +41,7 @@ void mx_print_line(t_info *info, char *buffer, int position) {
         write(1,"[1A", 3);
     }
     mx_print_char_loop('\b', mx_strlen(buffer) - lines * info->winsize);
-    mx_print_ush(info);
+    mx_print_ush(info, USH);
     mx_printstr(buffer);
     mx_print_char_loop('\b', mx_strlen(buffer) - position);
 }

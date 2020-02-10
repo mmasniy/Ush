@@ -13,14 +13,15 @@ int mx_start_function(t_info *info, char **tree) {
 
 
 void mx_printf_strarr(char **str) {
-    printf("%s[%s", GRN, RESET);
-    for (int i = 0; str[i]; i++) {
-         // if (str[i + 1])
-         //     printf("%s%s%s ",YEL, str[i], RESET);
-         // else
-             printf("%s%s%s ",YEL, str[i], RESET);
-    }
-    printf("%s]%s ",GRN, RESET);
+    if (str) {}
+    // printf("%s[%s", GRN, RESET);
+    // for (int i = 0; str[i]; i++) {
+    //      // if (str[i + 1])
+    //      //     printf("%s%s%s ",YEL, str[i], RESET);
+    //      // else
+    //          printf("%s%s%s ",YEL, str[i], RESET);
+    // }
+    // printf("%s]%s ",GRN, RESET);
 }
 
 int mx_execute_binary_file(t_info *info, char **args) {

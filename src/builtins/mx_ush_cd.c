@@ -26,13 +26,14 @@ int mx_ush_cd(t_info *info) {
         }
         if (!check_final_flags(flag, &final_pwd))
             return del_return(1, &old_pwd_now, &final_pwd, &argument);
-        mx_del_and_set(&(info->oldpwd), strdup(info->pwd));
-        mx_del_and_set(&(info->pwd), strdup(final_pwd));
-        setenv("PWD", info->pwd, 1);
-        setenv("OLDPWD", info->oldpwd, 1);
+        if (chdir(final_pwd) >= 0) {
+            mx_del_and_set(&(info->oldpwd), strdup(info->pwd));
+            mx_del_and_set(&(info->pwd), strdup(final_pwd));
+            setenv("PWD", info->pwd, 1);
+            setenv("OLDPWD", info->oldpwd, 1);
+        }
         // printf("getenv(PWD) = %s\n", getenv("PWD"));
         // printf("getenv(OLDPWD) = %s\n", getenv("OLDPWD"));
-        chdir(getenv("PWD"));
         return del_return(0, &old_pwd_now, &final_pwd, &argument);
     }
     else

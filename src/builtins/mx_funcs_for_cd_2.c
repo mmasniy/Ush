@@ -11,12 +11,11 @@ void mx_dots_for_path(char **arg, char flag, bool up) {
                 if (readlink(*arg, NULL, 0) >= 0) {
                     char *tmp = NULL;
                     char *link = mx_strnew(1024);
-                    printf("*arg = %s\n", *arg);
+
                     readlink(*arg, link, 1024);
                     mx_find_last_slash(arg);
-                    printf("*arg = %s\n", *arg);
+
                     tmp = mx_strjoin(*arg, "/");
-                    printf("tmp = %s\n", tmp);
                     mx_del_and_set(arg, mx_strjoin(tmp
                         , link));
                     mx_strdel(&link);
@@ -30,6 +29,9 @@ void mx_dots_for_path(char **arg, char flag, bool up) {
     }
     if (up)
         mx_find_last_slash(arg);
+    else
+        if (strlen(*arg) > 1 && (*arg)[strlen(*arg) - 1] == '/')
+            (*arg)[strlen(*arg) - 1] = '\0';
 }
 
 char *mx_del_and_set(char **str, char *new_str) {

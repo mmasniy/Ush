@@ -270,7 +270,6 @@ void mx_search_slash(char **line);
 void mx_parse_line(t_info *info, char **line);
 
 // mx_funcs_for_cd.c
-char *mx_del_and_set(char **str, char *new_str);
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
 
 // mx_funcs_for_cd_2.c
@@ -278,6 +277,11 @@ void mx_dots_for_path(char **arg, char flag, bool up);
 void mx_find_last_slash(char **str);
 char *mx_del_and_set(char **str, char *new_str);
 char *mx_save_without_links(char *path);
+
+// mx_funcs_for_cd_3.c
+bool mx_cd_error(char *arg, short error_type);
+int mx_check_cd_flags(t_info *info
+    , char *find_flag, int i, char **argument);
 
 // mx_funcs_for_env.c
 t_export *mx_save_env_as_list(char **environ);
@@ -301,9 +305,6 @@ void mx_del_strarr_elem(char **str, int index);
 
 // mx_create_strarr.c
 char **mx_create_strarr(int num_of_elements);
-
-// mx_count_name_len.c
-void mx_count_name_len(t_info *info);
 
 // mx_arrow_keys_for_read_line.c
 void mx_arrows_exec(t_info *info, char **buffer, int *position, char c);
@@ -377,7 +378,7 @@ void mx_winsize(t_info *info);
 void mx_print_char_loop(char c, int len);
 
 // mx_print_ush.c
-void mx_print_ush();
+void mx_print_ush(t_info *info, char *name);
 
 // mx_work_with_termios.c
 bool mx_custom_termios(t_info *info, int fd);
