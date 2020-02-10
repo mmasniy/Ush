@@ -34,7 +34,7 @@ int mx_size_str(char *s, int f, int i) {
 //mx_atoi(&s[i]) > -1 && mx_atoi(&s[i]) < 128)
 int mx_size_tok(char *s, bool f, int i) {
     if (f) {
-        if (mx_isdigit(s[i]))
+        while (mx_isdigit(s[i]))
             i++;
         if (s[i] == '>' || s[i] == '<')
             return mx_redirect_int(s, 0);
