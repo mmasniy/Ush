@@ -5,22 +5,22 @@ static bool del_return(bool res, char **old_pwd_now
     , char **final_pwd, char **argument);
 static bool change_all(char *argument, char **old_pwd_now, char **final_pwd);
 
-int mx_ush_cd(t_info *info) {
+int mx_ush_cd(t_info *i) {
     char flag = '\0';
     char *argument = NULL;
-    char *old_pwd_now = strdup(info->oldpwd);
+    char *old_pwd_now = strdup(i->oldpwd);
     char *final_pwd = NULL;
     int return_value;
 
-    if (mx_check_cd_args(info, info->args, &flag, &argument)) {
+    if (i->args[1] && mx_check_cd_args(i, i->args, &flag, &argument)) {
         return_value = change_all(argument, &old_pwd_now, &final_pwd);
         if (!check_final_flags(flag, &final_pwd))
             return del_return(1, &old_pwd_now, &final_pwd, &argument);
         if (chdir(final_pwd) >= 0) {
-            mx_del_and_set(&(info->oldpwd), strdup(info->pwd));
-            mx_del_and_set(&(info->pwd), strdup(final_pwd));
-            setenv("PWD", info->pwd, 1);
-            setenv("OLDPWD", info->oldpwd, 1);
+            mx_del_and_set(&(i->oldpwd), strdup(i->pwd));
+            mx_del_and_set(&(i->pwd), strdup(final_pwd));
+            setenv("PWD", i->pwd, 1);
+            setenv("OLDPWD", i->oldpwd, 1);
         }
         return del_return(return_value, &old_pwd_now, &final_pwd, &argument);
     }
