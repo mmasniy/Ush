@@ -6,7 +6,6 @@ SRCS = src/mx_work_with_process.c \
 	src/mx_up_to_one.c \
 	src/mx_signal.c \
 	src/mx_split_line.c \
-	src/mx_search_and_change_tilde.c \
 	src/mx_info_prepare.c \
 	src/mx_print_errors.c \
 	src/mx_error_message.c \
@@ -21,6 +20,7 @@ SRCS = src/mx_work_with_process.c \
 	src/parse_line_step/mx_save_key_value.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
+	src/parse_line_step/mx_search_and_change_tilde.c \
 	\
 	src/help_functions/mx_str_head.c \
 	src/help_functions/mx_str_char_in_str.c \

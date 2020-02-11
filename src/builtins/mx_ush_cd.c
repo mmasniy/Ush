@@ -3,23 +3,7 @@
 static bool check_final_flags(char flag, char **final_pwd);
 static bool del_return(bool res, char **old_pwd_now
     , char **final_pwd, char **argument);
-
-static bool change_all(char *argument, char **old_pwd_now, char **final_pwd) {
-    *final_pwd = strdup(argument);
-    if ((!argument || strcmp(argument, "--") == 0)) {
-        if (!getenv("HOME"))
-            return 1;
-        mx_del_and_set(final_pwd, getenv("HOME"));
-    }
-    else if (strcmp(argument, "-") == 0) {
-        char *tmp = strdup(*final_pwd);
-
-        mx_del_and_set(final_pwd, strdup(*old_pwd_now));
-        mx_del_and_set(old_pwd_now, strdup(tmp));
-        mx_strdel(&tmp);
-    }
-    return 0;
-}
+static bool change_all(char *argument, char **old_pwd_now, char **final_pwd);
 
 int mx_ush_cd(t_info *info) {
     char flag = '\0';
@@ -46,6 +30,7 @@ int mx_ush_cd(t_info *info) {
 
 static bool check_final_flags(char flag, char **final_pwd) {
     bool return_value = 1;
+
     if (flag == 's') {
         char *tmp = mx_save_without_links(*final_pwd);
 
@@ -68,4 +53,21 @@ static bool del_return(bool res, char **old_pwd_now
     mx_strdel(final_pwd);
     mx_strdel(argument);
     return res;
+}
+
+static bool change_all(char *argument, char **old_pwd_now, char **final_pwd) {
+    *final_pwd = strdup(argument);
+    if ((!argument || strcmp(argument, "--") == 0)) {
+        if (!getenv("HOME"))
+            return 1;
+        mx_del_and_set(final_pwd, getenv("HOME"));
+    }
+    else if (strcmp(argument, "-") == 0) {
+        char *tmp = strdup(*final_pwd);
+
+        mx_del_and_set(final_pwd, strdup(*old_pwd_now));
+        mx_del_and_set(old_pwd_now, strdup(tmp));
+        mx_strdel(&tmp);
+    }
+    return 0;
 }

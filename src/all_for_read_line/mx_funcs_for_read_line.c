@@ -32,16 +32,11 @@ void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {
 }
 
 void mx_print_line(t_info *info, char *buffer, int position) {
-    int lines;
-
-    mx_winsize(info);
-    lines = (strlen(buffer) + info->name_len) / (info->winsize);
-    for (int i = 0; i < lines; i++) {
-        mx_printchar(27);
-        write(1,"[1A", 3);
+    if (info && position) {}
+    for (unsigned int i = 0; i < strlen(buffer) + info->name_len; i++) {
+        mx_printstr("\b\x1b[2K");
     }
-    mx_print_char_loop('\b', mx_strlen(buffer) - lines * info->winsize);
-    mx_print_ush(info, USH);
+    mx_print_ush(info);
     mx_printstr(buffer);
     mx_print_char_loop('\b', mx_strlen(buffer) - position);
 }

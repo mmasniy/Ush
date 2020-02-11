@@ -1,4 +1,4 @@
-#include "../inc/ush.h"
+#include "../../inc/ush.h"
 
 static char *result_swap(char *search_line, int *len) {
     char *result_line = "~";

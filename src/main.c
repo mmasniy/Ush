@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
 
     (void)argc;
     (void)argv;
+    // setvbuf(stdout, NULL, _IONBF, 0);
     if (!isatty(STDIN_FILENO)) {
         mx_error_message("You must use it just in terminal");
         exit(EXIT_FAILURE);

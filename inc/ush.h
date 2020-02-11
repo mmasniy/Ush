@@ -75,7 +75,7 @@
 #define MX_CHECK2 "/-~'\".\\="
 #define TYPE "; | & &> <& &>> <<& < > << >> && ||"
 
-#define USH "\ru$h> "
+#define USH "u$h> "
 
 #define USH_RL_BUFSIZE  1024
 #define USH_TOK_BUFSIZE 64
@@ -211,6 +211,7 @@ typedef struct s_history_pack {
 }               t_history_pack;
 
 typedef struct  s_info {
+    char *name;
     char        **args;
     char        **builtin_str;
     int         (**builtin_func) (struct s_info *info, struct s_process *p);
@@ -379,7 +380,7 @@ void mx_winsize(t_info *info);
 void mx_print_char_loop(char c, int len);
 
 // mx_print_ush.c
-void mx_print_ush(t_info *info, char *name);
+void mx_print_ush(t_info *info);
 
 // mx_work_with_termios.c
 bool mx_custom_termios(t_info *info, int fd);

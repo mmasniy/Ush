@@ -93,4 +93,5 @@ static void init_continue(t_info *info) {
         mx_memset(info->jobs, 0, sizeof(t_job));
         info->max_number_job = 2;
     }
+    info->name = strdup(USH);
 }

@@ -11,7 +11,7 @@ char *mx_ush_read_line(t_info *info) {
 
     mx_push_history_front(&info->history_pack->history, buffer);
     info->history_pack->pos = info->history_pack->history;
-    mx_print_ush(info, USH);
+    mx_print_ush(info);
     while (1) {
         ch = mx_getchar();
         if (!input_work(info, &buffer, &position, ch))
