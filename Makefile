@@ -15,6 +15,7 @@ SRCS = src/mx_work_with_process.c \
 	src/mx_buildin_funcs.c \
 	src/main.c \
 	src/mx_work_with_environ_and_variables.c \
+	src/mx_multi_line_enter.c \
 	\
 	src/parse_line_step/mx_shell_functions.c \
 	src/parse_line_step/mx_save_key_value.c \

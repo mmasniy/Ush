@@ -12,16 +12,17 @@ char *mx_ush_read_line(t_info *info) {
     mx_push_history_front(&info->history_pack->history, buffer);
     info->history_pack->pos = info->history_pack->history;
     mx_print_ush(info);
+    mx_custom_termios(info, STDIN_FILENO);
     while (1) {
         ch = mx_getchar();
-        if (!input_work(info, &buffer, &position, ch))
+        if (!input_work(info, &buffer, &position, ch)) {
+            mx_origin_termios(info, STDIN_FILENO);
             return buffer;
+        }
         mx_print_line(info, buffer, position);
         if ((size_t)position + 1 >= malloc_size(buffer)
-            || malloc_size(buffer) <= (size_t)mx_strlen(buffer) + 1) {
-            bufsize += USH_RL_BUFSIZE;
-            buffer = realloc(buffer, bufsize);
-        }
+            || malloc_size(buffer) <= (size_t)mx_strlen(buffer) + 1)
+            buffer = realloc(buffer, (bufsize += USH_RL_BUFSIZE));
     }
 }
 

@@ -75,7 +75,7 @@
 #define MX_CHECK2 "/-~'\".\\="
 #define TYPE "; | & &> <& &>> <<& < > << >> && ||"
 
-#define USH "u$h> "
+#define USH "u$h>"
 
 #define USH_RL_BUFSIZE  1024
 #define USH_TOK_BUFSIZE 64
@@ -246,6 +246,9 @@ typedef struct  s_info {
 }               t_info;
 
 // Functions --------------------------------------------------------------|
+
+// mx_multi_line_enter.c
+char *mx_multi_line_enter(t_info *info, char *key_word);
 
 // mx_print_errors.c
 int mx_print_error(char *error);

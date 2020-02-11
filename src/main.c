@@ -7,9 +7,7 @@ void run_shell(t_info *info) {
     t_tok *tok = NULL;
 
     while (1) {
-        mx_custom_termios(info, STDIN_FILENO);
         line = mx_ush_read_line(info);
-        mx_origin_termios(info, STDIN_FILENO);
         mx_check_history(info, line);
         mx_parse_line(info, &line);
         if (mx_work_w_toks(line, &tok) < 0)

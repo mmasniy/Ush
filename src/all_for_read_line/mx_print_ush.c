@@ -9,6 +9,7 @@ void mx_print_ush(t_info *info) {
     mx_printstr(" \033[1;35m");
     mx_printstr(info->name);
     mx_printstr(RESET);
+    write(1, " ", 1);
     if (info->PWD) {
     	mx_printstr("\033[1;29m");
     	write(1, "(", 1);
