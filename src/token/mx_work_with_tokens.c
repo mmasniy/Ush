@@ -27,39 +27,57 @@ void check_file_or_in(t_tok **lst) {
             mx_strdel(&tmp->next->token);
             tmp->next->token = mx_strdup(filename);
             tmp->next->type = 0;
-            tmp->next->prio = 10;
+            tmp->next->prio = 4;
             mx_strdel(&filename);
         }
         tmp = tmp->next;
     }
 }
 
-void mx_check_tok(t_tok **tok, char *str, int size, int i) {
-    char *number;
+void mx_add_num(t_tok **root, char *num, int i) {
+    mx_strdel(&(*root)->token);
+    if (num[i] == '>' && num[i + 1] == num[i] && num[i + 2] == '&') // >>&
+        (*root)->prio = 16;
+    else if (num[i] == num[i + 1] && (num[i] == '>' || num[i] == '<')) // >> || <<
+        (*root)->prio = (num[i] == '<' ? 8 : 9);
+    else if ((num[i] == '>' || num[i] == '<') && num[i + 1] == '&') // <& || >&
+        (*root)->prio = (num[i] == '<' ? 12 : 13);
+    else if ((num[i] == '>' || num[i] == '<')) // < || >
+        (*root)->prio = (num[i] == '<' ? 4 : 5);
+    (*root)->token = (i == 0 ? mx_strdup("1") : mx_strndup(num, i)); 
+}
 
-    if (*tok || str || size || i) {}
-        // printf("ya na meste\n");
+void mx_add_ampersand(t_tok **root, char *num) {
+    if (num[1] == num[2] && (num[1] == '>' || num[1] == '<'))
+        (*root)->prio = (num[1] == '>' ? 19 : 20); // &>> || &<<
+    else if (num[1] == '>' || num[1] == '<')
+        (*root)->prio = (num[1] == '<' ? 17 : 18); //&> || &<
+    (*root)->token = mx_strdup("&");
+}
+
+void mx_check_tok(t_tok **tok, char *str, int i) {
+    char *number = mx_strdup(str);
+
     while(mx_isdigit(str[i]))
         i++;
-    // mx_strdel(&(*tok)->token);
-    // (*tok)->token = mx_strndup(str, i);
-    if (str[i] == '>' || str[i] == '<') {
-
+    if (number[i] == '>' || number[i] == '<') {
+        mx_add_num(tok, number, i);
+        mx_strdel(&number);
+        return;
     }
-    else if (str[0] == '&' || str[1] != '&') {
-
+    else if (number[0] == '&' && number[1] != '&') {
+        mx_add_ampersand(tok, number);
+        mx_strdel(&number);
+        return;
     }
     mx_strdel(&number);
-    // printf("(*tok)->token = %s\n", (*tok)->token);
-    // printf("(*tok)->prio = %d\n", (*tok)->prio);
 }
 
 void mx_valid_red(t_tok **tok) {
     t_tok *tmp = *tok;
 
     while (tmp) {
-        printf("");
-        mx_check_tok(&tmp, tmp->token, mx_strlen(tmp->token), 0);
+        mx_check_tok(&tmp, tmp->token, 0);
         tmp = tmp->next;
     }
 }
@@ -84,9 +102,9 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // while (*tok && (*tok)->prev)
     //     *tok = (*tok)->prev;
     // mx_valid_red(tok);
-    // while (*tok && (*tok)->prev)
-    //     *tok = (*tok)->prev;
-    // // check_file_or_in(tok);
+    while (*tok && (*tok)->prev)
+        *tok = (*tok)->prev;
+    check_file_or_in(tok);
     // Вывод красивый, чтобы было понятнее
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);

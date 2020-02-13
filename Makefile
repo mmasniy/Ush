@@ -66,6 +66,9 @@ SRCS = src/mx_work_with_process.c \
 	src/tree/mx_work_with_tree.c \
 	src/tree/mx_trees_help_func.c \
 	src/tree/mx_tree_run.c \
+	src/tree/mx_tree_pipe.c \
+	src/tree/mx_tree_redirection.c \
+	src/tree/mx_tree_start_function.c \
 
 OBJS = $(SRCS:.c=.o)
 FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic# -g -fsanitize=address

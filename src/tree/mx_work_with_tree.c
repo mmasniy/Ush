@@ -96,14 +96,14 @@ if (tree && tok) {}
 
 // void mx_printf_strarr(char **str) {
 //     if (str) {}
-// 	// printf("%s[%s", GRN, RESET);
-// 	// for (int i = 0; str[i]; i++) {
-// 	// 		if (str[i + 1])
-// 	// 			printf("%s%s%s ",YEL, str[i], RESET);
-// 	// 		else
-// 	// 			printf("%s%s%s",YEL, str[i], RESET);
-// 	// }
-// 	// printf("%s]%s ",GRN, RESET);
+// 	printf("%s[%s", GRN, RESET);
+// 	for (int i = 0; str[i]; i++) {
+// 			if (str[i + 1])
+// 				printf("%s%s%s ",YEL, str[i], RESET);
+// 			else
+// 				printf("%s%s%s",YEL, str[i], RESET);
+// 	}
+// 	printf("%s]%s ",GRN, RESET);
 // }
 
 void printKLP(t_ast* root) {

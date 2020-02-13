@@ -46,7 +46,7 @@ char **mx_merge_command(t_tok *t) {
         new->type = 2;
     }
     cmd[i] = NULL;
-    mx_printf_strarr(cmd);
+    // mx_printf_strarr(cmd);
     return cmd;
 }
 

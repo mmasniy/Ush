@@ -461,13 +461,17 @@ char **mx_merge_op(t_tok *max);
 void mx_free_tree(t_ast *tree);
 
 //tree_run
-int mx_execute_binary_file(t_info *info, char **args);
-void mx_reset_fd(int *fd);
 int mx_tree_run(t_ast *tree, t_info *info, int f);
 int mx_run_pipe(t_ast *tree, t_info *info);
-int mx_redirection(int type);
 void mx_tok_to_tree(t_tok *tok, t_info *info);
-int mx_get_fd(char **red);
+
+//mx_tree_start_func
+int mx_start_function(t_ast *t, t_info *info, char **tree);
+int mx_execute_binary_file(t_ast *t, t_info *info, char **args);
+
+//mx_tree_redirection
+int mx_create_file(t_ast *t);
+int mx_redirection(int type);
 int mx_run_redirection(t_ast *t, t_info *i);
 
 //delete
