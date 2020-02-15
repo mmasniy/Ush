@@ -82,6 +82,19 @@ void mx_valid_red(t_tok **tok) {
     }
 }
 
+static void mx_check_numbers_in_str(char *tmp, int *size) {
+    int j = (*size) - 1;
+    int size1 = 0;
+
+    while (tmp[j] == '<' || tmp[j] == '>')
+        j--;
+    while (mx_isdigit(tmp[j])) {
+        size1++;
+        j--;
+    }
+    (*size) += size1;
+}
+
 int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
     int i = 0;
@@ -95,8 +108,10 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             mx_strdel(&tmp);
             return 0;
         }
-        if (*(tmp + i) != 32)
+        if (*(tmp + i) != 32) {
+            mx_check_numbers_in_str(tmp + i, &size);
             mx_add_tok(tok, tmp + i, size);
+        }
         i += size;
     }
     // while (*tok && (*tok)->prev)
@@ -104,7 +119,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // mx_valid_red(tok);
     while (*tok && (*tok)->prev)
         *tok = (*tok)->prev;
-    check_file_or_in(tok);
+    // check_file_or_in(tok);
     // Вывод красивый, чтобы было понятнее
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
@@ -122,7 +137,6 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
     mx_valid_red(tok);
-    // printf("\n\nDone!\n\n");
     mx_strdel(&tmp);
     return 1;
 }

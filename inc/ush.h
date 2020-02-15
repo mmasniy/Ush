@@ -467,12 +467,14 @@ void mx_tok_to_tree(t_tok *tok, t_info *info);
 
 //mx_tree_start_func
 int mx_start_function(t_ast *t, t_info *info, char **tree);
-int mx_execute_binary_file(t_ast *t, t_info *info, char **args);
+int mx_execute_binary_file(t_ast *t, t_info *info);
+int mx_start_red(t_ast *t, t_info *info, pid_t pid);
+int mx_execute_red(t_ast *t, t_info *info, pid_t pid);
 
 //mx_tree_redirection
 int mx_create_file(t_ast *t);
 int mx_redirection(int type);
-int mx_run_redirection(t_ast *t, t_info *i);
+int mx_run_redirection(t_ast *t, t_info *i, int fd, int flag);
 
 //delete
 void printKLP(t_ast* root);
@@ -480,3 +482,32 @@ void mx_printf_strarr(char **str);
 void print_all(t_ast *tree, t_tok *tok);
 
 #endif
+
+/*
+**╔═══════════════╗
+**║     TOKEN     ║
+**╠═══════════════╣
+**║ 10  Command   ║
+**║ 1   ";"       ║
+**║ 2   "&"       ║
+**║ 3   "|"       ║
+**║ 4   "<"       ║
+**║ 5   ">"       ║
+**║ 6   "||"      ║
+**║ 7   "&&"      ║
+**║ 8   "<<"      ║
+**║ 9   ">>"      ║
+**║ 11  "<>"      ║
+**║ 12  "<&"      ║
+**║ 13  ">&"      ║
+**║ 16  ">>&"     ║
+**║ 17  "&>"      ║
+**║ 18  "&<"      ║
+**║ 19  "&>>"     ║
+**║ 20  "&<<"     ║
+**║ 15  filein    ║
+**║               ║
+**║               ║
+**║               ║
+**╚═══════════════╝
+*/

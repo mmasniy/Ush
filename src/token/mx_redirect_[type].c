@@ -2,7 +2,7 @@
 
 int mx_check(char *token);
 int mx_print_error(char *error);
-
+//auditor
 int mx_redirect_int(char *s, int i) {
     if (mx_isdigit(s[i])) {
         while (mx_isdigit(s[i]))

@@ -18,8 +18,6 @@ int mx_tree_run(t_ast *tree, t_info *info, int f) {
         if (!(f = mx_tree_run(tree->left, info, 0)))
             f = mx_tree_run(tree->right, info, 0);
     }
-    // else if (tree && mx_redirection(tree->type))
-    //     f = mx_run_redirection(tree, info);
     return f;
 }
 
