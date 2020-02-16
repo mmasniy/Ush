@@ -82,18 +82,18 @@ void mx_valid_red(t_tok **tok) {
     }
 }
 
-static void mx_check_numbers_in_str(char *tmp, int *size) {
-    int j = (*size) - 1;
-    int size1 = 0;
+// static void mx_check_numbers_in_str(char *tmp, int *size) {
+//     int j = (*size) - 1;
+//     int size1 = 0;
 
-    while (tmp[j] == '<' || tmp[j] == '>')
-        j--;
-    while (mx_isdigit(tmp[j])) {
-        size1++;
-        j--;
-    }
-    (*size) += size1;
-}
+//     while (tmp[j] == '<' || tmp[j] == '>')
+//         j--;
+//     while (mx_isdigit(tmp[j])) {
+//         size1++;
+//         j--;
+//     }
+//     (*size) += size1;
+// }
 
 int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
@@ -109,7 +109,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             return 0;
         }
         if (*(tmp + i) != 32) {
-            mx_check_numbers_in_str(tmp + i, &size);
+            // mx_check_numbers_in_str(tmp + i, &size);
             mx_add_tok(tok, tmp + i, size);
         }
         i += size;

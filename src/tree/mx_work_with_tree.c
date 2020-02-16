@@ -3,7 +3,36 @@
 // void PrintLKP(t_ast *Tree);
 void printKLP(t_ast* root);
 
-t_ast *mx_start_tree(t_tok *tok) {
+static t_ast *valid2(t_ast **t, t_info* i) {
+	i->flag_for_valid++;
+	mx_error_mes_tree((*t));
+	if (malloc_size(*t)) {
+		mx_free_tree(*t);
+		*t = NULL;
+	}
+	return *t;
+}
+
+t_ast *mx_valid_tree(t_ast **t, t_tok *tok, t_info *i) {
+	if ((*t)) {
+		if (i->flag_for_valid == 0) {
+			if ((*t)->type > 1 && (*t)->type < 21 && (*t)->type != 10
+				&& (*t)->type != 15) {
+				if (!(*t)->right || !(*t)->left
+					|| (((*t)->right->type != 10) && (*t)->right->type != 15
+					&& (((*t)->left->type != 10))))
+					return valid2(t, i);
+			}
+		}
+		if ((*t)->left)
+			mx_valid_tree(&(*t)->left, tok, i);
+		if ((*t)->right)
+			mx_valid_tree(&(*t)->right, tok, i);
+	}
+	return *t;
+}
+
+t_ast *mx_start_tree(t_tok *tok, t_info *i) {
 	t_tok *tmp = mx_search_first(tok);
 	t_ast *tree = mx_create_ast(tmp);
 	if (tmp->prio == 10 || tmp->prio == 15) {
@@ -20,7 +49,7 @@ t_ast *mx_start_tree(t_tok *tok) {
 			tree->left->father = tree;
 	}
 	print_all(tree, tok);
-	return tree;
+	return mx_valid_tree(&tree, tok, i);
 }
 
 t_ast *mx_create_leaf(t_tok *max, int side) {
@@ -94,17 +123,17 @@ if (tree && tok) {}
  //    printf("\n");
 }
 
-// void mx_printf_strarr(char **str) {
-//     if (str) {}
-// 	printf("%s[%s", GRN, RESET);
-// 	for (int i = 0; str[i]; i++) {
-// 			if (str[i + 1])
-// 				printf("%s%s%s ",YEL, str[i], RESET);
-// 			else
-// 				printf("%s%s%s",YEL, str[i], RESET);
-// 	}
-// 	printf("%s]%s ",GRN, RESET);
-// }
+void mx_printf_strarr(char **str) {
+    if (str) {}
+	// printf("%s[%s", GRN, RESET);
+	// for (int i = 0; str[i]; i++) {
+	// 		if (str[i + 1])
+	// 			printf("%s%s%s ",YEL, str[i], RESET);
+	// 		else
+	// 			printf("%s%s%s",YEL, str[i], RESET);
+	// }
+	// printf("%s]%s ",GRN, RESET);
+}
 
 void printKLP(t_ast* root) {
     // int i = 0;

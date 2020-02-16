@@ -1,7 +1,5 @@
 #include "../../inc/ush.h"
 
-void mx_free_tree(t_ast *tree);
-
 t_tok *mx_search_first(t_tok *tok) {
     t_tok *max = tok;
 

@@ -9,9 +9,10 @@ void run_shell(t_info *info) {
     while (1) {
         line = mx_ush_read_line(info);
         mx_check_history(info, line);
+        if (info->ctrl_c)
+            exit(0);
         mx_parse_line(info, &line);
-        if (mx_work_w_toks(line, &tok) < 0)
-            printf("error\n");
+        mx_work_w_toks(line, &tok);
         mx_tok_to_tree(tok, info);
         info->args = mx_strsplit(line, ' ');
         // if (mx_strlen(line) > 0) {
@@ -21,12 +22,11 @@ void run_shell(t_info *info) {
         // }
         if (malloc_size(line))
             free(line);
-        if (info->ctrl_c)
-            exit(0);
         mx_del_strarr(&info->args);
         info->ctrl_d = 0;
         info->ctrl_c = 0;
         mx_free_toks(&tok);
+        info->status = 0;
     }
 }
 

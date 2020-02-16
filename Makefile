@@ -22,12 +22,15 @@ SRCS = src/mx_work_with_process.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
 	src/parse_line_step/mx_search_and_change_tilde.c \
+	src/parse_line_step/mx_skip_all_quotes.c \
+	src/parse_line_step/mx_substitutions.c \
 	\
 	src/help_functions/mx_str_head.c \
 	src/help_functions/mx_str_char_in_str.c \
 	src/help_functions/mx_print_char_loop.c \
 	src/help_functions/mx_del_strarr_elem.c \
 	src/help_functions/mx_arr_copy.c \
+	src/help_functions/mx_get_char_index_without_symbols.c \
 	\
 	src/builtins/mx_ush_which.c \
 	src/builtins/mx_ush_unset.c \

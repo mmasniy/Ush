@@ -17,22 +17,22 @@ int mx_create_file(t_ast *t) {
     return -1;
 }
 
-int mx_run_redirection(t_ast *t, t_info *i, int fd, pid_t pid) {
-    if (fd == -1 && (t->type == 13 || t->type == 16)) {
+int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
+    if (i->fd_r == -1 && (t->type == 13 || t->type == 16)) {
         close(mx_atoi(t->command[0]));
     }
-    else if (fd > 0 && (t->type == 17 || t->type == 19)){
-        dup2(fd, 0);
-        dup2(fd, 1);
-        dup2(fd, 2);
+    else if (i->fd_r > 0 && (t->type == 17 || t->type == 19)){
+        dup2(i->fd_r, 0);
+        dup2(i->fd_r, 1);
+        dup2(i->fd_r, 2);
     }
-    else if (fd > 0 && (t->type == 5 || t->type == 9 || t->type == 13)) {
-        dup2(fd, mx_atoi(t->command[0]));
+    else if (i->fd_r > 0 && (t->type == 5 || t->type == 9 || t->type == 13)) {
+        dup2(i->fd_r, mx_atoi(t->command[0]));
         if (mx_atoi(t->command[0]) != 1)
             close(1);
     }
-    else if (fd > 0 && t->type == 4){
-        dup2(fd, 0);
+    else if (i->fd_r > 0 && t->type == 4){
+        dup2(i->fd_r, 0);
     }
     return (mx_start_red(t->left, i, pid));
 }

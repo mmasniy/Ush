@@ -80,12 +80,12 @@
 #define USH_RL_BUFSIZE  1024
 #define USH_TOK_BUFSIZE 64
 #define USH_TOK_DELIM   " \t\r\n\a"
-#define RED             "\x1B[31m"
-#define GRN             "\x1B[32m"
+#define RED             "\x1B[1;31m"
+#define GRN             "\x1B[1;32m"
 #define RESET           "\x1B[0m"
-#define YEL             "\x1B[33m"
-#define BLU             "\x1B[34m"
-#define MAG             "\x1B[35m"
+#define YEL             "\x1B[1;33m"
+#define BLU             "\x1B[1;34m"
+#define MAG             "\x1B[1;35m"
 
 #define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 
@@ -93,6 +93,7 @@
 
 #define EXIT_FAILURE 1
 #define TERM_ENV_NOT_EXIST "TERM variable in env not exist"
+#define ERROR_PARSE_TREE "u$h: syntax error near after token `"
 
 // Structures
 
@@ -242,26 +243,40 @@ typedef struct  s_info {
 
     char *pwd;
     char *oldpwd;
+    int status;
+    char quotes;
 
+    //fd
+    int fd[3];
+    int red;
+    int fd_r;
+
+    //for add out in file
+    int file;
+    int fd_f;
+    char *path_f;
+    int flag_for_valid;
 }               t_info;
 
 // Functions --------------------------------------------------------------|
 
-// mx_multi_line_enter.c
-char *mx_multi_line_enter(t_info *info, char *key_word);
+// All parse --------------------------------|
 
-// mx_print_errors.c
-int mx_print_error(char *error);
+// mx_substitutions.c
+void mx_recursion_substitutions(t_info *info, char **line
+    , int start, int finish);
+bool mx_execute_substitutions(t_info *info, char **line);
 
-// mx_buildin_funcs.c
-int mx_run_buildin(t_info *info);
-int mx_check_buildin(t_info *info, bool exec);
+// mx_skip_all_quotes.c
+bool mx_skip_single_quotes(char *check, int *pos);
+bool mx_skip_double_quotes(char *check, int *pos);
+bool mx_skip_substitutions(char *check, int *pos);
 
 // mx_shell_functions.c
 void mx_shell_functions(t_info *info, char **line);
 
 // mx_search_and_change_tilde.c
-void mx_tilde_search(char **line, char *craft);
+int mx_tilde_work(t_info *info, char **line, char *craft);
 
 // mx_find_key_and_insert_value.c
 void mx_insert_value(t_info *info, char **line, char *craft);
@@ -272,6 +287,18 @@ void mx_find_and_add_key_value(t_info *info, char **line, char *craft);
 // mx_parse_line.c
 void mx_search_slash(char **line);
 void mx_parse_line(t_info *info, char **line);
+
+// ------------------------------------------|
+
+// mx_multi_line_enter.c
+char *mx_multi_line_enter(t_info *info, char *key_word);
+
+// mx_print_errors.c
+void mx_print_error(char *error, char *arg);
+
+// mx_buildin_funcs.c
+int mx_run_buildin(t_info *info);
+int mx_check_buildin(t_info *info, bool exec);
 
 // mx_funcs_for_cd.c
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
@@ -304,6 +331,9 @@ t_export *mx_search_key_in_list(t_export *list, char *key);
 t_export *mx_create_new_export(char *key, char *value);
 void mx_push_export_back(t_export **list, char *key, char *value);
 void mx_pop_export_front(t_export **head);
+
+// mx_get_char_index_without_symbols.c
+int mx_char_block(const char *str, char prev, char c, char next);
 
 // mx_del_strarr_elem.c
 void mx_del_strarr_elem(char **str, int index);
@@ -375,6 +405,7 @@ bool mx_str_head(const char *where, const char *what);
 
 // mx_error_message.c
 void mx_error_message(char *str);
+void mx_error_mes_tree(t_ast *t);
 
 // mx_winsize.c
 void mx_winsize(t_info *info);
@@ -450,7 +481,7 @@ int mx_redirect_str(char *s, int i);
 //mx_work_with_tree.c
 int mx_check_op(int p);
 t_ast *mx_build_ast(t_tok *max);
-t_ast *mx_start_tree(t_tok *tok);
+t_ast *mx_start_tree(t_tok *tok, t_info *i);
 t_ast *mx_create_leaf(t_tok *max, int side);
 
 //mx_trees_help_func.c
@@ -467,20 +498,20 @@ void mx_tok_to_tree(t_tok *tok, t_info *info);
 
 //mx_tree_start_func
 int mx_start_function(t_ast *t, t_info *info, char **tree);
-int mx_execute_binary_file(t_ast *t, t_info *info);
+void mx_execute_binary_file(t_ast *t, t_info *info);
 int mx_start_red(t_ast *t, t_info *info, pid_t pid);
-int mx_execute_red(t_ast *t, t_info *info, pid_t pid);
+void mx_execute_red(t_ast *t, t_info *info, pid_t pid);
+void mx_exec_for_file(t_ast *t, t_info *i);
 
 //mx_tree_redirection
 int mx_create_file(t_ast *t);
 int mx_redirection(int type);
-int mx_run_redirection(t_ast *t, t_info *i, int fd, int flag);
+int mx_run_redirection(t_ast *t, t_info *i, int flag);
 
 //delete
 void printKLP(t_ast* root);
 void mx_printf_strarr(char **str);
 void print_all(t_ast *tree, t_tok *tok);
-
 #endif
 
 /*
