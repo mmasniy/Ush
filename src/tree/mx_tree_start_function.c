@@ -24,27 +24,19 @@ void mx_execute_binary_file(t_ast *t, t_info *i) {
     pid = fork();
     if (pid == 0) {
         if (mx_redirection(t->type)){
-            if (mx_redirection(t->type)
-                && (i->fd_r = mx_create_file(t)) == -1) {
-                if (t->right->command[0][0] != '-')
-                    i->fd_r = mx_atoi(t->right->command[0]);
-                else
-                    i->fd_r = -1;
-            }
+            i->fd_r = mx_create_file(t);
             mx_run_redirection(t, i, pid);
         }
         else {
             path = mx_find_in_PATH(i->paths, t->command[0], 1);
             if (execv(path, t->command) == -1){
-                mx_print_error(" command not found", t->command[0]);
-                exit(1);
+                mx_print_error(MX_ER, t->command[0]);
             }
             exit(EXIT_FAILURE);
         }
     }
     else if (pid < 0){
-        mx_print_error(" command not found", t->command[0]);
-        exit(1);
+        mx_print_error(MX_ER, t->command[0]);
     }
     else {
         int status;
@@ -67,16 +59,16 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
 
     if (pid == 0) {
             path = mx_find_in_PATH(info->paths, t->command[0], 1);
-            if (execv(path, t->command) == -1) {
-                mx_print_error(" command not found", t->command[0]);
-                exit(1);
+            if (info->fd_r < 0){
+                mx_printerr("file not found!\n"); // create func for this case
+            }
+            else if (execv(path, t->command) == -1) {
+                mx_print_error(MX_ER, t->command[0]);
             }
             exit(EXIT_FAILURE);
     }
-    else if (pid < 0) {
-        mx_print_error(" command not found", t->command[0]);
-        exit(1);
-    }
+    else if (pid < 0)
+            mx_print_error(MX_ER, t->command[0]);
     else {
         int status;
         pid_t wpid = waitpid(pid, &status, WUNTRACED); 
@@ -85,4 +77,5 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
             && !WIFSIGNALED(status))
             wpid = waitpid(pid, &status, WUNTRACED);
     }
+    mx_strdel(&path);
 }

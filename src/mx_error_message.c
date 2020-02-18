@@ -44,6 +44,8 @@ static char *operators1(int type) {
 }
 
 static char *operators2(int type) {
+	if (type == 1)
+		return ";";
 	if (type == 12)
 		return "<&";
 	if (type == 13)

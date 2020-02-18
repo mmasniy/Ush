@@ -14,13 +14,15 @@ static t_ast *valid2(t_ast **t, t_info* i, int type) {
 }
 
 t_ast *mx_valid_tree(t_ast **t, t_tok *tok, t_info *i) {
+	if ((*t)->type == 1 && !(*t)->right)
+		(*t) = (*t)->left;
 	if (i->type_e == 0)
 		i->type_e = (*t)->type;
 	if ((*t)) {
 		if ((*t)->left)
 			mx_valid_tree(&(*t)->left, tok, i);
 		if (i->flag_for_valid == 0) {
-			if ((*t)->type > 1 && (*t)->type < 21 && (*t)->type != 10
+			if ((*t)->type > 0 && (*t)->type < 21 && (*t)->type != 10
 				&& (*t)->type != 15) {
 				if (!(*t)->right || !(*t)->left)
 					return valid2(t, i, i->type_e);

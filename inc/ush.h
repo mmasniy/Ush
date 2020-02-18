@@ -1,6 +1,7 @@
 #ifndef USH_H
 #define USH_H
 
+
 #include <stdarg.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -94,7 +95,7 @@
 #define EXIT_FAILURE 1
 #define TERM_ENV_NOT_EXIST "TERM variable in env not exist"
 #define ERROR_PARSE_TREE "u$h: syntax error near after token `"
-
+#define MX_ER ": command not found"
 // Structures
 
 enum e_keys{
@@ -210,6 +211,18 @@ typedef struct s_history_pack {
     struct s_history *last;
     struct s_history *history;
 }               t_history_pack;
+
+typedef struct s_fg {
+    char        **cmd;  // name proc
+    pid_t       pid;    // pid proc
+    int         n;      //number proc
+}               t_fg;
+
+typedef struct s_alias {
+    char        *name;     // mk
+    char        *value;    // make && ./ush
+    char        *all_info; // mk=make && ./ush
+}               t_alias;
 
 typedef struct  s_info {
     char *name;
