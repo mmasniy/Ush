@@ -28,6 +28,7 @@ void mx_tok_to_tree(t_tok *tok, t_info *i) {
         return;
     i->flag_for_valid = 0;
     i->type_e = 0;
+    i->file_not_f = 0;
     i->fd_r = -2;
     i->fd[0] = dup(0);
     i->fd[1] = dup(1);

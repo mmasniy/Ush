@@ -7,7 +7,7 @@ int mx_redirection(int type) {
     return 0;
 }
 
-int mx_create_file(t_ast *t) {
+int mx_create_file(t_ast *t, t_info *i) {
     int fd;
 
     if (t->type == 5 || t->type == 17)
@@ -15,11 +15,24 @@ int mx_create_file(t_ast *t) {
     if (t->type == 9 || t->type == 19)
         return (open(t->right->command[0], O_WRONLY | O_APPEND | O_CREAT, 0600));
     if (t->type == 4) {
-        fd = (open (t->right->command[0], O_RDONLY, 0600));
+        if (i->fname)
+            mx_strdel(&i->fname);
+        i->fname = mx_strdup(t->right->command[0]);
+        fd = open (t->right->command[0], O_RDONLY, 0600);
         return fd;
     }
     return -1;
 }
+
+/*
+в ush_ было, обрати внимание
+if (t->type == 4 && !path) {
+        mx_strdel(&path);
+        return (open (t->right->command[0],
+            O_RDONLY | O_CREAT, 0600));
+    }
+    mx_strdel(&path);
+*/
 
 int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
     if (i->fd_r == -1 && (t->type == 13 || t->type == 16)) {

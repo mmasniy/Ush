@@ -10,6 +10,13 @@ void mx_error_message(char *str) {
     mx_printerr(RESET);
 }
 
+void mx_file_not_found(char *filename) {
+    mx_printerr("u$h:");
+    mx_printerr(MX_NOT_FOUND);
+    mx_printerr(filename);
+    mx_printerr("\n");
+}
+
 void mx_error_mes_tree(int type) {
     char *str;
 

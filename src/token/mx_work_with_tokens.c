@@ -10,30 +10,6 @@ void mx_free_lst(t_tok *lst) {
     free(lst);
 }
 
-void check_file_or_in(t_tok **lst) {
-    t_tok *tmp = *lst;;
-    char *filename;
-
-    if (!tmp)
-        return ;
-    while (tmp && tmp->next && tmp->next->next){
-        if ((tmp->next->prio == 8 || tmp->next->prio == 4)
-            && tmp->next->next){
-            // tmp->next->type == 10 ?
-            // filename = mx_strdup(mx_run_heredoc(tmp->next->next->content)) : 0;
-            tmp->next->prio == 4 ?
-            filename = mx_strdup(tmp->next->next->token) : 0;
-            mx_free_lst(tmp->next->next);
-            mx_strdel(&tmp->next->token);
-            tmp->next->token = mx_strdup(filename);
-            tmp->next->type = 0;
-            tmp->next->prio = 4;
-            mx_strdel(&filename);
-        }
-        tmp = tmp->next;
-    }
-}
-
 void mx_add_num(t_tok **root, char *num, int i) {
     mx_strdel(&(*root)->token);
     if (num[i] == '>' && num[i + 1] == num[i] && num[i + 2] == '&') // >>&
