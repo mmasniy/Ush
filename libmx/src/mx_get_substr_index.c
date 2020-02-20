@@ -1,5 +1,5 @@
 #include "libmx.h"
-#include <stdio.h>
+
 int mx_get_substr_index(const char *str, const char *sub) {
 	int i = 0;
 	int len = 0;
@@ -12,7 +12,7 @@ int mx_get_substr_index(const char *str, const char *sub) {
 					return i;
 			str++;
 		}
-		if (!str[i])
+		if (!str)
 			return -1;
 	}
 	return -2;

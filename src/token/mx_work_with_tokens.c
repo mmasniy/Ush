@@ -10,30 +10,6 @@ void mx_free_lst(t_tok *lst) {
     free(lst);
 }
 
-void check_file_or_in(t_tok **lst) {
-    t_tok *tmp = *lst;;
-    char *filename;
-
-    if (!tmp)
-        return ;
-    while (tmp && tmp->next && tmp->next->next){
-        if ((tmp->next->prio == 8 || tmp->next->prio == 4)
-            && tmp->next->next){
-            // tmp->next->type == 10 ?
-            // filename = mx_strdup(mx_run_heredoc(tmp->next->next->content)) : 0;
-            tmp->next->prio == 4 ?
-            filename = mx_strdup(tmp->next->next->token) : 0;
-            mx_free_lst(tmp->next->next);
-            mx_strdel(&tmp->next->token);
-            tmp->next->token = mx_strdup(filename);
-            tmp->next->type = 0;
-            tmp->next->prio = 4;
-            mx_strdel(&filename);
-        }
-        tmp = tmp->next;
-    }
-}
-
 void mx_add_num(t_tok **root, char *num, int i) {
     mx_strdel(&(*root)->token);
     if (num[i] == '>' && num[i + 1] == num[i] && num[i + 2] == '&') // >>&
@@ -82,19 +58,6 @@ void mx_valid_red(t_tok **tok) {
     }
 }
 
-// static void mx_check_numbers_in_str(char *tmp, int *size) {
-//     int j = (*size) - 1;
-//     int size1 = 0;
-
-//     while (tmp[j] == '<' || tmp[j] == '>')
-//         j--;
-//     while (mx_isdigit(tmp[j])) {
-//         size1++;
-//         j--;
-//     }
-//     (*size) += size1;
-// }
-
 int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
     int i = 0;
@@ -108,19 +71,14 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             mx_strdel(&tmp);
             return 0;
         }
-        if (*(tmp + i) != 32) {
+        if (*(tmp + i) != 32 && (i == 0 || *(tmp + i - 1) != '\\')) {
             // mx_check_numbers_in_str(tmp + i, &size);
             mx_add_tok(tok, tmp + i, size);
         }
         i += size;
     }
-    // while (*tok && (*tok)->prev)
-    //     *tok = (*tok)->prev;
-    // mx_valid_red(tok);
     while (*tok && (*tok)->prev)
         *tok = (*tok)->prev;
-    // check_file_or_in(tok);
-    // Вывод красивый, чтобы было понятнее
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
     // for (t_tok *temp = *tok; temp; temp = temp->next) {
@@ -136,6 +94,25 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // }
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
+    // printf("****************************\n");
+    mx_del_slash_and_quotes_in_list(tok);
+    // printf("****************************\n");
+    // Вывод красивый, чтобы было понятнее
+    printf("%slist: %s\n", GRN, RESET);
+    printf("%s---------------------------------------------%s\n", MAG, RESET);
+    for (t_tok *temp = *tok; temp; temp = temp->next) {
+         printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
+    }
+    printf("\n\n");
+    for (t_tok *temp = *tok; temp; temp = temp->next) {
+         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
+    }
+    printf("\n\n");
+    for (t_tok *temp = *tok; temp; temp = temp->next) {
+         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
+    }
+    printf("\n%s---------------------------------------------%s\n", MAG, RESET);
+    printf("\n");
     mx_valid_red(tok);
     mx_strdel(&tmp);
     return 1;

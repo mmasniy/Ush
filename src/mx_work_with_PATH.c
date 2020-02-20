@@ -22,16 +22,17 @@ char *mx_find_in_PATH(char **paths, char *word, bool full) {
     struct dirent *d = NULL;
     char *all_paths = NULL;
     char *tmp;
-
+// fprintf(stderr, "=========================\n");
     for (int i = 0; paths[i]; i++) {
         f = opendir(paths[i]);
-
         if (f) {
             while ((d = readdir(f)))
                 if (full) {
                     if (mx_strcmp(d->d_name, word) == 0) {
+                        tmp = mx_strjoin(paths[i], d->d_name);
                         closedir(f);
-                        return mx_strjoin(paths[i], d->d_name);
+                        // fprintf(stderr, "+++++++++++++++++++++++\n");
+                        return tmp;
                     }
                 }
                 else
@@ -44,5 +45,6 @@ char *mx_find_in_PATH(char **paths, char *word, bool full) {
             closedir(f);
         }
     }
+    // fprintf(stderr, "--------------------------\n");
     return all_paths;
 }

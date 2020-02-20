@@ -1,4 +1,4 @@
-#include "../inc/ush.h"
+#include "../../inc/ush.h"
 
 char *mx_up_to_one(char *str) {
     if (str) {

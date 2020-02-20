@@ -3,9 +3,10 @@
 // void PrintLKP(t_ast *Tree);
 void printKLP(t_ast* root);
 
-static t_ast *valid2(t_ast **t, t_info* i) {
+static t_ast *valid2(t_ast **t, t_info* i, int type) {
 	i->flag_for_valid++;
-	mx_error_mes_tree((*t));
+	i->file_not_f = 1;
+	mx_error_mes_tree(type);
 	if (malloc_size(*t)) {
 		mx_free_tree(*t);
 		*t = NULL;
@@ -14,22 +15,24 @@ static t_ast *valid2(t_ast **t, t_info* i) {
 }
 
 t_ast *mx_valid_tree(t_ast **t, t_tok *tok, t_info *i) {
+	if ((*t)->type == 1 && !(*t)->right)
+		(*t) = (*t)->left;
+	if (i->type_e == 0)
+		i->type_e = (*t)->type;
 	if ((*t)) {
-		if (i->flag_for_valid == 0) {
-			if ((*t)->type > 1 && (*t)->type < 21 && (*t)->type != 10
-				&& (*t)->type != 15) {
-				if (!(*t)->right || !(*t)->left
-					|| (((*t)->right->type != 10) && (*t)->right->type != 15
-					&& (((*t)->left->type != 10))))
-					return valid2(t, i);
-			}
-		}
 		if ((*t)->left)
 			mx_valid_tree(&(*t)->left, tok, i);
+		if (i->flag_for_valid == 0) {
+			if ((*t)->type > 0 && (*t)->type < 21 && (*t)->type != 10
+				&& (*t)->type != 15) {
+				if (!(*t)->right || !(*t)->left)
+					return valid2(t, i, i->type_e);
+			}
+		}
 		if ((*t)->right)
 			mx_valid_tree(&(*t)->right, tok, i);
 	}
-	return *t;
+	return (*t);
 }
 
 t_ast *mx_start_tree(t_tok *tok, t_info *i) {
@@ -48,6 +51,7 @@ t_ast *mx_start_tree(t_tok *tok, t_info *i) {
 		if (tree->left)
 			tree->left->father = tree;
 	}
+	if (i) {}
 	print_all(tree, tok);
 	return mx_valid_tree(&tree, tok, i);
 }
@@ -100,61 +104,61 @@ int mx_check_op(int p) {
 
 void print_all(t_ast *tree, t_tok *tok) {
 if (tree && tok) {}
-	// printf("%sTree: %s\n", GRN, RESET);
- //    printf("%s---------------------------------------------%s\n", MAG, RESET);
-	// printKLP(tree);
-	// printf("\n%s---------------------------------------------%s\n", MAG, RESET);
- //    printf("\n");
+	printf("%sTree: %s\n", GRN, RESET);
+    printf("%s---------------------------------------------%s\n", MAG, RESET);
+	printKLP(tree);
+	printf("\n%s---------------------------------------------%s\n", MAG, RESET);
+    printf("\n");
 
-	// printf("%slist: %s\n", GRN, RESET);
- //    printf("%s---------------------------------------------%s\n", MAG, RESET);
- //    for (t_tok *temp = tok; temp; temp = temp->next) {
- //         printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
- //    }
- //    printf("\n\n");
- //    for (t_tok *temp = tok; temp; temp = temp->next) {
- //         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
- //    }
- //    printf("\n\n");
- //    for (t_tok *temp = tok; temp; temp = temp->next) {
- //         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
- //    }
- //    printf("\n%s---------------------------------------------%s\n", MAG, RESET);
- //    printf("\n");
+	printf("%slist: %s\n", GRN, RESET);
+    printf("%s---------------------------------------------%s\n", MAG, RESET);
+    for (t_tok *temp = tok; temp; temp = temp->next) {
+         printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
+    }
+    printf("\n\n");
+    for (t_tok *temp = tok; temp; temp = temp->next) {
+         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
+    }
+    printf("\n\n");
+    for (t_tok *temp = tok; temp; temp = temp->next) {
+         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
+    }
+    printf("\n%s---------------------------------------------%s\n", MAG, RESET);
+    printf("\n");
 }
 
 void mx_printf_strarr(char **str) {
     if (str) {}
-	// printf("%s[%s", GRN, RESET);
-	// for (int i = 0; str[i]; i++) {
-	// 		if (str[i + 1])
-	// 			printf("%s%s%s ",YEL, str[i], RESET);
-	// 		else
-	// 			printf("%s%s%s",YEL, str[i], RESET);
-	// }
-	// printf("%s]%s ",GRN, RESET);
+	printf("%s[%s", GRN, RESET);
+	for (int i = 0; str[i]; i++) {
+			if (str[i + 1])
+				printf("%s%s%s \n",YEL, str[i], RESET);
+			else
+				printf("%s%s%s",YEL, str[i], RESET);
+	}
+	printf("%s]%s ",GRN, RESET);
 }
 
 void printKLP(t_ast* root) {
-    // int i = 0;
+    int i = 0;
 
     if (root) {
-    	// if (i == 0)
-    	// 	printf("%sFATHER:%s\n", MAG, RESET);
-    	// else
-    	// 	printf("%sCHILD:%s\n", MAG, RESET);
-    	// i++;
-    	// printf("%scommand:%s\n", RED, RESET);
-     //    mx_printf_strarr(root->command);
-     //    printf("\n");
-     //    printf("%stype:%s %s%d%s\n", RED, RESET, YEL, root->type, RESET);
-     //    if (root->father)
-     //    	printf("%sfather->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->father->command[0], RESET, GRN, RESET);
-     //    if (root->left)
-     //    	printf("%sleft->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->left->command[0], RESET, GRN, RESET);
-    	// if (root->right)
-     //    printf("%sright->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->right->command[0], RESET, GRN, RESET);
-     //    printKLP(root->left);
-     //    printKLP(root->right);
+    	if (i == 0)
+    		printf("%sFATHER:%s\n", MAG, RESET);
+    	else
+    		printf("%sCHILD:%s\n", MAG, RESET);
+    	i++;
+    	printf("%scommand:%s\n", RED, RESET);
+        mx_printf_strarr(root->command);
+        printf("\n");
+        printf("%stype:%s %s%d%s\n", RED, RESET, YEL, root->type, RESET);
+        if (root->father)
+        	printf("%sfather->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->father->command[0], RESET, GRN, RESET);
+        if (root->left)
+        	printf("%sleft->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->left->command[0], RESET, GRN, RESET);
+    	if (root->right)
+        printf("%sright->%s%s[%s%s%s%s%s]%s\n\n", MAG, RESET, GRN, RESET, YEL, root->right->command[0], RESET, GRN, RESET);
+        printKLP(root->left);
+        printKLP(root->right);
     }
 }

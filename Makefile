@@ -3,21 +3,17 @@ SRCS = src/mx_work_with_process.c \
 	src/mx_work_with_termios.c \
 	src/mx_winsize.c \
 	src/mx_work_with_PATH.c \
-	src/mx_up_to_one.c \
 	src/mx_signal.c \
 	src/mx_split_line.c \
 	src/mx_info_prepare.c \
 	src/mx_print_errors.c \
 	src/mx_error_message.c \
-	src/mx_execute_and_launch_ush.c \
 	src/mx_create_strarr.c \
-	src/mx_create_job.c \
 	src/mx_buildin_funcs.c \
 	src/main.c \
-	src/mx_work_with_environ_and_variables.c \
-	src/mx_multi_line_enter.c \
 	\
 	src/parse_line_step/mx_shell_functions.c \
+	src/parse_line_step/mx_work_with_environ_and_variables.c \
 	src/parse_line_step/mx_save_key_value.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
@@ -26,15 +22,17 @@ SRCS = src/mx_work_with_process.c \
 	src/parse_line_step/mx_substitutions.c \
 	\
 	src/help_functions/mx_str_head.c \
+	src/help_functions/mx_up_to_one.c \
 	src/help_functions/mx_str_char_in_str.c \
 	src/help_functions/mx_print_char_loop.c \
 	src/help_functions/mx_del_strarr_elem.c \
 	src/help_functions/mx_arr_copy.c \
 	src/help_functions/mx_get_char_index_without_symbols.c \
+	src/help_functions/mx_replace_symbols_pack.c \
+	src/help_functions/mx_size_arr_and_strarr_to_str.c \
 	\
 	src/builtins/mx_ush_which.c \
 	src/builtins/mx_ush_unset.c \
-	src/builtins/mx_ush_jobs.c \
 	src/builtins/mx_ush_pwd.c \
 	src/builtins/mx_ush_help.c \
 	src/builtins/mx_ush_history.c \
@@ -72,6 +70,8 @@ SRCS = src/mx_work_with_process.c \
 	src/tree/mx_tree_pipe.c \
 	src/tree/mx_tree_redirection.c \
 	src/tree/mx_tree_start_function.c \
+	src/tree/mx_start_redirection.c \
+	src/tree/mx_alias.c \
 
 OBJS = $(SRCS:.c=.o)
 FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic# -g -fsanitize=address

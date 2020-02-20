@@ -15,11 +15,6 @@ void run_shell(t_info *info) {
         mx_work_w_toks(line, &tok);
         mx_tok_to_tree(tok, info);
         info->args = mx_strsplit(line, ' ');
-        // if (mx_strlen(line) > 0) {
-        //     t_job *new_job = (t_job *) malloc(sizeof(t_job)); //create new job
-        //     new_job = mx_create_job(info, info->args);
-        //     status = mx_ush_execute(info, new_job);
-        // }
         if (malloc_size(line))
             free(line);
         mx_del_strarr(&info->args);

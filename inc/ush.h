@@ -58,13 +58,6 @@
 #define PROC_FILTER_DONE 1
 #define PROC_FILTER_REMAINING 2
 
-//  JOB STATUS
-#define STATUS_RUN "running"
-#define STATUS_DON "done"
-#define STATUS_SUS "suspended"
-#define STATUS_CON "continued"
-#define STATUS_TER "terminated"
-
 //*****
 
 /*
@@ -72,7 +65,7 @@
 */
 
 #define MX_CHECK "-_/~.:\"\\"
-#define MX_CHECK2 "/-~'\".\\="
+#define MX_CHECK2 "-_/~:'\".\\="
 #define TYPE "; | & &> <& &>> <<& < > << >> && ||"
 
 #define USH "u$h>"
@@ -94,6 +87,8 @@
 #define EXIT_FAILURE 1
 #define TERM_ENV_NOT_EXIST "TERM variable in env not exist"
 #define ERROR_PARSE_TREE "u$h: syntax error near after token `"
+#define MX_ER ": command not found"
+#define MX_NOT_FOUND " no such file or directory: "
 
 // Structures
 
@@ -160,43 +155,6 @@ typedef struct  s_ast {
     struct s_ast    *right;
 }                   t_ast;
 
-typedef struct      s_process {
-    char *fullpath;  //for execve
-    char **argv;
-   // char **envp;
-    char *command;
-    char *arg_command;
-    pid_t pid;
-    int exit_code;
-    int status;  //status RUNNING DONE SUSPENDED CONTINUED TERMINATED
-    int foreground;
-    int pipe;
-    int fd_in;
-    int fd_out;
-    int type;               // COMMAND_BUILTIN = 1;   defaultd = 0
-    char completed;        // true if process has completed
-    char stopped;          // true if process has stopped
-    struct s_process *next;     // next process in pipeline
-//    t_ast         *ast;  //ast tree
-} t_process;
-
-// A job is a pipeline of processes.
-typedef struct s_job {
-    int job_id;                 //number in jobs control
-    int mark_job_id;            // " ", "-", "+"   "+" - last added job, "-" - prev added job;
-    char *command;              // command line, used for messages
-    t_process *first_process;     // list of processes in this job
-    pid_t pgid;                 // process group ID
-    int exit_code;
-    int foreground;                  // foreground = 1 or background execution = 0
-    char notified;              // true if user told about stopped job
-    struct termios tmodes;      // saved terminal modes/
-    int stdin;  // standard i/o channels
-    int stdout;  // standard i/o channels
-    int stderr;  // standard i/o channels
-//    struct  s_job *next;           //next active job
-} t_job;
-
 typedef struct s_history {
     // int id;
     char *data;
@@ -211,12 +169,21 @@ typedef struct s_history_pack {
     struct s_history *history;
 }               t_history_pack;
 
+typedef struct s_fg {
+    char        **cmd;  // name proc
+    pid_t       pid;    // pid proc
+    int         n;      //number proc
+}               t_fg;
+
+typedef struct s_alias {
+    char                *name;     // mk
+    char                *value;    // make && ./ush
+    struct s_alias      *next;
+}                       t_alias;
+
 typedef struct  s_info {
     char *name;
     char        **args;
-    char        **builtin_str;
-    int         (**builtin_func) (struct s_info *info, struct s_process *p);
-    int         num_of_func;
     char        *PWD;
     char        *OLDPWD;
     struct s_history_pack *history_pack;
@@ -226,13 +193,9 @@ typedef struct  s_info {
     bool ctrl_c;
     int winsize;
 
-    t_job   *jobs[JOBS_NUMBER];     //arr jobs
-    pid_t shell_pgid;
-
     // for working tab
     struct s_history *tab_list;
     struct s_history *tab_pos;
-    int max_number_job;
     //
     unsigned int name_len;
 
@@ -255,17 +218,27 @@ typedef struct  s_info {
     int file;
     int fd_f;
     char *path_f;
+
     int flag_for_valid;
+    int file_not_f;
+    int type_e;
+
+    char *fname;
+
+    //alias
+    struct s_alias *alias;
 }               t_info;
 
 // Functions --------------------------------------------------------------|
 
 // All parse --------------------------------|
 
+void mx_del_slash_and_quotes_in_list(t_tok **tok);
+
 // mx_substitutions.c
 void mx_recursion_substitutions(t_info *info, char **line
     , int start, int finish);
-bool mx_execute_substitutions(t_info *info, char **line);
+bool mx_execute_substitutions(t_info *info, char **line, char *craft);
 
 // mx_skip_all_quotes.c
 bool mx_skip_single_quotes(char *check, int *pos);
@@ -291,7 +264,7 @@ void mx_parse_line(t_info *info, char **line);
 // ------------------------------------------|
 
 // mx_multi_line_enter.c
-char *mx_multi_line_enter(t_info *info, char *key_word);
+void mx_multi_line_enter(t_info *info, char *key_word);
 
 // mx_print_errors.c
 void mx_print_error(char *error, char *arg);
@@ -368,31 +341,6 @@ void mx_tab_work(t_info *info, char **buffer, int *position);
 // mx_funcs_for_tab.c
 void mx_replace_special_symbols(t_info *info);
 
-// mx_launch_ush.c
-int mx_ush_execute(t_info *info, t_job *job);
-int mx_launch_process(t_info *info, int job_id
-    , t_process *p, int infile, int outfile, int errfile);
-
-// mx_work_with_process.c
-int mx_get_pgid_by_job_id(t_info *info, int job_id);
-int mx_get_next_job_id(t_info *info);
-int mx_insert_job(t_info *info, t_job *job);
-void mx_remove_job(t_info *info, int id);
-void mx_destroy_jobs(t_info *info, int id);
-void mx_print_process_in_job(t_info *info, int id);
-int mx_get_proc_count(t_info *info, int job_id, int filter);
-int mx_wait_job(t_info *info, int id);
-int mx_wait_pid(t_info *info, int pid);
-void mx_set_process_status(t_info *info, int pid, int status);
-int mx_print_job_status(t_info *info, int id);
-int mx_is_job_completed(t_info *info, int id);
-void mx_check_jobs(t_info *info);
-int mx_get_job_id_by_pid(t_info *info, int pid);
-int mx_set_job_status(t_info *info, int job_id, int status);
-
-// mx_create_job.c
-t_job *mx_create_job(t_info *info, char **args);
-
 // mx_save_PATH.c
 void mx_save_PATH(t_info *info, char *paths);
 char *mx_find_in_PATH(char **paths, char *word, bool full);
@@ -405,13 +353,17 @@ bool mx_str_head(const char *where, const char *what);
 
 // mx_error_message.c
 void mx_error_message(char *str);
-void mx_error_mes_tree(t_ast *t);
+void mx_file_not_found(char *filename);
+void mx_error_mes_tree(int type);
 
 // mx_winsize.c
 void mx_winsize(t_info *info);
 
 // mx_print_char_loop.c
 void mx_print_char_loop(char c, int len);
+
+// mx_replace_symbols_pack.c
+void mx_replace_symbols_pack(char **str, int start, int size, char *new_pack);
 
 // mx_print_ush.c
 void mx_print_ush(t_info *info);
@@ -434,9 +386,6 @@ void mx_check_history(t_info *info, char *line);
 // mx_info_prepare.c
 void mx_info_start(t_info *info);
 
-// mx_jobs.c
-// int mx_jobs(t_info *info, t_process *p);
-
 // mx_ush_[Name].c
 int mx_ush_pwd(t_info *info);
 int mx_ush_cd(t_info *info);
@@ -454,20 +403,20 @@ void mx_ush_loop(t_info *info_sh);
 char **mx_ush_split_line(char *line);
 
 
-//mx_create_tok_list
+//mx_create_tok_list.c
 void mx_add_tok(t_tok **prev, char *cont, int size);
 char *mx_check_red(char *str, int *size);
 void mx_free_toks(t_tok **tok);
 void mx_check_file_in_or_out(t_tok *prev, t_tok *next);
 
-//mx_check_variable
+//mx_check_variable.c
 int mx_check_type(char *cont);
 int mx_check_priority(char *c);
 
-//mx_work_with_tokens
+//mx_work_with_tokens.c
 int mx_work_w_toks(char *line, t_tok **tok);
 
-//mx_size_function
+//mx_size_function.c
 int mx_get_size_tok(char *s);
 int mx_size_str(char *s, int f, int i);
 int mx_size_tok(char *s, bool f, int i);
@@ -491,27 +440,41 @@ char **mx_merge_command(t_tok *t);
 char **mx_merge_op(t_tok *max);
 void mx_free_tree(t_ast *tree);
 
-//tree_run
+//tree_run.c
 int mx_tree_run(t_ast *tree, t_info *info, int f);
 int mx_run_pipe(t_ast *tree, t_info *info);
 void mx_tok_to_tree(t_tok *tok, t_info *info);
 
-//mx_tree_start_func
+//mx_tree_start_func.c
 int mx_start_function(t_ast *t, t_info *info, char **tree);
 void mx_execute_binary_file(t_ast *t, t_info *info);
-int mx_start_red(t_ast *t, t_info *info, pid_t pid);
-void mx_execute_red(t_ast *t, t_info *info, pid_t pid);
 void mx_exec_for_file(t_ast *t, t_info *i);
 
-//mx_tree_redirection
-int mx_create_file(t_ast *t);
+//mx_start_redirection.c
+int mx_start_red(t_ast *t, t_info *info, pid_t pid);
+void mx_execute_red(t_ast *t, t_info *info, pid_t pid);
+
+//mx_tree_redirection.c
+int mx_create_file(t_ast *t, t_info *i);
 int mx_redirection(int type);
 int mx_run_redirection(t_ast *t, t_info *i, int flag);
+void mx_multi_line_enter(t_info *info, char *key_word);
+
+//mx_alias.c
+void mx_check_alias(t_ast *t, t_info *i, int a);
+char *mx_get_name_als(char **alias, int count);
+void mx_get_value_als(t_alias *a, char **alias, int i);
+
+//mx_size_arr_and_strarr_to_str.c
+int mx_arr_size(char **str);
+int mx_allarr_size(char **str);
+char *mx_strarr_to_str(char **strarr, int size_strarr, int i);
 
 //delete
 void printKLP(t_ast* root);
 void mx_printf_strarr(char **str);
 void print_all(t_ast *tree, t_tok *tok);
+
 #endif
 
 /*

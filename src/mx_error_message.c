@@ -1,63 +1,67 @@
 #include "../inc/ush.h"
 
-static char *operators1(t_ast *t);
-static char *operators2(t_ast *t);
+static char *operators1(int type);
+static char *operators2(int type);
 
 void mx_error_message(char *str) {
-    mx_printerr(RED);
     mx_printerr(USH);
     mx_printerr(str);
-    mx_printerr(RESET);
 }
 
-void mx_error_mes_tree(t_ast *t) {
+void mx_file_not_found(char *filename) {
+    mx_printerr("u$h:");
+    mx_printerr(MX_NOT_FOUND);
+    mx_printerr(filename);
+    mx_printerr("\n");
+}
+
+void mx_error_mes_tree(int type) {
     char *str;
 
-    mx_printerr(RED);
     mx_printerr(ERROR_PARSE_TREE);
-    str = mx_strdup(operators1(t));
-    // if (mx_strcmp(str, "") != 0)
-        mx_printerr(str);
+    str = mx_strdup(operators1(type));
+    mx_printerr(str);
     mx_printerr("'\n");
-    mx_printerr(RESET);
 }
 
-static char *operators1(t_ast *t) {
-    if (t->type == 2)
+static char *operators1(int type) {
+    if (type == 2)
         return "&";
-    if (t->type == 3)
+    if (type == 3)
         return "|";
-    if (t->type == 4)
+    if (type == 4)
         return "<";
-    if (t->type == 5)
+    if (type == 5)
         return ">";
-    if (t->type == 6)
+    if (type == 6)
         return "||";
-    if (t->type == 7)
+    if (type == 7)
         return "&&";
-    if (t->type == 8)
+    if (type == 8)
         return "<<";
-    if (t->type == 9)
+    if (type == 9)
         return ">>";
-    if (t->type == 11)
+    if (type == 11)
         return "<>";
-    return operators2(t);
+    return operators2(type);
 }
 
-static char *operators2(t_ast *t) {
-    if (t->type == 12)
+static char *operators2(int type) {
+    if (type == 1)
+        return ";";
+    if (type == 12)
         return "<&";
-    if (t->type == 13)
+    if (type == 13)
         return ">&";
-    if (t->type == 16)
+    if (type == 16)
         return ">>&";
-    if (t->type == 17)
+    if (type == 17)
         return "&>";
-    if (t->type == 18)
+    if (type == 18)
         return "&<";
-    if (t->type == 19)
+    if (type == 19)
         return "&>>";
-    if (t->type == 20)
+    if (type == 20)
         return "&<<";
     return "";
 }
