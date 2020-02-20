@@ -79,6 +79,17 @@ void mx_del_slash_and_quotes_in_list(t_tok **tok) {
             }
         }
     }
+    // char *tmp_line;
+
+    // for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
+    //     if (tmp->type == 0 && tmp->token) {
+    //         if (mx_get_substr_index_without_symbol(tmp->token) >= 0) {
+    //             search_just_slash(&(tmp->token));
+    //         }
+    //         else
+    //             search_just_slash(&(tmp->token));
+    //     }
+    // }
 }
 
 void mx_parse_line(t_info *info, char **line) {

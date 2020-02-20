@@ -14,7 +14,6 @@ void run_shell(t_info *info) {
         mx_parse_line(info, &line);
         mx_work_w_toks(line, &tok);
         mx_tok_to_tree(tok, info);
-        info->args = mx_strsplit(line, ' ');
         if (malloc_size(line))
             free(line);
         mx_del_strarr(&info->args);
@@ -32,7 +31,7 @@ int main(int argc, char **argv) {
     (void)argv;
     // setvbuf(stdout, NULL, _IONBF, 0);
     if (!isatty(STDIN_FILENO)) {
-        mx_error_message("You must use it just in terminal");
+        mx_error_message("You must use it just in terminal\n");
         exit(EXIT_FAILURE);
     }
     memset(info, 0, sizeof(t_info));

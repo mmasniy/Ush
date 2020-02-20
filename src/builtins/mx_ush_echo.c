@@ -37,7 +37,6 @@ int mx_ush_echo(t_info *info) {
         if (check_flags(info->args[i], flags))
             pos++;
     }
-    // printf("%d %d %d\n", flags[0], flags[1], flags[2]);
     for (int i = pos; info->args[i]; i++) {
         if (flags[2] && !flags[1])
             mx_printstr(info->args[i]);

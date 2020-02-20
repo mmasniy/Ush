@@ -26,6 +26,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/help_functions/mx_print_char_loop.c \
 	src/help_functions/mx_del_strarr_elem.c \
 	src/help_functions/mx_arr_copy.c \
+	src/help_functions/mx_replace_pack.c \
 	src/help_functions/mx_get_char_index_without_symbols.c \
 	src/help_functions/mx_replace_symbols_pack.c \
 	src/help_functions/mx_size_arr_and_strarr_to_str.c \

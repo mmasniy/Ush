@@ -66,10 +66,9 @@ else if (i->fd_r > 0 && (t->type == 17 || t->type == 19)){
 
 void mx_multi_line_enter(t_info *info, char *key_word) {
     char *line = NULL;
-    char *copy = strdup(key_word);
     FILE *f = fopen(".system_ush.txt", "w+");
 
-    mx_del_and_set(&(info->name), copy);
+    mx_del_and_set(&(info->name), strdup(key_word));
     while (strcmp((line = mx_ush_read_line(info)), key_word)) {
         fprintf(f, "%s\n", line);
         mx_strdel(&line);

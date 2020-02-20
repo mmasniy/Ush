@@ -35,7 +35,6 @@ int mx_start_function(t_ast *t, t_info *i, char **tree) {
 void mx_exec_for_file(t_ast *t, t_info *i) {
     pid_t pid;
 
-    i->path_f = mx_strdup(".system_ush.txt");
     i->fd_f = open(i->path_f, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     // printf("i->fd_f = %d\n", i->fd_f);
     pid = fork();

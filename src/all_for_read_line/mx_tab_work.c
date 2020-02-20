@@ -106,11 +106,10 @@ static void functions_search(t_info *info, char *what_check) {
     char *binary_func = NULL;
     char **all_binary_func;
 
-    // for (int i = 0; i < info->num_of_func; i++) {    ///////// buildin_funcs
-    //     if (mx_str_head(what_check, info->builtin_str[i]) == 0) {
-    //         mx_push_history_back(&info->tab_list, info->builtin_str[i]);
-    //     }
-    // }
+    if ((binary_func = mx_find_similar_buildin(what_check))) {
+        mx_push_history_back(&info->tab_list, binary_func);
+        mx_strdel(&binary_func);
+    }
     if ((binary_func = mx_find_in_PATH(info->paths, what_check, 0))) {
         all_binary_func = mx_strsplit(binary_func, ':');
         for (int i = 0; all_binary_func[i]; i++)

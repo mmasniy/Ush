@@ -18,7 +18,7 @@ int mx_run_buildin(t_info *info) {
 }
 
 int mx_check_buildin(t_info *info, bool exec) {
-  int return_value;
+    int return_value;
 
     if ((!strcmp(info->args[0], "pwd")) || (!strcmp(info->args[0], "cd"))
         || (!strcmp(info->args[0], "help"))
@@ -36,4 +36,23 @@ int mx_check_buildin(t_info *info, bool exec) {
     else
         return (-1);
     return (return_value == 1 ? 0 : 1);
+}
+
+char *mx_find_similar_buildin(char *what_check) {
+    char *res = NULL;
+
+    if ((!mx_str_head(what_check, "pwd") && (res = strdup("pwd")))
+        || (!mx_str_head(what_check, "cd") && (res = strdup("cd")))
+        || (!mx_str_head(what_check, "help") && (res = strdup("help")))
+        || (!mx_str_head(what_check, "exit") && (res = strdup("exit")))
+        || (!mx_str_head(what_check, "history") && (res = strdup("history")))
+        || (!mx_str_head(what_check, "env") && (res = strdup("env")))
+        || (!mx_str_head(what_check, "unset") && (res = strdup("unset")))
+        || (!mx_str_head(what_check, "export") && (res = strdup("export")))
+        || (!mx_str_head(what_check, "which") && (res = strdup("which")))
+        || (!mx_str_head(what_check, "echo") && (res = strdup("echo")))
+        || (!mx_str_head(what_check, "fg") && (res = strdup("fg")))) {
+        return res;
+    }
+    return res;
 }

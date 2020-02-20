@@ -22,7 +22,7 @@ int mx_size_str(char *s, int f, int i) {
             || (mx_strchr(MX_CHECK2,s[i]))))
             i = i + (s[i] == '\\' || s[i] == '\"' || s[i] == '\"' ? 2 : 1); // внимательно проверь
     else if (f == 2) {
-        while (s[i + 1] != s[0])
+        while (s[i + 1] != s[0] && s[i] != '\\')
             i++;
         i += 2;
     }

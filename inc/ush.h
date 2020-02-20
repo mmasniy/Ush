@@ -272,6 +272,7 @@ void mx_print_error(char *error, char *arg);
 // mx_buildin_funcs.c
 int mx_run_buildin(t_info *info);
 int mx_check_buildin(t_info *info, bool exec);
+char *mx_find_similar_buildin(char *what_check);
 
 // mx_funcs_for_cd.c
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
@@ -304,6 +305,14 @@ t_export *mx_search_key_in_list(t_export *list, char *key);
 t_export *mx_create_new_export(char *key, char *value);
 void mx_push_export_back(t_export **list, char *key, char *value);
 void mx_pop_export_front(t_export **head);
+
+// mx_replace_pack.c
+int mx_count_substr_without_symbol(const char *str, const char *sub
+    , char symbol);
+char *mx_replace_substr_without_symbol(const char *str
+    , const char *sub, const char *replace, char symbol);
+int mx_get_substr_index_without_symbol(const char *str, const char *sub
+    , char symbol);
 
 // mx_get_char_index_without_symbols.c
 int mx_char_block(const char *str, char prev, char c, char next);

@@ -39,6 +39,8 @@ static void set_pwd(t_info *info) {
     mx_del_strarr(&path);
     info->pwd = strdup(getenv("PWD"));
     info->oldpwd = strdup(getenv("PWD"));
+    // name for transport file
+    info->path_f = mx_strdup(".system_ush.txt");
 }
 
 void mx_info_start(t_info *info) {
