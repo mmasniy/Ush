@@ -1,6 +1,5 @@
 NAME = ush
-SRCS = src/mx_work_with_process.c \
-	src/mx_work_with_termios.c \
+SRCS = src/mx_work_with_termios.c \
 	src/mx_winsize.c \
 	src/mx_work_with_PATH.c \
 	src/mx_signal.c \

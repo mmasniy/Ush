@@ -29,12 +29,12 @@ static void exec_command(t_info *info, char **sub_line) {
     }
     if ((fl = open(".system_ush.txt", O_RDONLY))) {
         close(fl);
-        remove(".system_ush.txt");
+        // remove(".system_ush.txt");
     }
     // printf("========================================\n");
     // printf("\nSUB_LINE = %s\n", *sub_line);
     // mx_del_and_set(sub_line, mx_replace_substr(*sub_line, " ", "\\ "));
-    // printf("SUB_LINE = %s\n", *sub_line);
+    printf("SUB_LINE = %s\n", *sub_line);
     // printf("========================================\n");
     // mx_del_and_set(sub_line, mx_replace_substr(*sub_line, "\n", "QoIYem2"));
 }
