@@ -179,7 +179,7 @@ bool mx_execute_substitutions(t_info *info, char **line, char *craft) {
         if (start == -1)
             break;
         // printf("\n|%d %d|\n", pos + start, finish);
-        if ((info->quotes = check_quotes_before_recursion(*line, pos + start, finish)) == 1)
+        if ((info->quotes = check_quotes_before_recursion(craft, pos + start, finish)) == 1)
             return (info->status = 1);
         if (info->quotes != '\'') {
             // printf("\nline = %s | %d, %d\n", *line, start + 1, finish);

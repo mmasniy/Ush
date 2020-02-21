@@ -1,12 +1,12 @@
 #include "../../inc/ush.h"
 
 int mx_count_substr_without_symbol(const char *str, const char *sub
-    , char symbol) {
+    , char sym) {
     int num = 0;
     long len = strlen(sub);
 
     for (int i = 0; str[i]; i++) {
-        if (str[i] == sub[0] && (i == 0 || str[i - 1] != symbol)) {
+        if (str[i] == sub[0] && (i == 0 || str[i - 1] != sym)) {
             if (strncmp(str + i, sub, len) == 0) {
                 num++;
                 i += len - 1;

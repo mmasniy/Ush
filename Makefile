@@ -73,28 +73,34 @@ SRCS = src/mx_work_with_termios.c \
 	src/tree/mx_start_redirection.c \
 	src/tree/mx_alias.c \
 
+OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic# -g -fsanitize=address
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g -fsanitize=address
 HEADER = inc/ush.h
 LIB = libmx/libmx.a
 
 all: install
 
-install: $(LIB) $(OBJS)
-	@clang -o $(NAME) $(OBJS) $(LIB)
+install: $(NAME)
+$(NAME): $(LIB) $(OBJS)
+	@echo "Make ush"
+	@clang $(FLAGS) $(OBJS) $(LIB) -o $(NAME)
 
-%.o: %.c $(HEADER)
-	@clang -c $(FLAGS) -o $@ -c $<
+$(OBJ_DIR)/%.o: $(SRCS)
+	@mkdir -p $(OBJ_DIR)
+	@clang $(FLAGS) -o $@ -c $< $(HEADER)
 
 $(LIB):
-	@make -C libmx
-	@rm -rf $(OBJS)
-uninstall: clean
-	@make uninstall -sC libmx
-	@rm -rf $(NAME)
-
+	@echo "Make libmx"
+	@make -C ./libmx/
 clean:
-	@make clean -C libmx
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJ_DIR)
+	@make -C ./libmx/ clean
 
-reinstall: uninstall install uninstall
+uninstall: clean
+	@rm -f $(NAME)
+	@make -C ./libmx/ uninstall
+
+reinstall: uninstall all
+
+.PHONY:     reinstall all clean uninstall

@@ -71,7 +71,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             mx_strdel(&tmp);
             return 0;
         }
-        if (*(tmp + i) != 32 && (i == 0 || *(tmp + i - 1) != '\\')) {
+        if (*(tmp + i) != 32) {
             // mx_check_numbers_in_str(tmp + i, &size);
             mx_add_tok(tok, tmp + i, size);
         }
