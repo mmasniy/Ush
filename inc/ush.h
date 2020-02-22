@@ -477,7 +477,7 @@ void mx_add_and_check_alias(t_ast *t, t_info *i, int a);
 void mx_add_als(t_alias **als, char *alias, t_info *i);
 t_alias *mx_create_als(t_alias **als, char *alias, t_info *i);
 char *mx_get_name_als(char **alias, t_info *i, int count);
-char *mx_get_value_als(t_alias *a, char **alias, int i);
+void mx_get_value_als(t_alias *a, char **alias, int i);
 void mx_print_lias_alias(t_alias *als);
 
 //mx_size_arr_and_strarr_to_str.c
