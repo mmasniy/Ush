@@ -152,7 +152,7 @@ static bool find_start_finish(char *line, int *start, int *finish, char c) {
 
 bool mx_execute_substitutions(t_info *info, char **line, char *craft) {
     if (craft) {}
-    printf("\n*line1 = %s\n", *line);
+//    printf("\n*line1 = %s\n", *line);
 
     int pos = 0;
     int tmp_start = -1;
@@ -161,7 +161,7 @@ bool mx_execute_substitutions(t_info *info, char **line, char *craft) {
     int finish = -1;
 
     while ((start >= 0)) {
-        printf("\n\n*line2 = %s\n\n", *line);
+       // printf("\n\n*line2 = %s\n\n", *line);
         if (find_start_finish(*line, &start, &finish, '`'))
             return (info->status = 1);
         // printf("start = %d\n", start);
@@ -187,7 +187,7 @@ bool mx_execute_substitutions(t_info *info, char **line, char *craft) {
         }
         tmp_start = tmp_finish = finish = -1;
     }
-    printf("\n\n*line3 = %s\n\n", *line);
+    //printf("\n\n*line3 = %s\n\n", *line);
     return 0;
 }
 

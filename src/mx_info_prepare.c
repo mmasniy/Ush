@@ -51,6 +51,8 @@ void mx_info_start(t_info *info) {
     mx_memset(info->history_pack, 0, sizeof(t_history_pack));
     info->to_export = mx_save_env_as_list(environ);
     info->variables = mx_save_env_as_list(environ);
+    info->alias = NULL;
+    info->num_of_al = 0;
     // info->alias = (t_alias *)malloc(sizeof(t_alias));
     // info->alias->name = NULL;
     // info->alias->value = NULL;

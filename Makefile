@@ -75,7 +75,7 @@ SRCS = src/mx_work_with_termios.c \
 
 OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g -fsanitize=address
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic          #  -g -fsanitize=address
 HEADER = inc/ush.h
 LIB = libmx/libmx.a
 
@@ -94,7 +94,7 @@ $(LIB):
 	@echo "Make libmx"
 	@make -C ./libmx/
 clean:
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJS)
 	@make -C ./libmx/ clean
 
 uninstall: clean

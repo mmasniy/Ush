@@ -227,6 +227,7 @@ typedef struct  s_info {
 
     //alias
     struct s_alias *alias;
+    int num_of_al;
 }               t_info;
 
 // Functions --------------------------------------------------------------|
@@ -455,6 +456,7 @@ int mx_run_pipe(t_ast *tree, t_info *info);
 void mx_tok_to_tree(t_tok *tok, t_info *info);
 
 //mx_tree_start_func.c
+void dup_2(t_info *i, int flag);
 int mx_start_function(t_ast *t, t_info *info, char **tree);
 void mx_execute_binary_file(t_ast *t, t_info *info);
 void mx_exec_for_file(t_ast *t, t_info *i);
@@ -462,6 +464,7 @@ void mx_exec_for_file(t_ast *t, t_info *i);
 //mx_start_redirection.c
 int mx_start_red(t_ast *t, t_info *info, pid_t pid);
 void mx_execute_red(t_ast *t, t_info *info, pid_t pid);
+void mx_execute_file(t_ast *t, t_info *info, pid_t pid);
 
 //mx_tree_redirection.c
 int mx_create_file(t_ast *t, t_info *i);
@@ -470,14 +473,16 @@ int mx_run_redirection(t_ast *t, t_info *i, int flag);
 void mx_multi_line_enter(t_info *info, char *key_word);
 
 //mx_alias.c
-void mx_check_alias(t_ast *t, t_info *i, int a);
-char *mx_get_name_als(char **alias, int count);
-void mx_get_value_als(t_alias *a, char **alias, int i);
+void mx_add_and_check_alias(t_ast *t, t_info *i, int a);
+void mx_add_als(t_alias **als, char *alias, t_info *i);
+t_alias *mx_create_als(t_alias **als, char *alias, t_info *i);
+char *mx_get_name_als(char **alias, t_info *i, int count);
+char *mx_get_value_als(t_alias *a, char **alias, int i);
+void mx_print_lias_alias(t_alias *als);
 
 //mx_size_arr_and_strarr_to_str.c
 int mx_arr_size(char **str);
-int mx_allarr_size(char **str);
-char *mx_strarr_to_str(char **strarr, int size_strarr, int i);
+char *mx_strarr_to_str(char **strarr, int i);
 
 //delete
 void printKLP(t_ast* root);

@@ -28,47 +28,34 @@ int mx_create_file(t_ast *t, t_info *i) {
     return -1;
 }
 
-/*
-в ush_ было, обрати внимание
-if (t->type == 4 && !path) {
-        mx_strdel(&path);
-        return (open (t->right->command[0],
-            O_RDONLY | O_CREAT, 0600));
-    }
-    mx_strdel(&path);
-*/
-
 int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
+    // printf("i->fd_r = %d\n", i->fd_r);
     if (i->fd_r == -1 && (t->type == 13 || t->type == 16)) {
         close(mx_atoi(t->command[0]));
     }
-    else if (i->fd_r > 0 && (t->type == 5 || t->type == 9 || t->type == 13)) {
-        dup2(i->fd_r, mx_atoi(t->command[0]));
-        if (mx_atoi(t->command[0]) != 1)
-            close(1);
-    }
-    else if (i->fd_r > 0 && (t->type == 4 || t->type == 8)) {
-        if (i->fd_r != STDIN_FILENO){
-            dup2(i->fd_r, 0);
-            close(i->fd_r);
-        }
-    }
-    return (mx_start_red(t->left, i, pid));
-}
-
-/*
-else if (i->fd_r > 0 && (t->type == 17 || t->type == 19)){
+    else if (i->fd_r > 0 && (t->type == 17 || t->type == 19)){
         dup2(i->fd_r, 0);
         dup2(i->fd_r, 1);
         dup2(i->fd_r, 2);
     }
-*/
+    else if (i->fd_r > 0 && (t->type == 5 || t->type == 9 || t->type == 13)) {
+        if (i->fd_r != mx_atoi(t->command[0])) {
+            dup2(i->fd_r, mx_atoi(t->command[0]));
+            close(i->fd_r);
+        }
+    }
+    else if (i->fd_r > 0 && (t->type == 4 || t->type == 8)) {
+        dup2(i->fd_r, 0);
+    }
+    return (mx_start_red(t->left, i, pid));
+}
 
 void mx_multi_line_enter(t_info *info, char *key_word) {
     char *line = NULL;
+    char *copy = strdup(key_word);
     FILE *f = fopen(".system_ush.txt", "w+");
 
-    mx_del_and_set(&(info->name), strdup(key_word));
+    mx_del_and_set(&(info->name), copy);
     while (strcmp((line = mx_ush_read_line(info)), key_word)) {
         fprintf(f, "%s\n", line);
         mx_strdel(&line);
