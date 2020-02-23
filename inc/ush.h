@@ -26,6 +26,7 @@
 #include <curses.h>
 #include <malloc/malloc.h>
 #include <wchar.h>
+#include <termcap.h>
 #include "../libmx/inc/libmx.h"
 
 //*****
@@ -117,10 +118,6 @@ enum e_keys{
     ESC = 27,
     CTRL_CLOSE_BRACKET = 29,
     BACKSPACE = 127,
-    UP = 1001,
-    DOWN = 1002,
-    LEFT = 1003,
-    RIGHT = 1004,
     EXTRA_SYM = 10000,
 };
 
@@ -196,6 +193,7 @@ typedef struct  s_info {
     // for working tab
     struct s_history *tab_list;
     struct s_history *tab_pos;
+    int num_of_elems_in_tab;
     //
     unsigned int name_len;
 
@@ -234,12 +232,15 @@ typedef struct  s_info {
 
 // All parse --------------------------------|
 
+// mx_check_first_argument.c
+bool mx_check_first_argument(t_info *info, char *head);
+
 void mx_del_slash_and_quotes_in_list(t_tok **tok);
 
 // mx_substitutions.c
 void mx_recursion_substitutions(t_info *info, char **line
     , int start, int finish);
-bool mx_execute_substitutions(t_info *info, char **line, char *craft);
+bool mx_execute_substitutions(t_info *info, char **line);
 
 // mx_skip_all_quotes.c
 bool mx_skip_single_quotes(char *check, int *pos);
@@ -344,6 +345,9 @@ void mx_print_line(t_info *info, char *buffer, int position);
 
 // mx_up_to_one.c
 char *mx_up_to_one(char *str);
+
+// mx_print_tab_list.c
+void mx_print_tab_list(t_info *info);
 
 // mx_tab_work.c
 void mx_tab_work(t_info *info, char **buffer, int *position);

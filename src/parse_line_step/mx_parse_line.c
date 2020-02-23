@@ -65,8 +65,6 @@ static void search_just_slash(char **line) {
     mx_strdel(&new_line);
 }
 
-// 10 || 15
-
 void mx_del_slash_and_quotes_in_list(t_tok **tok) {
     for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
         if (tmp->type == 0 && tmp->token) {
@@ -78,7 +76,7 @@ void mx_del_slash_and_quotes_in_list(t_tok **tok) {
                 search_just_slash(&(tmp->token));
             }
         }
-    }
+    }//////////////////////////////////////////////////////////////////
     // char *tmp_line;
 
     // for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
@@ -89,13 +87,13 @@ void mx_del_slash_and_quotes_in_list(t_tok **tok) {
     //         else
     //             search_just_slash(&(tmp->token));
     //     }
-    // }
+    // }////////////////////////////////////////////////////////////
 }
 
 void mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
     // printf("line = %s\n", *line);
-    mx_execute_substitutions(info, line, *line);
+    mx_execute_substitutions(info, line);
     // del_quotes(line);
     // mx_replace_spaces_and_slash(line);
     if (info->status > 0) {

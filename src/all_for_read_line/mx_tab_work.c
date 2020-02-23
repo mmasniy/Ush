@@ -19,25 +19,16 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
         info->tab_pos = info->tab_pos->next;
         if (!info->tab_pos)
             info->tab_pos = info->tab_list->next;
-        for (char c = 127; *position > pos;)
+        for (char c = 127; *position > pos; )
             mx_str_edit(info, *buffer, position, &c);
-        for (int i = 0; i < mx_strlen(info->tab_pos->data); i++) {
-            mx_str_edit(info, *buffer, &pos, &(info->tab_pos->data)[i]);
-        }
+        for (int i = 0; i < mx_strlen(info->tab_pos->data); i++)
+            mx_str_edit(info, *buffer, &pos, &(info->tab_pos->data[i]));
         *position += mx_strlen(info->tab_pos->data);
     }
     else { //////// Create new
-        // printf("what_check = %s\n", what_check);
-        // if (info->tab_list) {
-        //     printf("+ info->tab_list\n");
-        // if (info->tab_list->next)
-        //     printf("info->tab_list->next\n");
-        // printf("strcmp(what_check, info->tab_pos->data) = %d\n", strcmp(what_check, info->tab_pos->data));
-        // }
-        
         create_new_tab_list(info, what_check, buffer, position);
+        mx_print_tab_list(info);
     }
-    // printf("++++++++++++++++\n");
 }
 
 static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {

@@ -19,6 +19,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_search_and_change_tilde.c \
 	src/parse_line_step/mx_skip_all_quotes.c \
 	src/parse_line_step/mx_substitutions.c \
+	src/parse_line_step/mx_check_first_argument.c \
 	\
 	src/help_functions/mx_str_head.c \
 	src/help_functions/mx_up_to_one.c \
@@ -51,6 +52,7 @@ SRCS = src/mx_work_with_termios.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_tab_work.c \
+	src/all_for_read_line/mx_print_tab_list.c \
 	src/all_for_read_line/mx_funcs_for_tab.c \
 	src/all_for_read_line/mx_read_line.c \
 	src/all_for_read_line/mx_print_ush.c \
@@ -75,7 +77,7 @@ SRCS = src/mx_work_with_termios.c \
 
 OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic  #-g -fsanitize=address
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -ltermcap -g -fsanitize=address
 HEADER = inc/ush.h
 LIB = libmx/libmx.a
 

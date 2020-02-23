@@ -8,7 +8,7 @@ int mx_start_function(t_ast *t, t_info *i, char **tree) {
         }
         else {
             if (mx_check_buildin(i, 1) == -1){
-                mx_add_and_check_alias(t, i, 0);
+                // mx_add_and_check_alias(t, i, 0);
                 // mx_print_lias_alias(i->alias);
                 mx_execute_binary_file(t, i);
             }
