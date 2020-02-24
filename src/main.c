@@ -9,8 +9,10 @@ void run_shell(t_info *info) {
     while (1) {
         line = mx_ush_read_line(info);
         mx_check_history(info, line);
-        if (info->ctrl_c)
+        if (info->ctrl_c) {
+            mx_save_all_history(info);
             exit(0);
+        }
         mx_parse_line(info, &line);
         mx_work_w_toks(line, &tok);
         mx_tok_to_tree(tok, info);

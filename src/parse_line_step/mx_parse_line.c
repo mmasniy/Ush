@@ -1,47 +1,5 @@
 #include "../../inc/ush.h"
 
-// static void replace_quotes_spaces(char **line, char c) {
-//     int pos = 0;
-//     char *chk = NULL;
-//     char *replace = NULL;
-
-//     for (int i = 0; (i = mx_char_block(&((*line)[pos])
-//         , '\\', c, '\0')) >= 0; ) {
-//         pos += i;
-//         if ((i = mx_char_block(&((*line)[pos + 1]), '\\', c, '\0')) >= 0) {
-//             chk = mx_strndup(&((*line)[pos + 1]), i);
-//             pos += i + 1;
-//             printf("chk = |%s|\n", chk);
-//             replace = mx_replace_substr(chk, " ", "Zu5Qmpnr");
-//             mx_del_and_set(&chk, mx_replace_substr(chk, " ", replace));
-//         }
-//         else
-//             break;
-//     }
-// }
-
-// void mx_replace_spaces_and_slash(char **line) {
-//     replace_quotes_spaces(line, '\"');
-//     replace_quotes_spaces(line, '\'');
-//     // mx_del_and_set(line, mx_replace_substr(*line, "\\ ", "Zu5Qmpnr"));
-// }
-
-// static bool del_quotes(char **line) {
-//     int pos = 0;
-//     char *craft = *line;
-
-
-//     while (change) {
-
-//     }
-//     for (int i = 0; (i = mx_char_block(&(craft[pos]), '\\', '\'', '\0')) >= 0; ) {
-//         if ()
-//         pos += i + 1;
-//     }
-// }
-
-// mx_del_and_set(sub_line, mx_replace_substr(*sub_line, " ", "\\ "));
-
 static void search_just_slash(char **line) {
     char *new_line = mx_strnew(mx_strlen(*line));
     int pos = 0;

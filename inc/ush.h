@@ -389,12 +389,15 @@ bool mx_origin_termios(t_info *info, int fd);
 // mx_signal.c
 void mx_sigio_handler(int sigio);
 
-// mx_history.c
+// mx_work_with_history.c
 t_history *mx_create_new_history(char *data);
 void mx_push_history_front(t_history **lst, void *data);
 void mx_push_history_back(t_history **lst, void *data);
 void mx_pop_history_front(t_history **head);
 void mx_pop_history_back(t_history **head);
+
+// mx_work_with_history_2.c
+void mx_save_all_history(t_info *info);
 void mx_check_history(t_info *info, char *line);
 
 // mx_info_prepare.c

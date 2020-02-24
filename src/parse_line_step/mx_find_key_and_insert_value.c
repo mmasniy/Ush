@@ -11,10 +11,8 @@ static int key_len(char *line) {
     int i = 0;
 
     while (line[i] && is_allow(line[i])) {
-        // printf("line[i] = %c\n", line[i]);
         i++;
     }
-    // printf("len = %d\n", i);
     return i;
 }
 

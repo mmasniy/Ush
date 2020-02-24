@@ -1,6 +1,19 @@
 #include "../inc/ush.h"
 
-static void init_continue(t_info *info);
+static void init_continue(t_info *info) {
+    int shell_is_interactive = isatty(STDIN_FILENO);
+
+    if (shell_is_interactive) {
+        signal(SIGINT, mx_sigio_handler);
+        signal(SIGIO, mx_sigio_handler);
+        signal(SIGQUIT, SIG_IGN);
+        signal(SIGTSTP, SIG_IGN);
+        signal(SIGTTIN, SIG_IGN);
+        signal(SIGTTOU, SIG_IGN);
+        signal(SIGCHLD, SIG_IGN);
+    }
+    info->name = strdup(USH);
+}
 
 static void set_pwd(t_info *info) {
     char *tmp = NULL;
@@ -43,6 +56,19 @@ static void set_pwd(t_info *info) {
     info->path_f = mx_strdup(".system_ush.txt");
 }
 
+static void open_history_file(t_info *info) {
+    char *history_file = mx_file_to_str(".history_ush.txt");
+
+    if (history_file) {
+        char **lines = mx_strsplit(history_file, '\n');
+
+        for (int i = 0; lines[i]; i++)
+            mx_push_history_front(&info->history_pack->history, lines[i]);
+        mx_strdel(&history_file);
+        mx_del_strarr(&lines);
+    }
+}
+
 void mx_info_start(t_info *info) {
     extern char **environ;
     info->args = NULL;
@@ -58,20 +84,6 @@ void mx_info_start(t_info *info) {
     // info->alias->value = NULL;
     // info->alias->next = NULL;
     set_pwd(info);
+    open_history_file(info);
     init_continue(info);
-}
-
-static void init_continue(t_info *info) {
-    int shell_is_interactive = isatty(STDIN_FILENO);
-
-    if (shell_is_interactive) {
-        signal(SIGINT, mx_sigio_handler);
-        signal(SIGIO, mx_sigio_handler);
-        signal(SIGQUIT, SIG_IGN);
-        signal(SIGTSTP, SIG_IGN);
-        signal(SIGTTIN, SIG_IGN);
-        signal(SIGTTOU, SIG_IGN);
-        signal(SIGCHLD, SIG_IGN);
-    }
-    info->name = strdup(USH);
 }

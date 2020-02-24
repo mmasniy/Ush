@@ -63,8 +63,8 @@ void mx_pop_history_back(t_history **head) {
 
         while (temp->next->next)
             temp = temp->next;
-        if (malloc_size(temp->data))
-            mx_strdel(&(temp->data));
+        if (malloc_size(temp->next->data))
+            mx_strdel(&(temp->next->data));
         free(temp->next);
         temp->next = NULL;
     }
@@ -74,17 +74,4 @@ void mx_pop_history_back(t_history **head) {
         free(*head);
         *head = NULL;
     }
-}
-
-void mx_check_history(t_info *info, char *line) {
-    if (mx_strlen(line)) {
-        free(info->history_pack->history->data);
-        info->history_pack->history->data = mx_strdup(line);
-    }
-    else
-        mx_pop_history_front(&info->history_pack->history);
-    if (info->history_pack->total_num < 100)
-        (info->history_pack->total_num)++;
-    else
-        mx_pop_history_back(&info->history_pack->history);
 }

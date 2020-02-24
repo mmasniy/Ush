@@ -51,6 +51,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_funcs_for_cd_3.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
+	src/all_for_read_line/mx_work_with_history_2.c \
 	src/all_for_read_line/mx_tab_work.c \
 	src/all_for_read_line/mx_print_tab_list.c \
 	src/all_for_read_line/mx_funcs_for_tab.c \
@@ -77,7 +78,7 @@ SRCS = src/mx_work_with_termios.c \
 
 OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -ltermcap -g -fsanitize=address
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -ltermcap# -g -fsanitize=address
 HEADER = inc/ush.h
 LIB = libmx/libmx.a
 
