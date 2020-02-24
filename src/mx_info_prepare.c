@@ -57,16 +57,21 @@ static void set_pwd(t_info *info) {
 }
 
 static void open_history_file(t_info *info) {
+    struct stat time;
     char *history_file = mx_file_to_str(".history_ush.txt");
 
     if (history_file) {
-        char **lines = mx_strsplit(history_file, '\n');
+        stat(".history_ush.txt", &time);
+        if (time.st_mtime == 1576800125) {
+            char **lines = mx_strsplit(history_file, '\n');
 
-        for (int i = 0; lines[i]; i++)
-            mx_push_history_front(&info->history_pack->history, lines[i]);
-        mx_strdel(&history_file);
-        mx_del_strarr(&lines);
+            for (int i = 0; lines[i]; i++)
+                mx_push_history_front(&info->history_pack->history, lines[i]);
+            mx_strdel(&history_file);
+            mx_del_strarr(&lines);
+        }
     }
+    remove(".history_ush.txt");
 }
 
 void mx_info_start(t_info *info) {

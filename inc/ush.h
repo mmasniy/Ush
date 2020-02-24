@@ -27,6 +27,7 @@
 #include <malloc/malloc.h>
 #include <wchar.h>
 #include <termcap.h>
+#include <utime.h>
 #include "../libmx/inc/libmx.h"
 
 //*****
