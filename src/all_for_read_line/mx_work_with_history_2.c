@@ -2,25 +2,13 @@
 
 void mx_save_all_history(t_info *info) {
     FILE *f = fopen(".history_ush.txt", "w+");
+    struct utimbuf new_times;
 
     for (t_history *tmp = info->history_pack->history; tmp; tmp = tmp->next) {
         fprintf(f, "%s\n", tmp->data);
     }
     fflush(f);
     fclose(f);
-
-    // struct stat foo;
-    // time_t mtime;
-    // struct utimbuf new_times;
-    // stat(filename, &foo);
-
-    // mtime = foo.st_mtime; /* seconds since the epoch */
-    // new_times.actime = foo.st_atime; /* keep atime unchanged */
-    // new_times.modtime = time(NULL);    /* set mtime to current time */
-    // utime(filename, &new_times);
-
-    struct utimbuf new_times;
-
     new_times.actime = time(NULL); /* keep atime unchanged */
     new_times.modtime = 1576800125;    /* set mtime to current time */
     utime(".history_ush.txt", &new_times);

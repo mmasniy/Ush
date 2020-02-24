@@ -16,7 +16,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_save_key_value.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
-	src/parse_line_step/mx_search_and_change_tilde.c \
+	src/parse_line_step/mx_work_with_tilde.c \
 	src/parse_line_step/mx_skip_all_quotes.c \
 	src/parse_line_step/mx_substitutions.c \
 	src/parse_line_step/mx_check_first_argument.c \

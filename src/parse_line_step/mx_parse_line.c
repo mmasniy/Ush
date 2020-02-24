@@ -50,7 +50,7 @@ void mx_del_slash_and_quotes_in_list(t_tok **tok) {
 
 void mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
-    // printf("line = %s\n", *line);
+    printf("line = %s\n", *line);
     mx_execute_substitutions(info, line);
     // del_quotes(line);
     // mx_replace_spaces_and_slash(line);

@@ -251,7 +251,7 @@ bool mx_skip_substitutions(char *check, int *pos);
 // mx_shell_functions.c
 void mx_shell_functions(t_info *info, char **line);
 
-// mx_search_and_change_tilde.c
+// mx_work_with_tilde.c
 int mx_tilde_work(t_info *info, char **line, char *craft);
 
 // mx_find_key_and_insert_value.c
