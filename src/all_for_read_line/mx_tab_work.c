@@ -40,17 +40,17 @@ static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {
             if (!mx_str_head(d->d_name, &wrd[strlen(file)])) {
                 sent = mx_strjoin(file, d->d_name);
                 mx_push_history_back(&info->tab_list, sent);
-                if (malloc_size(sent))
-                    free(sent);
+                mx_strdel(&sent);
             }
     }
     else if ((f = opendir("."))) {
         mx_push_history_back(&info->tab_list, wrd);
         while ((d = readdir(f)))
-            if (mx_str_head(d->d_name, wrd) == 0)
+            if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")
+                && mx_str_head(d->d_name, wrd) == 0)
                 mx_push_history_back(&info->tab_list, d->d_name);
-        closedir(f);
     }
+    closedir(f);
     info->tab_pos = info->tab_list->next;
 }
 
@@ -64,8 +64,10 @@ static void check_if_that_folder(t_info *info, char *what_check
     else
         full_path = what_check;
     while ((d = readdir(f))) {
-        second = mx_strjoin(full_path, d->d_name);
-        mx_push_history_back(&info->tab_list, second);
+        if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")) {
+            second = mx_strjoin(full_path, d->d_name);
+            mx_push_history_back(&info->tab_list, second);
+        }
     }
     closedir(f);
 }
@@ -89,8 +91,8 @@ static void create_new_tab_list(t_info *info
         check_for_file(info, what_check, f, d);
     functions_search(info, what_check);
     info->tab_pos = info->tab_list;
-    if (info->tab_list && info->tab_list->next)
-        mx_tab_work(info, buffer, position);
+    // if (info->tab_list && info->tab_list->next)
+    //     mx_tab_work(info, buffer, position);
 }
 
 static void functions_search(t_info *info, char *what_check) {

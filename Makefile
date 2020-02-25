@@ -20,6 +20,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_skip_all_quotes.c \
 	src/parse_line_step/mx_substitutions.c \
 	src/parse_line_step/mx_check_first_argument.c \
+	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
 	\
 	src/help_functions/mx_str_head.c \
 	src/help_functions/mx_up_to_one.c \

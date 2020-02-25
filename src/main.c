@@ -6,8 +6,8 @@ static void run_command(t_info *info, char *line) {
     t_tok *tok = NULL;
 
     mx_parse_line(info, &line);
-    mx_work_w_toks(line, &tok);
-    mx_tok_to_tree(tok, info);
+    if (mx_work_w_toks(line, &tok))
+        mx_tok_to_tree(tok, info);
     mx_del_strarr(&info->args);
     info->ctrl_d = 0;
     info->ctrl_c = 0;

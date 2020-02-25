@@ -67,7 +67,7 @@
 */
 
 #define MX_CHECK "-_/~.:\"\\"
-#define MX_CHECK2 "-_/~:'\".\\="
+#define MX_CHECK2 "+-_/~:'\".\\="
 #define TYPE "; | & &> <& &>> <<& < > << >> && ||"
 
 #define USH "u$h>"
@@ -236,8 +236,6 @@ typedef struct  s_info {
 // mx_check_first_argument.c
 bool mx_check_first_argument(t_info *info, char *head);
 
-void mx_del_slash_and_quotes_in_list(t_tok **tok);
-
 // mx_substitutions.c
 void mx_recursion_substitutions(t_info *info, char **line
     , int start, int finish);
@@ -263,6 +261,9 @@ void mx_find_and_add_key_value(t_info *info, char **line, char *craft);
 // mx_parse_line.c
 void mx_search_slash(char **line);
 void mx_parse_line(t_info *info, char **line);
+
+// mx_del_slash_and_quotes_in_list.c
+void mx_del_slash_and_quotes_in_list(t_tok **tok);
 
 // ------------------------------------------|
 

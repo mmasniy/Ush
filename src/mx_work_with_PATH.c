@@ -47,16 +47,16 @@ char *mx_find_in_PATH(char **paths, char *word, bool full) {
     if (full)
         return check_full_path(paths, word);
     else
-        for (int i = 0; paths[i]; i++) {
+        for (int i = 0; paths[i]; i++)
             if ((f = opendir(paths[i]))) {
                 while ((d = readdir(f)))
-                    if (mx_str_head(d->d_name, word) == 0) {
+                    if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")
+                        && mx_str_head(d->d_name, word) == 0) {
                         tmp = mx_strjoin(all_paths, ":");
                         mx_strdel(&all_paths);
                         all_paths = mx_strjoin(tmp, d->d_name);
                     }
                 closedir(f);
             }
-        }
     return all_paths;
 }

@@ -1,53 +1,5 @@
 #include "../../inc/ush.h"
 
-static void search_just_slash(char **line) {
-    char *new_line = mx_strnew(mx_strlen(*line));
-    int pos = 0;
-    int i = 0;
-
-    for (; (pos = mx_get_char_index(&((*line)[i]), '\\')) >= 0; i++) {
-        if (pos >= 0) {
-            strncat(new_line, &((*line)[i]), pos);
-            i += pos;
-            if ((*line)[i + 1] == '\\' && strcat(new_line, "\\"))
-                i++;
-        }
-        else {
-            strcat(new_line, &((*line)[i]));
-            break;
-        }
-    }
-    strcat(new_line, &((*line)[i]));
-    free(*line);
-    *line = mx_strdup(new_line);
-    mx_strdel(&new_line);
-}
-
-void mx_del_slash_and_quotes_in_list(t_tok **tok) {
-    for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
-        if (tmp->type == 0 && tmp->token) {
-            if (tmp->token[0] == '\"' || tmp->token[0] == '\'') {
-                mx_del_and_set(&(tmp->token)
-                    , strndup(&(tmp->token[1]), strlen(tmp->token) - 2));
-            }
-            else {
-                search_just_slash(&(tmp->token));
-            }
-        }
-    }//////////////////////////////////////////////////////////////////
-    // char *tmp_line;
-
-    // for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
-    //     if (tmp->type == 0 && tmp->token) {
-    //         if (mx_get_substr_index_without_symbol(tmp->token) >= 0) {
-    //             search_just_slash(&(tmp->token));
-    //         }
-    //         else
-    //             search_just_slash(&(tmp->token));
-    //     }
-    // }////////////////////////////////////////////////////////////
-}
-
 void mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
     // printf("line = %s\n", *line);

@@ -61,7 +61,7 @@ static bool find_argument(t_info *info, char **arg, char flag) {
         res = 1;
     else if ((f = opendir(info->pwd)))
         while ((d = readdir(f)))
-            if (mx_str_head(d->d_name, *arg) == 0) {
+            if (mx_str_head(d->d_name, *arg) == 0 && d->d_type == 4) {
                 tmp = (info->pwd)[strlen(info->pwd) - 1] != '/'
                 ? mx_strjoin("/", *arg) : strdup(*arg);
                 mx_del_and_set(arg, mx_strjoin(info->pwd, tmp));

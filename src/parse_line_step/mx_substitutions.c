@@ -6,8 +6,8 @@ static void exec_command(t_info *info, char **sub_line, char quotes) {
     short fl = 0;
 
     info->file = 1;
-    mx_work_w_toks(*sub_line, &tok);
-    mx_tok_to_tree(tok, info);
+    if (mx_work_w_toks(*sub_line, &tok))
+        mx_tok_to_tree(tok, info);
     info->file = 0;
     mx_strdel(sub_line);
     mx_del_strarr(&info->args);

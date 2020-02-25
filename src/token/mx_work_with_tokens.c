@@ -62,6 +62,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
     int i = 0;
     char *tmp;
+    bool exist = 0;
 
     if (!line)
         return 0;
@@ -71,10 +72,8 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             mx_strdel(&tmp);
             return 0;
         }
-        if (*(tmp + i) != 32) {
-            // mx_check_numbers_in_str(tmp + i, &size);
+        if (*(tmp + i) != 32)
             mx_add_tok(tok, tmp + i, size);
-        }
         i += size;
     }
     while (*tok && (*tok)->prev)
@@ -94,17 +93,24 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // }
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
+
     mx_del_slash_and_quotes_in_list(tok);
+    for (t_tok *tmp = *tok; tmp; tmp = tmp->next)
+        if (strcmp(tmp->token, ""))
+            exist = 1;
+    if (!exist)
+        return 0;
+
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
     // for (t_tok *temp = *tok; temp; temp = temp->next) {
     //      printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
     // }
-    // printf("\n");
+    // printf("\n\n");
     // for (t_tok *temp = *tok; temp; temp = temp->next) {
     //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
     // }
-    // printf("\n");
+    // printf("\n\n");
     // for (t_tok *temp = *tok; temp; temp = temp->next) {
     //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
     // }

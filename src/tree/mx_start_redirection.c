@@ -60,8 +60,7 @@ void mx_exec_for_file(t_ast *t, t_info *i) {
     // i->path_f = mx_strdup(".system_ush.txt");
     // printf("tut\n");
     pid = fork();
-    if (mx_check_buildin(i, 1) == -1)
-        mx_execute_file(t, i, pid);
+    mx_execute_file(t, i, pid);
     if (pid <= 0)
         exit(0);
 }
@@ -80,11 +79,13 @@ void mx_execute_file(t_ast *t, t_info *info, pid_t pid) {
             dup2(info->fd_f, 1);
             close(info->fd_f);
         }
-        path = mx_find_in_PATH(info->paths, t->command[0], 1);
-        if (info->fd_r < 0 && info->file != 1)
-            mx_file_not_found(info->fname);
-        else if (execv(path, t->command) == -1)
-            mx_print_error(MX_ER, t->command[0]);
+        if (mx_check_buildin(info, 1) == -1) {
+            path = mx_find_in_PATH(info->paths, t->command[0], 1);
+            if (info->fd_r < 0 && info->file != 1)
+                mx_file_not_found(info->fname);
+            else if (execv(path, t->command) == -1)
+                mx_print_error(MX_ER, t->command[0]);
+        }
         dup_2(info, 1);
         exit(EXIT_FAILURE);
     }
