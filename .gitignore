@@ -60,3 +60,4 @@ dkms.conf
 *.swp
 *.swo
 ush
+.history_ush.txt

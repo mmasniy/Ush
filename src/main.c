@@ -14,6 +14,7 @@ void run_shell(t_info *info) {
             exit(0);
         }
         mx_parse_line(info, &line);
+        mx_replace_als_to_cmd(info->alias, &line, 0);
         mx_work_w_toks(line, &tok);
         mx_tok_to_tree(tok, info);
         if (malloc_size(line))

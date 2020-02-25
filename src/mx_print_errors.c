@@ -7,5 +7,5 @@ void mx_print_error(char *error, char *arg) {
         mx_printerr(error);
     }
     mx_printerr("\n");
-    exit(1);
+    // exit(1);
 }

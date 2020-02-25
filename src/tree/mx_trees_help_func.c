@@ -14,14 +14,17 @@ t_tok *mx_search_first(t_tok *tok) {
 }
 
 t_ast *mx_create_ast(t_tok *max) {
-    t_ast *tree = (t_ast*)malloc(sizeof(t_ast));
+    t_ast *tree = NULL;
 
-    tree->command = NULL;
-    tree->token = *max;
-    tree->type = max->prio;
-    tree->father = NULL;
-    tree->right = NULL;
-    tree->left = NULL;
+    if (max) {
+        tree = (t_ast*)malloc(sizeof(t_ast));
+        tree->command = NULL;
+        // tree->token = *max;
+        tree->type = max->prio;
+        tree->father = NULL;
+        tree->right = NULL;
+        tree->left = NULL;
+    }
     return tree;
 }
 

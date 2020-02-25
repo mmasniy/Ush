@@ -8,7 +8,7 @@ int mx_start_function(t_ast *t, t_info *i, char **tree) {
         }
         else {
             if (mx_check_buildin(i, 1) == -1){
-                // mx_add_and_check_alias(t, i, 0);
+                mx_add_alias(t, i, 0);
                 // mx_print_lias_alias(i->alias);
                 mx_execute_binary_file(t, i);
             }
@@ -26,7 +26,7 @@ static void execute_binary_file(t_ast *t, t_info *i, pid_t pid) {
     }
     else {
         path = mx_find_in_PATH(i->paths, t->command[0], 1);
-        if (execv(path, t->command) == -1){
+        if (execv(path, t->command) == -1) {
             mx_print_error(MX_ER, t->command[0]);
         }
         dup_2(i, 1);

@@ -33,8 +33,10 @@ void mx_free_toks(t_tok **tok) {
 }
 
 void mx_check_file_in_or_out(t_tok *prev, t_tok *next) {
-    if (next && prev && mx_check(prev->token) == -1 && (prev->prio != 10
-        || prev->prio != 10)) {
-        next->prio = 15;
+    if (next && prev && mx_check(prev->token) == -1 && prev->prio != 10) {
+        if (prev->prio == 1)
+            next->prio = 10;
+        else
+            next->prio = 15;
     }
 }

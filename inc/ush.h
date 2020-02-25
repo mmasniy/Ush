@@ -481,12 +481,15 @@ int mx_run_redirection(t_ast *t, t_info *i, int flag);
 void mx_multi_line_enter(t_info *info, char *key_word);
 
 //mx_alias.c
-void mx_add_and_check_alias(t_ast *t, t_info *i, int a);
-void mx_add_als(t_alias **als, char *alias, t_info *i);
-t_alias *mx_create_als(t_alias **als, char *alias, t_info *i);
+void mx_add_alias(t_ast *t, t_info *i, int a);
 char *mx_get_name_als(char **alias, t_info *i, int count);
 void mx_get_value_als(t_alias *a, char **alias, int i);
-void mx_print_lias_alias(t_alias *als);
+// void mx_print_lias_alias(t_alias *als);
+
+//mx_work_with_alias_list.c
+t_alias *mx_create_als(t_alias **als, char *alias, t_info *i);
+void mx_add_newnode_als(t_alias **als, char *alias, t_info *i);
+void mx_replace_als_to_cmd(t_alias *als, char **line, int i);
 
 //mx_size_arr_and_strarr_to_str.c
 int mx_arr_size(char **str);

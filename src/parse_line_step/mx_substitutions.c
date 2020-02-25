@@ -94,12 +94,12 @@ void mx_recursion_substitutions(t_info *info, char **line
     char *after = strdup(&((*line)[start + finish + 1]));
     char quotes = info->quotes;
 
-    printf("===================\n");
-    printf("before = |%s|\n", before);
-    printf("sub_line = |%s|\n", sub_line);
-    printf("after = |%s|\n", after);
-    printf("quotes = |%c|\n", info->quotes);
-    printf("===================\n");
+    // printf("===================\n");
+    // printf("before = |%s|\n", before);
+    // printf("sub_line = |%s|\n", sub_line);
+    // printf("after = |%s|\n", after);
+    // printf("quotes = |%c|\n", info->quotes);
+    // printf("===================\n");
     del_slash_for_substitutions(&sub_line);
     mx_execute_substitutions(info, &sub_line);
     exec_command(info, &sub_line, quotes);

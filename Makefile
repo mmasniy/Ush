@@ -75,6 +75,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/tree/mx_tree_start_function.c \
 	src/tree/mx_start_redirection.c \
 	src/tree/mx_alias.c \
+	src/tree/mx_work_with_alias_list.c \
 
 OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
