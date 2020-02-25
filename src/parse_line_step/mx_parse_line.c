@@ -52,6 +52,7 @@ void mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
     // printf("line = %s\n", *line);
     mx_execute_substitutions(info, line);
+    // mx_shell_functions(info, line);
     // del_quotes(line);
     // mx_replace_spaces_and_slash(line);
     if (info->status > 0) {
@@ -60,24 +61,6 @@ void mx_parse_line(t_info *info, char **line) {
     }
     // printf("-------------------------------------\n%s\n-------------------------------------\n", *line);
 }
-
-
-// echo Hello ` \"    \`   ls \" \\\` ls \\\` \"  \` \"  `
-
-// echo Hello ` \"    \`   ls \" \\\` ls \\\` \"  \` \"  `
-// echo Hello  \"       ls \"  ls  \"   \"  
-
-// 1 = шукаємо `
-// 2 = визначаємо чи є він в якихось кавичках (кожеш раз, як спускаємося на рівень нище)
-// 3 = відправляємо ці ` в рекурсію дальше, але перед тим затираємо // чи /`
-// 4 = заглиблюємося максимально вниз по рекурсії і з кінця починаємо виконувати парсинг
-// Етапи парсингу:
-// ...
-
-// #include "../../inc/ush.h"
-
-// static char findchar(char c);
-// static void search_just_slash(char **line);
 
 // void mx_parse_line(t_info *info, char **line) {
 //     search_just_slash(line);

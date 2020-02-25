@@ -1,17 +1,13 @@
 #include "../inc/ush.h"
 
 static void init_continue(t_info *info) {
-    int shell_is_interactive = isatty(STDIN_FILENO);
-
-    if (shell_is_interactive) {
-        signal(SIGINT, mx_sigio_handler);
-        signal(SIGIO, mx_sigio_handler);
-        signal(SIGQUIT, SIG_IGN);
-        signal(SIGTSTP, SIG_IGN);
-        signal(SIGTTIN, SIG_IGN);
-        signal(SIGTTOU, SIG_IGN);
-        signal(SIGCHLD, SIG_IGN);
-    }
+    signal(SIGINT, mx_sigio_handler);
+    signal(SIGIO, mx_sigio_handler);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
     info->name = strdup(USH);
 }
 
@@ -65,8 +61,12 @@ static void open_history_file(t_info *info) {
         if (time.st_mtime == 1576800125) {
             char **lines = mx_strsplit(history_file, '\n');
 
-            for (int i = 0; lines[i]; i++)
+            for (int i = 0; lines[i]; i++) {
+                if (info->history_pack->total_num >= 250)
+                    break;
                 mx_push_history_front(&info->history_pack->history, lines[i]);
+                (info->history_pack->total_num)++;
+            }
             mx_strdel(&history_file);
             mx_del_strarr(&lines);
         }

@@ -9,6 +9,11 @@ char *mx_ush_read_line(t_info *info) {
     int position = 0;
     char *buffer = mx_strnew(bufsize);
     unsigned int ch = 0;
+    // int savedFds[2];
+
+    // savedFds[0] = dup(1);
+    // savedFds[1] = dup(2);
+    // dup2(2, 1);
 
     mx_push_history_front(&info->history_pack->history, buffer);
     info->history_pack->pos = info->history_pack->history;
@@ -25,6 +30,10 @@ char *mx_ush_read_line(t_info *info) {
             || malloc_size(buffer) <= (size_t)mx_strlen(buffer) + 1)
             buffer = realloc(buffer, (bufsize += USH_RL_BUFSIZE));
     }
+    // dup2(1, savedFds[0]);
+    // dup2(2, savedFds[1]);
+    // close(savedFds[1]);
+    // close(savedFds[0]);
 }
 
 static void home_end_page(t_info *info, char **buf, int *position, char *c) {
@@ -52,9 +61,9 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
             else if (c[2] == 72 || c[2] == 70 || c[2] == 53 || c[2] == 54)
                 home_end_page(info, buffer, pos, c);
         }
-        else {
-            save_all(info, *buffer, pos, c);
-        }
+        // else {
+        //     save_all(info, *buffer, pos, c);
+        // }
     }
     else if (c[0] >= 32 && c[0] <= 127) {
         mx_str_edit(info, *buffer, pos, c);
@@ -64,18 +73,17 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
     return result;
 }
 
-static void save_all(t_info *info, char *buffer, int *position, char *c) {
-    if (info && buffer && position && c) {}
-    int len = mx_strlen(buffer);
+// static void save_all(t_info *info, char *buffer, int *position, char *c) {
+//     if (info && buffer && position && c) {}
+//     int len = mx_strlen(buffer);
 
-    for (int i = 0; i < 4; i++) {
-        if (buffer[0])
-            for (int i = len; i > *position; i--)
-                buffer[i] = buffer[i - 1];
-        buffer[*position] = c[i];
-        buffer[len + 1] = '\0';
-        (*position)++;
-        len++;
-    }
-}
-// здвигати по 6 і перевіряти чи воно дорівнює == 2
+//     for (int i = 0; i < 4; i++) {
+//         if (buffer[0])
+//             for (int i = len; i > *position; i--)
+//                 buffer[i] = buffer[i - 1];
+//         buffer[*position] = c[i];
+//         buffer[len + 1] = '\0';
+//         (*position)++;
+//         len++;
+//     }
+// }

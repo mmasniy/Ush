@@ -1,11 +1,11 @@
 #include "../../inc/ush.h"
 
 int mx_getchar() {
-	unsigned int ch = 0;
+    unsigned int ch = 0;
 
-	if (read(1, &ch, 4) == 0)
-		return 0;
-	return ch;
+    if (read(STDIN_FILENO, &ch, 4) == 0)
+        return 0;
+    return ch;
 }
 
 void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {

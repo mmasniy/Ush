@@ -12,7 +12,6 @@ void mx_save_all_history(t_info *info) {
     new_times.actime = time(NULL); /* keep atime unchanged */
     new_times.modtime = 1576800125;    /* set mtime to current time */
     utime(".history_ush.txt", &new_times);
-
 }
 
 void mx_check_history(t_info *info, char *line) {

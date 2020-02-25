@@ -11,13 +11,13 @@ void mx_print_ush(t_info *info) {
     mx_printstr(RESET);
     write(1, " ", 1);
     if (info->PWD) {
-    	mx_printstr("\033[1;29m");
-    	write(1, "(", 1);
-    	mx_printstr(&(info->pwd[strlen(info->pwd)
+        mx_printstr("\033[1;29m");
+        write(1, "(", 1);
+        mx_printstr(&(info->pwd[strlen(info->pwd)
             - (info->name_len - (6 + strlen(info->name)))]));
-    	write(1, "): ", 3);
-    	mx_printstr(RESET);
-	}
+        write(1, "): ", 3);
+        mx_printstr(RESET);
+    }
 }
 
 static void count_name_len(t_info *info) {

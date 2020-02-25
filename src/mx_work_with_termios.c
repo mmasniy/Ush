@@ -3,10 +3,9 @@
 bool mx_custom_termios(t_info *info, int fd) {
     struct termios raw;
 
-    if (!isatty(fd))
+    if (tcgetattr(fd, &info->origin_termios) == -1) {
         return 0;
-    if (tcgetattr(fd, &info->origin_termios) == -1)
-        return 0;
+    }
     raw = info->origin_termios;
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     raw.c_oflag &= ~(OPOST); // with that baground process can print wrong

@@ -95,21 +95,21 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
     mx_del_slash_and_quotes_in_list(tok);
-    printf("%slist: %s\n", GRN, RESET);
-    printf("%s---------------------------------------------%s\n", MAG, RESET);
-    for (t_tok *temp = *tok; temp; temp = temp->next) {
-         printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
-    }
-    printf("\n\n");
-    for (t_tok *temp = *tok; temp; temp = temp->next) {
-         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
-    }
-    printf("\n\n");
-    for (t_tok *temp = *tok; temp; temp = temp->next) {
-         printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
-    }
-    printf("\n%s---------------------------------------------%s\n", MAG, RESET);
-    printf("\n");
+    // printf("%slist: %s\n", GRN, RESET);
+    // printf("%s---------------------------------------------%s\n", MAG, RESET);
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
+    // }
+    // printf("\n");
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
+    // }
+    // printf("\n");
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
+    // }
+    // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
+    // printf("\n");
     mx_valid_red(tok);
     mx_strdel(&tmp);
     return 1;
