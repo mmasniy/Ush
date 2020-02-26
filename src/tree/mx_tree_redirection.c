@@ -29,7 +29,6 @@ int mx_create_file(t_ast *t, t_info *i) {
 }
 
 int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
-    // printf("i->fd_r = %d\n", i->fd_r);
     if (i->fd_r == -1 && (t->type == 13 || t->type == 16)) {
         close(mx_atoi(t->command[0]));
     }

@@ -22,7 +22,8 @@ void mx_add_tok(t_tok **prev, char *c, int s) {
 }
 
 void mx_free_toks(t_tok **tok) {
-    t_tok *tmp;
+    t_tok *tmp = NULL;
+    
     while (*tok) {
         tmp = (*tok)->next;
         (*tok)->prev = NULL;

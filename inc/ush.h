@@ -91,7 +91,9 @@
 #define ERROR_PARSE_TREE "u$h: syntax error near after token `"
 #define MX_ER ": command not found"
 #define MX_NOT_FOUND " no such file or directory: "
-
+#define MX_DOT "u$h: parse error near `;;'\n"
+#define MX_RED "u$h: parse error: input, please, one of redirections. \n"
+#define MX_DOP_RED "If it's not like a case : \"functions << file1 > file\"\n"
 // Structures
 
 enum e_keys{
@@ -226,7 +228,9 @@ typedef struct  s_info {
 
     //alias
     struct s_alias *alias;
-    int num_of_al;
+
+    //variable for counting redirection in tree
+    int num_of_red;
 }               t_info;
 
 // Functions --------------------------------------------------------------|
@@ -447,6 +451,7 @@ int mx_redirect_str(char *s, int i);
 
 
 //mx_work_with_tree.c
+void mx_print_red_err(int i);
 int mx_check_op(int p);
 t_ast *mx_build_ast(t_tok *max);
 t_ast *mx_start_tree(t_tok *tok, t_info *i);

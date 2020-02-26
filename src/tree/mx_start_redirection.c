@@ -36,13 +36,15 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
         path = mx_find_in_PATH(info->paths, t->command[0], 1);
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname);
-        else if (execv(path, t->command) == -1)
+        else if (execv(path, t->command) == -1){
             mx_print_error(MX_ER, t->command[0]);
+        }
         dup_2(info, 1);
         exit(EXIT_FAILURE);
     }
-    else if (pid < 0)
+    else if (pid < 0){
             mx_print_error(MX_ER, t->command[0]);
+    }
     else {
         int status;
         pid_t wpid = waitpid(pid, &status, WUNTRACED); 

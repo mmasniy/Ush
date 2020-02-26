@@ -26,9 +26,8 @@ static void execute_binary_file(t_ast *t, t_info *i, pid_t pid) {
     }
     else {
         path = mx_find_in_PATH(i->paths, t->command[0], 1);
-        if (execv(path, t->command) == -1) {
+        if (execv(path, t->command) == -1)
             mx_print_error(MX_ER, t->command[0]);
-        }
         dup_2(i, 1);
         exit(EXIT_FAILURE);
     }
@@ -42,9 +41,8 @@ void mx_execute_binary_file(t_ast *t, t_info *i) {
         dup_2(i, 0);
         execute_binary_file(t, i, pid);
     }
-    else if (pid < 0) {
+    else if (pid < 0)
         mx_print_error(MX_ER, t->command[0]);
-    }
     else {
         int status;
         pid_t wpid = waitpid(pid, &status, WUNTRACED); 

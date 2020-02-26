@@ -83,11 +83,7 @@ void mx_info_start(t_info *info) {
     info->to_export = mx_save_env_as_list(environ);
     info->variables = mx_save_env_as_list(environ);
     info->alias = NULL;
-    info->num_of_al = 0;
-    // info->alias = (t_alias *)malloc(sizeof(t_alias));
-    // info->alias->name = NULL;
-    // info->alias->value = NULL;
-    // info->alias->next = NULL;
+    info->num_of_red = 0;
     set_pwd(info);
     open_history_file(info);
     init_continue(info);
