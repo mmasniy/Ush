@@ -6,9 +6,8 @@ static t_history *search_for_ctrl_r(t_info *info, char *search_line);
 static void ctrl_r(t_info *info, char **buffer, int *position);
 
 bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c) {
-    if (c[0] == TAB && *position > 0 && !mx_isspace((*buffer)[*position - 1])) {
+    if (c[0] == TAB && *position > 0 && !mx_isspace((*buffer)[*position - 1]))
         mx_tab_work(info, buffer, position);
-    }
     else if (c[0] == CTRL_D || c[0] == CTRL_C || c[0] == 13 || c[0] == '\n') {
         write(1, "\n\r", 2);
         if (c[0] == CTRL_D)
@@ -51,9 +50,10 @@ static void print_posible_history(t_info *info, t_history *result) {
 }
 
 static t_history *search_for_ctrl_r(t_info *info, char *search_line) {
-    for (t_history *tmp = info->history_pack->history->next;
-        tmp; tmp = tmp->next) {
+    for (t_history *tmp = info->history_pack->history->next
+        ; tmp; tmp = tmp->next) {
         int index;
+
         if ((index = mx_get_substr_index(tmp->data, search_line)) >= 0)
             return tmp;
     }

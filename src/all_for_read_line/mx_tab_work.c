@@ -25,10 +25,8 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
             mx_str_edit(info, *buffer, &pos, &(info->tab_pos->data[i]));
         *position += mx_strlen(info->tab_pos->data);
     }
-    else { //////// Create new
+    else //////// Create new
         create_new_tab_list(info, what_check, buffer, position);
-        mx_print_tab_list(info);
-    }
     mx_strdel(&what_check);
 }
 
@@ -93,8 +91,7 @@ static void create_new_tab_list(t_info *info
         check_for_file(info, what_check, f, d);
     functions_search(info, what_check);
     info->tab_pos = info->tab_list;
-    // if (info->tab_list && info->tab_list->next)
-    //     mx_tab_work(info, buffer, position);
+    mx_print_tab_list(info);
 }
 
 static void functions_search(t_info *info, char *what_check) {

@@ -96,7 +96,8 @@
 #define MX_DOP_RED "If it's not like a case : \"functions << file1 > file\"\n"
 // Structures
 
-enum e_keys{
+enum e_keys
+{
     CTRL_A = 1,
     CTRL_B = 2,
     CTRL_C = 3,
@@ -128,13 +129,15 @@ enum e_keys{
 ** list of tokins
 */
 
-typedef struct s_export {
+typedef struct  s_export
+{
     char *key;
     char *value;
     struct s_export *next;
-} t_export;
+}               t_export;
 
-typedef struct  s_tok {
+typedef struct  s_tok
+{
     int             type;
     int             prio;
     char            *token; // content
@@ -146,42 +149,48 @@ typedef struct  s_tok {
 ** Tree of commands
 */
 
-typedef struct  s_ast {
+typedef struct  s_ast
+{
     char            **command;
     t_tok           token;
     int             type;
     struct s_ast    *father;
     struct s_ast    *left;
     struct s_ast    *right;
-}                   t_ast;
+}               t_ast;
 
-typedef struct s_history {
+typedef struct  s_history
+{
     // int id;
     char *data;
     struct s_history *prev;
     struct s_history *next;
 }               t_history;
 
-typedef struct s_history_pack {
+typedef struct  s_history_pack
+{
     int total_num;
     struct s_history *pos;
     struct s_history *last;
     struct s_history *history;
 }               t_history_pack;
 
-typedef struct s_fg {
+typedef struct  s_fg
+{
     char        **cmd;  // name proc
     pid_t       pid;    // pid proc
     int         n;      //number proc
 }               t_fg;
 
-typedef struct s_alias {
+typedef struct  s_alias
+{
     char                *name;     // mk
     char                *value;    // make && ./ush
     struct s_alias      *next;
-}                       t_alias;
+}               t_alias;
 
-typedef struct  s_info {
+typedef struct  s_info
+{
     char *name;
     char        **args;
     char        *PWD;
