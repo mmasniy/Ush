@@ -6,8 +6,9 @@ static t_history *search_for_ctrl_r(t_info *info, char *search_line);
 static void ctrl_r(t_info *info, char **buffer, int *position);
 
 bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c) {
-    if (c[0] == TAB && *position > 0 && !mx_isspace((*buffer)[*position - 1]))
+    if (c[0] == TAB && *position > 0 && !mx_isspace((*buffer)[*position - 1])) {
         mx_tab_work(info, buffer, position);
+    }
     else if (c[0] == CTRL_D || c[0] == CTRL_C || c[0] == 13 || c[0] == '\n') {
         write(1, "\n\r", 2);
         if (c[0] == CTRL_D)

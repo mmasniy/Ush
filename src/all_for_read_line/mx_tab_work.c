@@ -29,6 +29,7 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
         create_new_tab_list(info, what_check, buffer, position);
         mx_print_tab_list(info);
     }
+    mx_strdel(&what_check);
 }
 
 static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {
@@ -67,6 +68,7 @@ static void check_if_that_folder(t_info *info, char *what_check
         if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")) {
             second = mx_strjoin(full_path, d->d_name);
             mx_push_history_back(&info->tab_list, second);
+            mx_strdel(&second);
         }
     }
     closedir(f);

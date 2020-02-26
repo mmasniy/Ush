@@ -68,8 +68,9 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
     else if (c[0] >= 32 && c[0] <= 127) {
         mx_str_edit(info, *buffer, pos, c);
     }
-    else
+    else {
         result = mx_line_hot_key(info, buffer, pos, c);
+    }
     return result;
 }
 

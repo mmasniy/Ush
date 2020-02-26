@@ -124,14 +124,12 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // }
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
-
     mx_del_slash_and_quotes_in_list(tok);
-    for (t_tok *tmp = *tok; tmp; tmp = tmp->next)
-        if (strcmp(tmp->token, ""))
-            exist = 1;
-    if (!exist)
-        return 0;
-
+    for (t_tok *tmp_tok = *tok; tmp_tok; tmp_tok = tmp_tok->next)
+        if (strcmp(tmp_tok->token, "") == 0) {
+            mx_strdel(&tmp);
+            return 0;
+        }
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
     // for (t_tok *temp = *tok; temp; temp = temp->next) {
