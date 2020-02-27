@@ -76,6 +76,7 @@ static void open_history_file(t_info *info) {
 
 void mx_info_start(t_info *info) {
     extern char **environ;
+
     info->args = NULL;
     info->OLDPWD = NULL;
     info->history_pack = (t_history_pack *)malloc(sizeof(t_history_pack));

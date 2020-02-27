@@ -276,7 +276,7 @@ void mx_search_slash(char **line);
 void mx_parse_line(t_info *info, char **line);
 
 // mx_del_slash_and_quotes_in_list.c
-void mx_del_slash_and_quotes_in_list(t_tok **tok);
+bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
 
 // ------------------------------------------|
 

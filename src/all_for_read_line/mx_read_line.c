@@ -9,19 +9,19 @@ char *mx_ush_read_line(t_info *info) {
     int position = 0;
     char *buffer = mx_strnew(bufsize);
     unsigned int ch = 0;
-    // int savedFds[2];
+    int fds[2];
 
-    // savedFds[0] = dup(1);
-    // savedFds[1] = dup(2);
-    // dup2(2, 1);
-
+    fds[0] = dup(1);
+    fds[1] = open("/dev/tty", O_WRONLY);
+    dup2(fds[1], 1);
     mx_push_history_front(&info->history_pack->history, buffer);
     info->history_pack->pos = info->history_pack->history;
     mx_print_ush(info);
     mx_custom_termios(info, STDIN_FILENO);
     while (1) {
         ch = mx_getchar();
-        if (!input_work(info, &buffer, &position, ch)) {
+        if (!input_work(info, &buffer, &position, ch) && dup2(fds[0], 1) >= 0
+            && close(fds[0]) >= 0 && close(fds[1]) >= 0) {
             mx_origin_termios(info, STDIN_FILENO);
             return buffer;
         }
@@ -30,10 +30,6 @@ char *mx_ush_read_line(t_info *info) {
             || malloc_size(buffer) <= (size_t)mx_strlen(buffer) + 1)
             buffer = realloc(buffer, (bufsize += USH_RL_BUFSIZE));
     }
-    // dup2(1, savedFds[0]);
-    // dup2(2, savedFds[1]);
-    // close(savedFds[1]);
-    // close(savedFds[0]);
 }
 
 static void home_end_page(t_info *info, char **buf, int *position, char *c) {

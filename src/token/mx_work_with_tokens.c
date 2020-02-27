@@ -93,7 +93,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     int size = 1;
     int i = 0;
     char *tmp;
-    bool exist = 0;
+    bool not_valid = 0;
 
     if (!line)
         return 0;
@@ -124,9 +124,11 @@ int mx_work_w_toks(char *line, t_tok **tok) {
     // }
     // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
     // printf("\n");
-    mx_del_slash_and_quotes_in_list(tok);
+    // system("leaks ush");
+    mx_del_slash_and_quotes_in_list(tok, &not_valid);
+    // system("leaks ush");
     for (t_tok *tmp_tok = *tok; tmp_tok; tmp_tok = tmp_tok->next)
-        if (strcmp(tmp_tok->token, "") == 0) {
+        if (strcmp(tmp_tok->token, "" ) == 0 || not_valid) {
             mx_strdel(&tmp);
             return 0;
         }
