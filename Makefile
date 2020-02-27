@@ -17,7 +17,6 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
 	src/parse_line_step/mx_work_with_tilde.c \
-	src/parse_line_step/mx_skip_all_quotes.c \
 	src/parse_line_step/mx_substitutions.c \
 	src/parse_line_step/mx_check_first_argument.c \
 	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
@@ -44,6 +43,8 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_ush_env.c \
 	src/builtins/mx_ush_echo.c \
 	src/builtins/mx_ush_cd.c \
+	src/builtins/mx_ush_true_and_false.c \
+	src/builtins/mx_ush_custom.c \
 	src/builtins/mx_funcs_for_env.c \
 	src/builtins/mx_funcs_for_env_3.c \
 	src/builtins/mx_funcs_for_env_2.c \

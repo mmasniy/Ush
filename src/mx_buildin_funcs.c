@@ -13,6 +13,9 @@ int mx_run_buildin(t_info *info) {
     !strcmp(info->args[0], "export") ? exit_code = mx_ush_export(info) : 0;
     !strcmp(info->args[0], "which") ? exit_code = mx_ush_which(info) : 0;
     !strcmp(info->args[0], "echo") ? exit_code = mx_ush_echo(info) : 0;
+    !strcmp(info->args[0], "custom") ? exit_code = mx_ush_custom(info) : 0;
+    !strcmp(info->args[0], "true") ? exit_code = mx_ush_true(info) : 0;
+    !strcmp(info->args[0], "false") ? exit_code = mx_ush_false(info) : 0;
     !strcmp(info->args[0], "fg") ? mx_fg(info) : 0;
     return exit_code;
 }
@@ -27,7 +30,9 @@ int mx_check_buildin(t_info *info, bool exec) {
         || (!strcmp(info->args[0], "env")) || (!strcmp(info->args[0], "unset"))
         || (!strcmp(info->args[0], "export"))
         || (!strcmp(info->args[0], "which")) || (!strcmp(info->args[0], "echo"))
-        || (!strcmp(info->args[0], "fg"))) {
+        || (!strcmp(info->args[0], "fg")) || (!strcmp(info->args[0], "true"))
+        || (!strcmp(info->args[0], "false"))
+        || (!strcmp(info->args[0], "custom")))  {
         if (exec)
             return_value = mx_run_buildin(info);
         else
@@ -51,6 +56,9 @@ char *mx_find_similar_buildin(char *what_check) {
         || (!mx_str_head(what_check, "export") && (res = strdup("export")))
         || (!mx_str_head(what_check, "which") && (res = strdup("which")))
         || (!mx_str_head(what_check, "echo") && (res = strdup("echo")))
+        || (!mx_str_head(what_check, "custom") && (res = strdup("custom")))
+        || (!mx_str_head(what_check, "true") && (res = strdup("true")))
+        || (!mx_str_head(what_check, "false") && (res = strdup("false")))
         || (!mx_str_head(what_check, "fg") && (res = strdup("fg")))) {
         return res;
     }

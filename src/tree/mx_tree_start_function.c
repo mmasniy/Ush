@@ -47,8 +47,9 @@ void mx_execute_binary_file(t_ast *t, t_info *i) {
         int status;
         pid_t wpid = waitpid(pid, &status, WUNTRACED); 
 
-        while (!WIFEXITED(status)
-            && !WIFSIGNALED(status))
-            wpid = waitpid(pid, &status, WUNTRACED);
+        // printf("status = %d\n", status);
+        // while (!WIFEXITED(status)
+        //     && !WIFSIGNALED(status))
+        //     wpid = waitpid(pid, &status, WUNTRACED);
     }
 }

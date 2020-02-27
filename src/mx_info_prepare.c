@@ -3,10 +3,10 @@
 static void init_continue(t_info *info) {
     signal(SIGINT, mx_sigio_handler);
     signal(SIGIO, mx_sigio_handler);
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGTSTP, SIG_IGN);
-    signal(SIGTTIN, SIG_IGN);
-    signal(SIGTTOU, SIG_IGN);
+    // signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, mx_sigio_handler);
+    // signal(SIGTTIN, SIG_IGN);
+    // signal(SIGTTOU, SIG_IGN);
     signal(SIGCHLD, SIG_IGN);
     info->name = strdup(USH);
 }
@@ -50,6 +50,10 @@ static void set_pwd(t_info *info) {
     info->oldpwd = strdup(getenv("PWD"));
     // name for transport file
     info->path_f = mx_strdup(".system_ush.txt");
+
+    info->history_path = mx_strjoin(info->pwd, "/");
+    mx_del_and_set(&(info->history_path)
+        , mx_strjoin(info->history_path, ".history_ush.txt"));
 }
 
 static void open_history_file(t_info *info) {

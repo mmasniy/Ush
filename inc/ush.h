@@ -96,8 +96,7 @@
 #define MX_DOP_RED "If it's not like a case : \"functions << file1 > file\"\n"
 // Structures
 
-enum e_keys
-{
+enum e_keys {
     CTRL_A = 1,
     CTRL_B = 2,
     CTRL_C = 3,
@@ -129,15 +128,13 @@ enum e_keys
 ** list of tokins
 */
 
-typedef struct  s_export
-{
+typedef struct  s_export {
     char *key;
     char *value;
     struct s_export *next;
 }               t_export;
 
-typedef struct  s_tok
-{
+typedef struct  s_tok {
     int             type;
     int             prio;
     char            *token; // content
@@ -149,8 +146,7 @@ typedef struct  s_tok
 ** Tree of commands
 */
 
-typedef struct  s_ast
-{
+typedef struct  s_ast {
     char            **command;
     t_tok           token;
     int             type;
@@ -159,39 +155,37 @@ typedef struct  s_ast
     struct s_ast    *right;
 }               t_ast;
 
-typedef struct  s_history
-{
+typedef struct  s_history {
     // int id;
     char *data;
     struct s_history *prev;
     struct s_history *next;
 }               t_history;
 
-typedef struct  s_history_pack
-{
+typedef struct  s_history_pack {
     int total_num;
     struct s_history *pos;
     struct s_history *last;
     struct s_history *history;
 }               t_history_pack;
 
-typedef struct  s_fg
-{
+typedef struct  s_fg {
     char        **cmd;  // name proc
     pid_t       pid;    // pid proc
     int         n;      //number proc
 }               t_fg;
 
-typedef struct  s_alias
-{
+typedef struct  s_alias {
     char                *name;     // mk
     char                *value;    // make && ./ush
     struct s_alias      *next;
 }               t_alias;
 
-typedef struct  s_info
-{
+typedef struct  s_info {
     char *name;
+    char *color_name;
+    bool def_name;
+    unsigned int name_len;
     char        **args;
     char        *PWD;
     char        *OLDPWD;
@@ -206,8 +200,8 @@ typedef struct  s_info
     struct s_history *tab_list;
     struct s_history *tab_pos;
     int num_of_elems_in_tab;
+    char *history_path;
     //
-    unsigned int name_len;
 
     char **paths;
     struct s_export *to_export;
@@ -253,11 +247,6 @@ bool mx_check_first_argument(t_info *info, char *head);
 void mx_recursion_substitutions(t_info *info, char **line
     , int start, int finish);
 bool mx_execute_substitutions(t_info *info, char **line);
-
-// mx_skip_all_quotes.c
-bool mx_skip_single_quotes(char *check, int *pos);
-bool mx_skip_double_quotes(char *check, int *pos);
-bool mx_skip_substitutions(char *check, int *pos);
 
 // mx_shell_functions.c
 void mx_shell_functions(t_info *info, char **line);
@@ -430,6 +419,9 @@ int mx_ush_export(t_info *info);
 int mx_ush_which(t_info *info);
 int mx_ush_echo(t_info *info);
 int mx_fg(t_info *info);
+int mx_ush_custom(t_info *info);
+int mx_ush_true(t_info *info);
+int mx_ush_false(t_info *info);
 
 void mx_ush_loop(t_info *info_sh);
 char **mx_ush_split_line(char *line);

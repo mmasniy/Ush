@@ -1,5 +1,22 @@
 #include "../../inc/ush.h"
 
+static char findchar(char c) {
+    char t = -1;
+
+    t = c == 'n' ? 10 :
+    c == 't' ? 9 :
+    c == 'v' ? 11 :
+    c == 'b' ? 8 :
+    c == 'a' ? 7 :
+    c == 'r' ? 013 :
+    c == '\"' ? 34 :
+    c == '\'' ? 39 :
+    c == '\?' ? 63 :
+    c == '\\' ? 92 :
+    c == '\0' ? 0 : -1;
+    return t;
+}
+
 void mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
     // printf("line = %s\n", *line);
@@ -29,37 +46,6 @@ bool mx_is_allowed_symbol_for_tilde(char c) {
         || c == '-' || c == '_')
         return 1;
     return 0;
-}
-
-bool mx_tilde_search(t_info *info, char **line) {
-    for (int pos = 0; (*line)[pos]; pos++) {
-        if (mx_skip_single_quotes(*line, &pos)
-            || mx_skip_double_quotes(*line, &pos)
-            || mx_skip_substitutions(*line, &pos)) {
-            return (info->status = 1);
-        }
-        printf("+%s+\n", &((*line)[pos]));
-        if ((*line)[pos] == '~') {
-        }
-    }
-    return 0;
-}
-
-static char findchar(char c) {
-    char t = -1;
-
-    t = c == 'n' ? 10 :
-    c == 't' ? 9 :
-    c == 'v' ? 11 :
-    c == 'b' ? 8 :
-    c == 'a' ? 7 :
-    c == 'r' ? 013 :
-    c == '\"' ? 34 :
-    c == '\'' ? 39 :
-    c == '\?' ? 63 :
-    c == '\\' ? 92 :
-    c == '\0' ? 0 : -1;
-    return t;
 }
 
 void mx_search_slash(char **line) { 

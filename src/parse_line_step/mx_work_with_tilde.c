@@ -8,7 +8,7 @@ static bool before_tilde(char *line, int pos) {
     return 0;
 }
 
-static void find_tilde_content(char *search_line, char **tilde_change) {
+static void find_tilde_content_file(char *search_line, char **tilde_change) {
     char *passwd_data = mx_file_to_str("/etc/passwd");
 
     if (passwd_data) {
@@ -28,8 +28,22 @@ static void find_tilde_content(char *search_line, char **tilde_change) {
     }
 }
 
+static void tilde_content_in_Users(char *search_line, char **tilde_change) {
+    DIR *f = opendir("/Users");
+    struct dirent *d = NULL;
+
+    if (f) {
+        while ((d = readdir(f))) {
+            if (strcmp(d->d_name, search_line) == 0) {
+                *tilde_change = mx_strjoin("/Users/", d->d_name);
+                break;
+            }
+        }
+        closedir(f);
+    }
+}
+
 static bool read_tilde_content(char *line, int *pos, char **tilde_change) {
-    DIR *f = NULL;
     char *check_line = NULL;
     int size = 1;
 
@@ -37,10 +51,11 @@ static bool read_tilde_content(char *line, int *pos, char **tilde_change) {
         if (line[i + size] == '/' || mx_strchr(TYPE, line[i + size]))
             break;
     check_line = strndup(&(line[*pos + 1]), size);
-    // printf("check_line = %s\n", check_line);
-    find_tilde_content(check_line, tilde_change);
+    if (!(*tilde_change))
+    find_tilde_content_file(check_line, tilde_change);
+    if (!(*tilde_change))
+        tilde_content_in_Users(check_line, tilde_change);
     mx_strdel(&check_line);
-    // printf("size = %d\n",size);
     *pos += size;
     return 0;
 }
