@@ -5,14 +5,15 @@ static void mx_init_shell(t_info *info);
 static void run_command(t_info *info, char **line) {
     t_tok *tok = NULL;
 
-    mx_parse_line(info, line);
-    if (mx_work_w_toks(*line, &tok))
-        mx_tok_to_tree(tok, info);
+    info->status = 0;
+    if (mx_parse_line(info, line) == 0) {
+        if (mx_work_w_toks(*line, &tok))
+            mx_tok_to_tree(tok, info);
+        mx_free_toks(&tok);
+    }
     mx_del_strarr(&(info->args));
     info->ctrl_d = 0;
     info->ctrl_c = 0;
-    mx_free_toks(&tok);
-    info->status = 0;
     mx_strdel(line);
 }
 
@@ -29,6 +30,7 @@ static bool check_open_type(t_info *info) {
         if (line[linelen - 1] == '\n')
             line[linelen - 1] = '\0';
         run_command(info, &line);
+        // printf("i->status = %d\n", info->status);
     }
     return false;
 }
@@ -39,12 +41,14 @@ void run_shell(t_info *info) {
 
         while (1) {
             line = mx_ush_read_line(info);
+            info->name_len = 0;
             mx_check_history(info, line);
             if (info->ctrl_c) {
                 mx_save_all_history(info);
                 exit(0);
             }
             run_command(info, &line);
+            // printf("i->status = %d\n", info->status);
         }
     }
 }

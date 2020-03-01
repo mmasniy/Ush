@@ -9,6 +9,7 @@ int mx_run_buildin(t_info *info) {
     !strcmp(info->args[0], "exit") ? exit_code = mx_ush_exit(info) : 0;
     !strcmp(info->args[0], "history") ? exit_code = mx_ush_history(info) : 0;
     !strcmp(info->args[0], "env") ? exit_code = mx_ush_env(info) : 0;
+    !strcmp(info->args[0], "set") ? exit_code = mx_ush_set(info) : 0;
     !strcmp(info->args[0], "unset") ? exit_code = mx_ush_unset(info) : 0;
     !strcmp(info->args[0], "export") ? exit_code = mx_ush_export(info) : 0;
     !strcmp(info->args[0], "which") ? exit_code = mx_ush_which(info) : 0;
@@ -27,7 +28,8 @@ int mx_check_buildin(t_info *info, bool exec) {
         || (!strcmp(info->args[0], "help"))
         || (!strcmp(info->args[0], "exit"))
         || (!strcmp(info->args[0], "history"))
-        || (!strcmp(info->args[0], "env")) || (!strcmp(info->args[0], "unset"))
+        || (!strcmp(info->args[0], "env")) || (!strcmp(info->args[0], "set"))
+        || (!strcmp(info->args[0], "unset"))
         || (!strcmp(info->args[0], "export"))
         || (!strcmp(info->args[0], "which")) || (!strcmp(info->args[0], "echo"))
         || (!strcmp(info->args[0], "fg")) || (!strcmp(info->args[0], "true"))
@@ -52,6 +54,7 @@ char *mx_find_similar_buildin(char *what_check) {
         || (!mx_str_head(what_check, "exit") && (res = strdup("exit")))
         || (!mx_str_head(what_check, "history") && (res = strdup("history")))
         || (!mx_str_head(what_check, "env") && (res = strdup("env")))
+        || (!mx_str_head(what_check, "set") && (res = strdup("set")))
         || (!mx_str_head(what_check, "unset") && (res = strdup("unset")))
         || (!mx_str_head(what_check, "export") && (res = strdup("export")))
         || (!mx_str_head(what_check, "which") && (res = strdup("which")))

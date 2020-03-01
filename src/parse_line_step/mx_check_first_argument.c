@@ -6,7 +6,7 @@ static bool check_file_or_folder(t_info *info, char *head) {
 
     if ((f = opendir(head))) {
         closedir(f);
-        mx_print_error(head, ": is a directory\n");
+        mx_print_error(info, head, ": is a directory\n");
         return (info->status = 126);
     }
     else {
@@ -21,7 +21,7 @@ static bool check_file_or_folder(t_info *info, char *head) {
                 }
             }
             closedir(f);
-            mx_print_error(head, ": No such file or directory\n");
+            mx_print_error(info, head, ": No such file or directory\n");
             return (info->status = 127);
         }
     }
@@ -38,7 +38,7 @@ bool mx_check_first_argument(t_info *info, char *head) {
         if (tmp || mx_check_buildin(info, 0) == 0)
             mx_strdel(&tmp);
         else {
-            mx_print_error(head, ": command not found");
+            mx_print_error(info, head, ": command not found");
             return (info->status = 1);
         }
     }

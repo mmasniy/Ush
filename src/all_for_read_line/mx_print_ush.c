@@ -3,8 +3,9 @@
 static void count_name_len(t_info *info);
 
 void mx_print_ush(t_info *info) {
+    mx_print_char_loop('\b', info->name_len - 1);
     count_name_len(info);
-    write(1, "\r", 1);
+    // write(1, "\r", 1);
 
 // info->default_name
     if (info->def_name) {

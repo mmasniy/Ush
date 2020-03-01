@@ -7,7 +7,7 @@ static void init_continue(t_info *info) {
     signal(SIGTSTP, mx_sigio_handler);
     // signal(SIGTTIN, SIG_IGN);
     // signal(SIGTTOU, SIG_IGN);
-    signal(SIGCHLD, SIG_IGN);
+    // signal(SIGCHLD, SIG_IGN);
     info->name = strdup(USH);
 }
 
@@ -49,19 +49,16 @@ static void set_pwd(t_info *info) {
     info->pwd = strdup(getenv("PWD"));
     info->oldpwd = strdup(getenv("PWD"));
     // name for transport file
-    info->path_f = mx_strdup(".system_ush.txt");
-
-    info->history_path = mx_strjoin(info->pwd, "/");
-    mx_del_and_set(&(info->history_path)
-        , mx_strjoin(info->history_path, ".history_ush.txt"));
+    info->path_f = "/tmp/.system_ush.txt";
+    info->history_path = "/tmp/.history_ush.txt";
 }
 
 static void open_history_file(t_info *info) {
     struct stat time;
-    char *history_file = mx_file_to_str(".history_ush.txt");
+    char *history_file = mx_file_to_str("/tmp/.history_ush.txt");
 
     if (history_file) {
-        stat(".history_ush.txt", &time);
+        stat("/tmp/.history_ush.txt", &time);
         if (time.st_mtime == 1576800125) {
             char **lines = mx_strsplit(history_file, '\n');
 
@@ -75,7 +72,7 @@ static void open_history_file(t_info *info) {
             mx_del_strarr(&lines);
         }
     }
-    remove(".history_ush.txt");
+    remove("/tmp/.history_ush.txt");
 }
 
 void mx_info_start(t_info *info) {

@@ -19,7 +19,7 @@ t_export *mx_create_new_export(char *key, char *value) {
         if (value)
         	new_elem->value = mx_strdup(value);
         else
-        	new_elem->value = mx_strdup("");
+        	new_elem->value = NULL;
         new_elem->next = NULL;
     }
     return new_elem;

@@ -23,41 +23,16 @@ static void search_just_slash(char **line) {
     mx_strdel(&new_line);
 }
 
-// void mx_del_slash_and_quotes_in_list(t_tok **tok) {
-//     for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
-//         if (tmp->type == 0 && tmp->token) {
-//             if (tmp->token[0] == '\"' || tmp->token[0] == '\'') {
-//                 mx_del_and_set(&(tmp->token)
-//                     , strndup(&(tmp->token[1]), strlen(tmp->token) - 2));
-//             }
-//             else {
-//                 search_just_slash(&(tmp->token));
-//             }
-//         }
-//     }
-    //////////////////////////////////////////////////////////////////
-    // char *tmp_line;
-
-    // for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
-    //     if (tmp->type == 0 && tmp->token) {
-    //         if (mx_get_substr_index_without_symbol(tmp->token) >= 0) {
-    //             search_just_slash(&(tmp->token));
-    //         }
-    //         else
-    //             search_just_slash(&(tmp->token));
-    //     }
-    // }////////////////////////////////////////////////////////////
-// }
-
 static int find_quote(char *line, char *type) {
-    int quotes_1 = mx_char_block(line, '\\', '\'', '\0');
-    int quotes_2 = mx_char_block(line, '\\', '"', '\0');
-
-    if (*type == '\'')
-        return quotes_1;
+    if (*type == '\'') {
+        return mx_get_char_index(line, '\'');
+    }
     else if (*type == '"')
-        return quotes_2;
+        return mx_char_block(line, '\\', '"', '\0');
     else {
+        int quotes_1 = mx_char_block(line, '\\', '\'', '\0');
+        int quotes_2 = mx_char_block(line, '\\', '"', '\0');
+
         if (quotes_1 == -1 || (quotes_1 > quotes_2 && quotes_2 != -1)) {
             *type = '"';
             return quotes_2;

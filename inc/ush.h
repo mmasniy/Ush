@@ -66,9 +66,11 @@
 ** Defines for tokens
 */
 
+#define OPEN_CHECK "('\""
 #define MX_CHECK "-_/~.:\"\\"
 #define MX_CHECK2 "+-_/~:'\".\\="
 #define TYPE "; | & &> <& &>> <<& < > << >> && ||"
+#define EXPORT_VALUE_ALLOW "_$+-#()?:<>|&=.,/~"
 
 #define USH "u$h>"
 
@@ -83,6 +85,12 @@
 #define MAG             "\x1B[1;35m"
 
 #define MX_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
+#define MX_W_INT(w)         (*(int *)&(w))
+#define MX_WST(x)           (x & 0177)
+#define MX_WIFEXIT(x)       (MX_WST(x) == 0)
+#define MX_WIFSIG(x)        (MX_WST(x) != _WSTOPPED && MX_WST(x) != 0)
+#define MX_WTERMSIG(x)      (MX_WST(x))
+#define MX_WEXITSTATUS(x)   ((MX_W_INT(x) >> 8) & 0x000000ff)
 
 // Errors
 
@@ -169,11 +177,12 @@ typedef struct  s_history_pack {
     struct s_history *history;
 }               t_history_pack;
 
-typedef struct  s_fg {
-    char        **cmd;  // name proc
-    pid_t       pid;    // pid proc
-    int         n;      //number proc
-}               t_fg;
+typedef struct  s_process {
+    int                 pos;
+    char                *cmd;
+    pid_t               pid;
+    struct  s_process   *next;
+}                       t_process;
 
 typedef struct  s_alias {
     char                *name;     // mk
@@ -230,7 +239,9 @@ typedef struct  s_info {
     char *fname;
 
     //alias
-    struct s_alias *alias;
+    struct s_alias          *alias;
+    struct s_process        *process;
+    struct s_ast            *t;
 
     //variable for counting redirection in tree
     int num_of_red;
@@ -239,6 +250,9 @@ typedef struct  s_info {
 // Functions --------------------------------------------------------------|
 
 // All parse --------------------------------|
+
+// mx_check_open_close_symbols.c
+bool mx_check_open_close_symbols(t_info *info, char *line);
 
 // mx_check_first_argument.c
 bool mx_check_first_argument(t_info *info, char *head);
@@ -257,12 +271,12 @@ int mx_tilde_work(t_info *info, char **line, char *craft);
 // mx_find_key_and_insert_value.c
 void mx_insert_value(t_info *info, char **line, char *craft);
 
-// mx_save_key_value.c
-void mx_find_and_add_key_value(t_info *info, char **line, char *craft);
+// mx_save_ush_key_value.c
+void mx_save_ush_key_value(t_info *info, char **line, char *craft);
 
 // mx_parse_line.c
 void mx_search_slash(char **line);
-void mx_parse_line(t_info *info, char **line);
+bool mx_parse_line(t_info *info, char **line);
 
 // mx_del_slash_and_quotes_in_list.c
 bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
@@ -273,7 +287,7 @@ bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
 void mx_multi_line_enter(t_info *info, char *key_word);
 
 // mx_print_errors.c
-void mx_print_error(char *error, char *arg);
+void mx_print_error(t_info *i, char *error, char *arg);
 
 // mx_buildin_funcs.c
 int mx_run_buildin(t_info *info);
@@ -414,8 +428,12 @@ int mx_ush_history(t_info *info);
 int mx_ush_help(t_info *info);
 int mx_ush_exit(t_info *info);
 int mx_ush_env(t_info *info);
+int mx_ush_set(t_info *info);
 int mx_ush_unset(t_info *info);
+
 int mx_ush_export(t_info *info);
+bool mx_update_key_value(t_export **list, char **key, char **value);
+
 int mx_ush_which(t_info *info);
 int mx_ush_echo(t_info *info);
 int mx_fg(t_info *info);
@@ -463,7 +481,7 @@ t_tok *mx_search_first(t_tok *tok);
 t_ast *mx_create_ast(t_tok *max);
 char **mx_merge_command(t_tok *t);
 char **mx_merge_op(t_tok *max);
-void mx_free_tree(t_ast *tree);
+void mx_free_tree(t_ast **tree);
 
 //tree_run.c
 int mx_tree_run(t_ast *tree, t_info *info, int f);
@@ -471,7 +489,7 @@ int mx_run_pipe(t_ast *tree, t_info *info);
 void mx_tok_to_tree(t_tok *tok, t_info *info);
 
 //mx_tree_start_func.c
-void dup_2(t_info *i, int flag);
+void mx_dup_2(t_info *i, int flag);
 int mx_start_function(t_ast *t, t_info *info, char **tree);
 void mx_execute_binary_file(t_ast *t, t_info *info);
 void mx_exec_for_file(t_ast *t, t_info *i);
@@ -501,6 +519,26 @@ void mx_replace_als_to_cmd(t_alias *als, char **line, int i);
 //mx_size_arr_and_strarr_to_str.c
 int mx_arr_size(char **str);
 char *mx_strarr_to_str(char **strarr, int i);
+
+//mx_wait.c
+void mx_waitpid(t_info *i, t_ast *t, int status, pid_t pid);
+void mx_pop_front_process(t_process **p);
+void mx_del_procces_by_pid(t_process **p, pid_t pid);
+void mx_print_added_new_node(t_process *p, pid_t pid);
+t_process *mx_get_name_procces(t_process *process, pid_t pid);
+void mx_add_process(t_process **p, pid_t pid, char **cmd);
+
+// fg
+// mx_ush_fg.c
+int mx_fg(t_info *i);
+void mx_wait_process(t_info *i, int status, pid_t child);
+
+//mx_work_with_fg.c
+t_process *mx_search_by_char(char *cmd, t_process *processes);
+t_process *mx_search_by_id(int pos, t_process *processes);
+t_process *mx_get_process(t_process *process, char *cmd);
+t_process *get_last_process(t_process *p);
+int mx_continue_process(t_info *i, char **argv, int fd);
 
 //delete
 void printKLP(t_ast* root);

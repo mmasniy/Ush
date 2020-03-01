@@ -17,18 +17,24 @@ static char findchar(char c) {
     return t;
 }
 
-void mx_parse_line(t_info *info, char **line) {
+bool mx_parse_line(t_info *info, char **line) {
     mx_tilde_work(info, line, *line);
     // printf("line = %s\n", *line);
     mx_execute_substitutions(info, line);
-    // mx_shell_functions(info, line);
-    // del_quotes(line);
-    // mx_replace_spaces_and_slash(line);
-    if (info->status > 0) {
+    if (info->status)
+        return 1;
+    if (mx_check_open_close_symbols(info, *line) == 1)
+        return 1;
+    mx_shell_functions(info, line);
+    if (mx_get_char_index(*line, '$') >= 0)
+        mx_insert_value(info, line, *line);
+    // if (mx_get_char_index(*line, '=') >= 0) //////// don't work as need
+    //     mx_save_ush_key_value(info, line, *line);
+    if (info->status) {
         printf("Error !\n");
-        return;
+        return 1;
     }
-    // printf("-------------------------------------\n%s\n-------------------------------------\n", *line);
+    return 0;
 }
 
 // void mx_parse_line(t_info *info, char **line) {

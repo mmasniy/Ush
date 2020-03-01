@@ -1,6 +1,6 @@
 #include "../../inc/ush.h"
 
-void dup_2(t_info *i, int flag) {
+void mx_dup_2(t_info *i, int flag) {
     if (flag == 0) {
         i->fd[0] = dup(0);
         i->fd[1] = dup(1);
@@ -30,28 +30,26 @@ int mx_start_red(t_ast *t, t_info *info, pid_t pid) {
 
 void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
     char *path;
+    int status;
 
     if (pid == 0) {
-        dup_2(info, 0);
+        mx_dup_2(info, 0);
         path = mx_find_in_PATH(info->paths, t->command[0], 1);
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname);
         else if (execv(path, t->command) == -1){
-            mx_print_error(MX_ER, t->command[0]);
+            mx_print_error(info, MX_ER, t->command[0]);
         }
-        dup_2(info, 1);
+        mx_dup_2(info, 1);
         exit(EXIT_FAILURE);
     }
-    else if (pid < 0){
-            mx_print_error(MX_ER, t->command[0]);
-    }
+    else if (pid < 0)
+            mx_print_error(info, MX_ER, t->command[0]);
     else {
-        int status;
-        pid_t wpid = waitpid(pid, &status, WUNTRACED); 
-
-        while (!WIFEXITED(status)
-            && !WIFSIGNALED(status))
-            wpid = waitpid(pid, &status, WUNTRACED);
+        mx_waitpid(info, t, status, pid);
+        // while (!WIFEXITED(status)
+        //     && !WIFSIGNALED(status))
+        //     wpid = waitpid(pid, &status, WUNTRACED);
     }
     mx_strdel(&path);
 }
@@ -72,7 +70,7 @@ void mx_execute_file(t_ast *t, t_info *info, pid_t pid) {
     char *path;
 
     if (pid == 0) {
-        dup_2(info, 0);
+        mx_dup_2(info, 0);
         if (info->fd_f < 0)
             info->fd_f = open(info->path_f, O_WRONLY | O_CREAT | O_TRUNC, 0600);
         // printf("i->fd_f = %d\n", info->fd_f);
@@ -86,20 +84,21 @@ void mx_execute_file(t_ast *t, t_info *info, pid_t pid) {
             if (info->fd_r < 0 && info->file != 1)
                 mx_file_not_found(info->fname);
             else if (execv(path, t->command) == -1)
-                mx_print_error(MX_ER, t->command[0]);
+                mx_print_error(info, MX_ER, t->command[0]);
         }
-        dup_2(info, 1);
+        mx_dup_2(info, 1);
         exit(EXIT_FAILURE);
     }
     else if (pid < 0)
-            mx_print_error(MX_ER, t->command[0]);
+            mx_print_error(info, MX_ER, t->command[0]);
     else {
         int status;
-        pid_t wpid = waitpid(pid, &status, WUNTRACED); 
-
-        while (!WIFEXITED(status)
-            && !WIFSIGNALED(status))
-            wpid = waitpid(pid, &status, WUNTRACED);
+        // pid_t wpid;// = waitpid(pid, &status, WUNTRACED); 
+        
+        mx_waitpid(info, t, status, pid);
+        // while (!WIFEXITED(status)
+        //     && !WIFSIGNALED(status))
+        //     wpid = waitpid(pid, &status, WUNTRACED);
     }
     mx_strdel(&path);
 }

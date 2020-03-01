@@ -23,7 +23,7 @@ int mx_create_file(t_ast *t, t_info *i) {
     }
     if (t->type == 8) {
         mx_multi_line_enter(i, t->right->command[0]);
-        return open(".system_ush.txt", O_RDONLY, 0600);
+        return open("/tmp/.system_ush.txt", O_RDONLY, 0600);
     }
     return -1;
 }
@@ -52,7 +52,7 @@ int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
 void mx_multi_line_enter(t_info *info, char *key_word) {
     char *line = NULL;
     char *copy = strdup(key_word);
-    FILE *f = fopen(".system_ush.txt", "w+");
+    FILE *f = fopen("/tmp/.system_ush.txt", "w+");
 
     mx_del_and_set(&(info->name), copy);
     while (strcmp((line = mx_ush_read_line(info)), key_word)) {

@@ -14,7 +14,7 @@ int mx_check_priority(char *c) {
     mx_strcmp(c, ";") == 0 || mx_strcmp(c, "\n") == 0 ? p = 1 : 0;
     mx_strcmp(c, "&") == 0 ? p = 2 : mx_strcmp(c, "|") == 0 ? p = 3 : 0;
     mx_strcmp(c, "<") == 0 ? p = 4 : mx_strcmp(c, ">") == 0 ? p = 5 : 0;
-    mx_strcmp(c, "||") == 0 ? p = 6 : mx_strcmp(c, "&&") == 0 ? p = 7 : 0;
+    mx_strcmp(c, "||") == 0 ? p = 7 : mx_strcmp(c, "&&") == 0 ? p = 6 : 0;
     mx_strcmp(c, "<<") == 0 ? p = 8 : mx_strcmp(c, ">>") == 0 ? p = 9 : 0;
     mx_strcmp(c, "<>") == 0 ? p = 11 : mx_strcmp(c, "<&") == 0 ? p = 12 : 0;
     mx_strcmp(c, ">&") == 0 ? p = 13 : mx_strcmp(c, ">>&") == 0 ? p = 16 : 0;

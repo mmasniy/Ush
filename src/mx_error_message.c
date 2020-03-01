@@ -33,9 +33,9 @@ static char *operators1(int type) {
         return "<";
     if (type == 5)
         return ">";
-    if (type == 6)
-        return "||";
     if (type == 7)
+        return "||";
+    if (type == 6)
         return "&&";
     if (type == 8)
         return "<<";

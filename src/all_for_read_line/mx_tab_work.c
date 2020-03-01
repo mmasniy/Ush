@@ -12,7 +12,7 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
     int len = 1;
     char *what_check = NULL;
 
-    for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++);
+    for (; pos > 0 && (!mx_isspace((*buffer)[pos - 1]) || (pos > 1 && (*buffer)[pos - 2] == '\\')); pos--, len++);
     what_check = strndup(&(*buffer)[pos], len);
     if (info->tab_list && info->tab_list->next &&
     !strcmp(what_check, info->tab_pos->data)) { ////// If exist

@@ -12,7 +12,7 @@ static void exec_command(t_info *info, char **sub_line, char quotes) {
     mx_strdel(sub_line);
     mx_del_strarr(&info->args);
     mx_free_toks(&tok);
-    line_from_file = mx_file_to_str(".system_ush.txt");
+    line_from_file = mx_file_to_str("/tmp/.system_ush.txt");
     if (line_from_file) {
         if (!quotes) {
             char *file_elements = strtok(line_from_file, "\n");

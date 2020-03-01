@@ -9,16 +9,18 @@ SRCS = src/mx_work_with_termios.c \
 	src/mx_error_message.c \
 	src/mx_create_strarr.c \
 	src/mx_buildin_funcs.c \
+	src/mx_wait.c \
 	src/main.c \
 	\
 	src/parse_line_step/mx_shell_functions.c \
 	src/parse_line_step/mx_work_with_environ_and_variables.c \
-	src/parse_line_step/mx_save_key_value.c \
+	src/parse_line_step/mx_save_ush_key_value.c \
 	src/parse_line_step/mx_parse_line.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
 	src/parse_line_step/mx_work_with_tilde.c \
 	src/parse_line_step/mx_substitutions.c \
 	src/parse_line_step/mx_check_first_argument.c \
+	src/parse_line_step/mx_check_open_close_symbols.c \
 	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
 	\
 	src/help_functions/mx_str_head.c \
@@ -41,6 +43,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_ush_export.c \
 	src/builtins/mx_ush_exit.c \
 	src/builtins/mx_ush_env.c \
+	src/builtins/mx_ush_set.c \
 	src/builtins/mx_ush_echo.c \
 	src/builtins/mx_ush_cd.c \
 	src/builtins/mx_ush_true_and_false.c \
@@ -51,6 +54,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_funcs_for_cd.c \
 	src/builtins/mx_funcs_for_cd_2.c \
 	src/builtins/mx_funcs_for_cd_3.c \
+	src/builtins/mx_work_with_fg.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_work_with_history_2.c \

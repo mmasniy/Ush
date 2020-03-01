@@ -62,11 +62,15 @@ char **mx_merge_op(t_tok *max) {
     return cmd;
 }
 
-void mx_free_tree(t_ast *tree) {
-    if (tree) {
-        mx_free_tree(tree->left);
-        mx_free_tree(tree->right);
-        mx_del_strarr(&tree->command);
-        free(tree);
+void mx_free_tree(t_ast **tree) {
+    if (tree && *tree) {
+        if ((*tree)->left)
+            mx_free_tree(&((*tree)->left));
+        if ((*tree)->right)
+            mx_free_tree(&((*tree)->right));
+        if ((*tree)->command)
+            mx_del_strarr(&((*tree)->command));
+        free((*tree));
+        *tree = NULL;
     }
 }
