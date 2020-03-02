@@ -1,25 +1,29 @@
 #include "../../inc/ush.h"
 
-static bool check_arg(char *key, char *value) {
-    for (int i = 0; key[i]; i++)
-        if (!((key[i] >= 'a' && key[i] <= 'z')
-            || (key[i] >= 'A' && key[i] <= 'Z')
-            || key[i] == '_' || key[i] == '$'))
-            return 1;
-    if (value)
-        for (int i = 0; value[i]; i++)
-            if (!((value[i] >= 'a' && value[i] <= 'z')
-                || (value[i] >= 'A' && value[i] <= 'Z')
-                || mx_get_char_index(EXPORT_VALUE_ALLOW, value[i]) != -1))
-                return 1;
-    return 0;
-}
-
 static bool print_error(char *arg) {
     mx_printerr("u$h: export: `");
     mx_printerr(arg);
     mx_printerr("': not a valid identifier\n");
     return 1;
+}
+
+static bool check_arg(char *arg, char *key, char *value) {
+    if (!((key[0] >= 'a' && key[0] <= 'z') || (key[0] >= 'A' && key[0] <= 'Z')
+        || key[0] == '_' || key[0] == '$')) {
+        return print_error(arg);
+    }
+    for (int i = 0; key[i]; i++)
+        if (!((key[i] >= 'a' && key[i] <= 'z')
+            || (key[i] >= 'A' && key[i] <= 'Z')
+            || key[i] == '_' || key[i] == '$'))
+            return print_error(arg);
+    // if (value)
+    //     for (int i = 0; value[i]; i++)
+    //         if (!((value[i] >= 'a' && value[i] <= 'z')
+    //             || (value[i] >= 'A' && value[i] <= 'Z')
+    //             || mx_get_char_index(EXPORT_VALUE_ALLOW, value[i]) != -1))
+    //             return print_error(arg);
+    return 0;
 }
 
 static bool check_arg_and_take_key_value(char *arg, char **key, char **value) {
@@ -33,7 +37,7 @@ static bool check_arg_and_take_key_value(char *arg, char **key, char **value) {
         return print_error(arg);
     else
         *key = mx_strdup(arg);
-    if (check_arg(*key, *value) == 0)
+    if (check_arg(arg, *key, *value) == 0)
         return 0;
     return 1;
 }
@@ -78,14 +82,17 @@ bool mx_update_key_value(t_export **list, char **key, char **value) {
 }
 
 int mx_ush_export(t_info *info) {
+    int exit_code = 0;
+
     if (info->args[1]) {
         char *key = NULL;
         char *value = NULL;
 
         for (int i = 1; info->args[i]; i++) {
-            if (!check_arg_and_take_key_value(info->args[i], &key, &value)) {
+            if (!check_arg_and_take_key_value(info->args[i], &key, &value))
                 go_export(info, &key, &value);
-            }
+            else
+                exit_code = 1;
             mx_strdel(&key);
             mx_strdel(&value);
         }
@@ -93,7 +100,8 @@ int mx_ush_export(t_info *info) {
     else
         for (t_export *tmp = info->to_export; tmp; tmp = tmp->next)
             printf("%s=%s\n", tmp->key, tmp->value ? tmp->value : "");
-    return 0;
+    mx_save_PATH(info, getenv("PATH"));
+    return exit_code;
 }
 // a-z
 // A-Z

@@ -72,6 +72,15 @@ static void mx_init_shell(t_info *info) {
         mx_error_message(TERM_ENV_NOT_EXIST);
         exit(EXIT_FAILURE);
     }
+    if (getenv("PATH") == NULL) {
+        char *path = mx_strjoin("/Users/vkmetyk/.brew/bin:/Users/vkmetyk/"
+            , ".brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin");
+        mx_del_and_set(&path, mx_strjoin(path, ":/sbin:/usr/local/munki"));
+        setenv("PATH", path, 1);
+        mx_push_export_back(&(info->variables), "PATH", path);
+        mx_push_export_back(&(info->to_export), "PATH", path);
+        mx_strdel(&path);
+    }
     mx_save_PATH(info, getenv("PATH"));
     info->PWD = getenv("PWD");
 }

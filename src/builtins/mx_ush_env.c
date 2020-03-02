@@ -28,9 +28,9 @@ int mx_ush_env(t_info *info) {
         while (env)
             mx_pop_export_front(&env);
     }
-    else {
+    else
         print_env(environ);
-    }
+    mx_save_PATH(info, getenv("PATH"));
     return 0;
 }
 

@@ -37,7 +37,8 @@ t_export *mx_save_env_as_list(char **environ) {
             value = mx_strdup(&(environ[i][j + 1]));
         else
             value = NULL;
-        mx_push_export_back(&new_env_list, key, value);
+        if (strcmp(key, "_"))
+            mx_push_export_back(&new_env_list, key, value);
         if (malloc_size(key))
             free(key);
         if (malloc_size(value))

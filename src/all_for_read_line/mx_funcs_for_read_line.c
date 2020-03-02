@@ -32,7 +32,6 @@ void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {
 }
 
 void mx_print_line(t_info *info, char *buffer, int position) {
-    if (info && position) {}
     for (unsigned int i = 0; i < strlen(buffer) + info->name_len; i++) {
         mx_printstr("\b\x1b[2K");
     }

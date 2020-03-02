@@ -4,8 +4,7 @@ static char *operators1(int type);
 static char *operators2(int type);
 
 void mx_error_message(char *str) {
-    mx_printerr(USH);
-    mx_printerr(str);
+    fprintf(stderr, "%s %s\n", USH, str);
 }
 
 void mx_file_not_found(char *filename) {

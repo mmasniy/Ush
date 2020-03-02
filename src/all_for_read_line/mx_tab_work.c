@@ -33,17 +33,27 @@ void mx_tab_work(t_info *info, char **buffer, int *position) {
 static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {
     char *file = mx_up_to_one(wrd);
     char *sent = NULL;
+    int len = strlen(file);
+
+    for (int i = 0; (i = mx_get_char_index(wrd + len, '/')) >= 0; )
+        len += i + 1;
 
     if ((f = opendir(file))) {
-        while ((d = readdir(f)))
-            if (!mx_str_head(d->d_name, &wrd[strlen(file)])) {
-                sent = mx_strjoin(file, d->d_name);
+        // printf("+\n");
+        while ((d = readdir(f))) {
+            // printf("&wrd[strlen(file)] = %s\n", &wrd[strlen(file)]);
+            if (!mx_str_head(d->d_name, &wrd[len])) {
+                // strcmp("/", file) ? mx_del_and_set(&sent, mx_strjoin(file, "/")) : 0;
+                sent = strcmp("/", file) ? mx_strjoin(file, "/") : strdup(file);
+                mx_del_and_set(&sent, mx_strjoin(sent, d->d_name));
                 mx_push_history_back(&info->tab_list, sent);
                 mx_strdel(&sent);
             }
+        }
     }
     else if ((f = opendir("."))) {
-        mx_push_history_back(&info->tab_list, wrd);
+        // printf("-\n");
+        // mx_push_history_back(&info->tab_list, wrd);
         while ((d = readdir(f)))
             if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")
                 && mx_str_head(d->d_name, wrd) == 0)
@@ -72,26 +82,27 @@ static void check_if_that_folder(t_info *info, char *what_check
     closedir(f);
 }
 
-static void create_new_tab_list(t_info *info
-    , char *what_check, char **buffer, int *position) {
+static void create_new_tab_list(t_info *i, char *check, char **buf, int *pos) {
     DIR *f = NULL;
     struct dirent *d = NULL;
-    char *home_path = mx_strjoin(getenv("HOME"), what_check + 1);
+    char *home_path = mx_strjoin(getenv("HOME"), check + 1);
 
-    while (info->tab_list)
-        mx_pop_history_front(&info->tab_list);
-    mx_push_history_back(&info->tab_list, what_check);
-    if (what_check[0] == '~')
+    while (i->tab_list)
+        mx_pop_history_front(&i->tab_list);
+    mx_push_history_back(&i->tab_list, check);
+    if (check[0] == '~')
         if ((f = opendir(home_path))) // check_if_that_folder
-            check_if_that_folder(info, what_check, f, d);
+            check_if_that_folder(i, check, f, d);
     mx_strdel(&home_path);
-    if ((f = opendir(what_check))) // check_if_that_folder
-        check_if_that_folder(info, what_check, f, d);
-    else if (mx_str_char_in_str(*buffer, " \t\r\n\f\v")) // check if that is file in folder
-        check_for_file(info, what_check, f, d);
-    functions_search(info, what_check);
-    info->tab_pos = info->tab_list;
-    mx_print_tab_list(info);
+    (f = opendir(check)) ? check_if_that_folder(i, check, f, d) : 0; // check_if_that_folder
+    if (mx_str_char_in_str(*buf, " \t\r\n\f\v")) // check if that is file in folder
+        check_for_file(i, check, f, d);
+    functions_search(i, check);
+    i->tab_pos = i->tab_list;
+    if (i->tab_list && i->tab_list->next && i->tab_list->next->next)
+        mx_print_tab_list(i);
+    else
+        i->tab_list && i->tab_list->next ? mx_tab_work(i, buf, pos) : 0;
 }
 
 static void functions_search(t_info *info, char *what_check) {

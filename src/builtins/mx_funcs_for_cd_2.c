@@ -75,9 +75,9 @@ char *mx_save_without_links(char *path) {
 }
 
 static void save_link_path(char **res_line) {
-    char *link_path = mx_strnew(1000);
+    char *link_path = mx_strnew(1024);
 
-    readlink(*res_line, link_path, 1000);
+    readlink(*res_line, link_path, 1024);
     mx_strdel(res_line);
     if (link_path && link_path[0] == '.'
         && (link_path[1] == '/' || !link_path[1])) {
@@ -86,7 +86,12 @@ static void save_link_path(char **res_line) {
         *res_line = mx_strjoin(cwd_path, &(link_path[1]));
         mx_strdel(&cwd_path);
     }
-    else
-        *res_line = strdup(link_path);
+    else {
+        char *tmp = mx_up_to_one(*res_line);
+
+        *res_line = tmp == NULL || strcmp(tmp, "/") == 0
+        ? mx_strjoin("/", link_path) : strdup(link_path);
+        mx_strdel(&tmp);
+    }
     mx_strdel(&link_path);
 }

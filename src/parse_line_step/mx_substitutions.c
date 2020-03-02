@@ -28,7 +28,7 @@ static void exec_command(t_info *info, char **sub_line, char quotes) {
         else if (quotes == '\"')
             *sub_line = strndup(line_from_file, strlen(line_from_file) - 1);
     }
-    remove(".system_ush.txt");
+    remove("/tmp/.system_ush.txt");
     mx_strdel(&line_from_file);
     // printf("\n\nSUB_LINE = %s\n\n", *sub_line);
 }

@@ -22,20 +22,24 @@ static char *check_full_path(char **paths, char *word) {
 }
 
 void mx_save_PATH(t_info *info, char *all_paths) {
-    char **splitted_paths = mx_strsplit(all_paths, ':');
-    char *tmp;
-
-    for (int i = 0; splitted_paths[i]; i++) {
-        tmp = mx_strjoin(splitted_paths[i], "/");
-        if (malloc_size(splitted_paths[i]))
-            free(splitted_paths[i]);
-        splitted_paths[i] = mx_strdup(tmp);
-        free(tmp);
-    }
-    if (malloc_size(info->paths))
+    if (info->paths)
         mx_del_strarr(&(info->paths));
-    info->paths = mx_arr_copy(splitted_paths);
-    mx_del_strarr(&splitted_paths);
+    if (all_paths) {
+        char **splitted_paths = mx_strsplit(all_paths, ':');
+        char *tmp;
+
+        for (int i = 0; splitted_paths[i]; i++) {
+            tmp = mx_strjoin(splitted_paths[i], "/");
+            if (malloc_size(splitted_paths[i]))
+                free(splitted_paths[i]);
+            splitted_paths[i] = mx_strdup(tmp);
+            free(tmp);
+        }
+        if (malloc_size(info->paths))
+            mx_del_strarr(&(info->paths));
+        info->paths = mx_arr_copy(splitted_paths);
+        mx_del_strarr(&splitted_paths);
+    }
 }
 
 char *mx_find_in_PATH(char **paths, char *word, bool full) {

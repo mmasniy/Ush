@@ -5,6 +5,7 @@ static bool check_arg(char *arg);
 static void del_elem_form_list(t_export **list, char *key);
 
 int mx_ush_unset(t_info *info) {
+    bool exit_code = 0;
     // printf("=================\n");
     // for (t_export *tmp = info->variables; tmp; tmp = tmp->next)
     //     printf("key = %s, value = %s\n", tmp->key, tmp->value);
@@ -14,14 +15,17 @@ int mx_ush_unset(t_info *info) {
     // printf("=================\n");
     if (info->args[1]) {
         for (int i = 1; info->args[i]; i++) {
-            if (check_arg(info->args[i])) {
+            if (check_arg(info->args[i]) == 0) {
                 del_elem_form_list(&(info->to_export), info->args[i]);
                 del_elem_form_list(&(info->variables), info->args[i]);
                 unsetenv(info->args[i]);
             }
+            else
+                exit_code = 1;
         }
     }
-    return 0;
+    mx_save_PATH(info, getenv("PATH"));
+    return exit_code;
 }
 
 static void print_error(char *arg) {
@@ -32,18 +36,19 @@ static void print_error(char *arg) {
 
 static bool check_arg(char *arg) {
     if (!((arg[0] >= 65 && arg[0] <= 90) || (arg[0] >= 97 && arg[0] <= 122)
-        || arg[0] == 95)) {
+        || arg[0] == '_' || arg[0] == '$')) {
         print_error(arg);
-        return 0;
+        return 1;
     }
     for (int i = 0; arg[i]; i++) {
         if (!((arg[i] >= 48 && arg[i] <= 57) || (arg[i] >= 65 && arg[i] <= 90)
-            || (arg[i] >= 97 && arg[i] <= 122) || arg[0] == 95)) {
+            || (arg[i] >= 97 && arg[i] <= 122)
+            || arg[i] == '_' || arg[i] == '$')) {
             print_error(arg);
-            return 0;
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 static void del_elem_form_list(t_export **list, char *key) {
