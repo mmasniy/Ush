@@ -3,7 +3,7 @@
 static void init_continue(t_info *info) {
     signal(SIGINT, mx_sigio_handler);
     signal(SIGIO, mx_sigio_handler);
-    // signal(SIGQUIT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
     signal(SIGTSTP, mx_sigio_handler);
     // signal(SIGTTIN, SIG_IGN);
     // signal(SIGTTOU, SIG_IGN);

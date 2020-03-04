@@ -17,7 +17,9 @@ int mx_run_buildin(t_info *info) {
     !strcmp(info->args[0], "custom") ? exit_code = mx_ush_custom(info) : 0;
     !strcmp(info->args[0], "true") ? exit_code = mx_ush_true(info) : 0;
     !strcmp(info->args[0], "false") ? exit_code = mx_ush_false(info) : 0;
-    !strcmp(info->args[0], "fg") ? mx_fg(info) : 0;
+    !strcmp(info->args[0], "return") ? exit_code = mx_ush_return(info) : 0;
+    !strcmp(info->args[0], "fg") ? exit_code = mx_fg(info, 0) : 0;
+    !strcmp(info->args[0], "jobs") ? exit_code = mx_jobs(info) : 0;
     return exit_code;
 }
 
@@ -31,14 +33,13 @@ int mx_check_buildin(t_info *info, bool exec) {
         || (!strcmp(info->args[0], "env")) || (!strcmp(info->args[0], "set"))
         || (!strcmp(info->args[0], "unset"))
         || (!strcmp(info->args[0], "export"))
-        || (!strcmp(info->args[0], "which")) || (!strcmp(info->args[0], "echo"))
-        || (!strcmp(info->args[0], "fg")) || (!strcmp(info->args[0], "true"))
-        || (!strcmp(info->args[0], "false"))
+        || (!strcmp(info->args[0], "which")) || (!strcmp(info->args[0], "fg"))
+        || (!strcmp(info->args[0], "echo")) || (!strcmp(info->args[0], "true"))
+        || (!strcmp(info->args[0], "false")) 
+        || (!strcmp(info->args[0], "return"))
+        || (!strcmp(info->args[0], "jobs"))
         || (!strcmp(info->args[0], "custom")))  {
-        if (exec)
-            return_value = mx_run_buildin(info);
-        else
-            return_value = 1;
+        return_value = exec ? mx_run_buildin(info) : 1;
     }
     else
         return (-1);
@@ -62,8 +63,8 @@ char *mx_find_similar_buildin(char *what_check) {
         || (!mx_str_head(what_check, "custom") && (res = strdup("custom")))
         || (!mx_str_head(what_check, "true") && (res = strdup("true")))
         || (!mx_str_head(what_check, "false") && (res = strdup("false")))
-        || (!mx_str_head(what_check, "fg") && (res = strdup("fg")))) {
+        || (!mx_str_head(what_check, "return") && (res = strdup("return")))
+        || (!mx_str_head(what_check, "jobs") && (res = strdup("jobs")))
+        || (!mx_str_head(what_check, "fg") && (res = strdup("fg"))) || 1)
         return res;
-    }
-    return res;
 }

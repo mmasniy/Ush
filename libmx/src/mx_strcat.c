@@ -1,5 +1,6 @@
 #include "libmx.h"
 #include <stdio.h>
+
 char *mx_strcat(char *restrict s1, const char *restrict s2) {
     int s1_size = strlen(s1);
     int size = strlen(s1) + strlen(s2);

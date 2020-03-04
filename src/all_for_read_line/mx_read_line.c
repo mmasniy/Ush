@@ -1,37 +1,5 @@
 #include "../../inc/ush.h"
 
-static void home_end_page(t_info *info, char **buf, int *position, char *c);
-static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch);
-static void save_all(t_info *info, char *buffer, int *position, char *c);
-
-char *mx_ush_read_line(t_info *info) {
-    int bufsize = USH_RL_BUFSIZE;
-    int position = 0;
-    char *buffer = mx_strnew(bufsize);
-    unsigned int ch = 0;
-    int fds[2];
-
-    fds[0] = dup(1);
-    fds[1] = open("/dev/tty", O_WRONLY);
-    dup2(fds[1], 1);
-    mx_push_history_front(&info->history_pack->history, buffer);
-    info->history_pack->pos = info->history_pack->history;
-    mx_print_ush(info);
-    mx_custom_termios(info, STDIN_FILENO);
-    while (1) {
-        ch = mx_getchar();
-        if (!input_work(info, &buffer, &position, ch) && dup2(fds[0], 1) >= 0
-            && close(fds[0]) >= 0 && close(fds[1]) >= 0) {
-            mx_origin_termios(info, STDIN_FILENO);
-            return buffer;
-        }
-        mx_print_line(info, buffer, position);
-        if ((size_t)position + 1 >= malloc_size(buffer)
-            || malloc_size(buffer) <= (size_t)mx_strlen(buffer) + 1)
-            buffer = realloc(buffer, (bufsize += USH_RL_BUFSIZE));
-    }
-}
-
 static void home_end_page(t_info *info, char **buf, int *position, char *c) {
     if (c[2] == 72)
         *position = 0;
@@ -48,17 +16,13 @@ static void home_end_page(t_info *info, char **buf, int *position, char *c) {
 static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
     bool result = 1;
     char *c = (char*)(&ch);
-//     printf("ch = %u\n", ch);
-// printf("%d %d %d %d\n", c[0], c[1], c[2], c[3]);
+
     if (ch > 127) {
         if (c[0] == 27) {
             if (c[2] >= 65 && c[2] <= 68)
                 mx_arrows_exec(info, buffer, pos, c[2]);
             else if (c[2] == 72 || c[2] == 70 || c[2] == 53 || c[2] == 54)
                 home_end_page(info, buffer, pos, c);
-        }
-        else {
-            save_all(info, *buffer, pos, c);
         }
     }
     else if (c[0] >= 32 && c[0] <= 127) {
@@ -70,17 +34,32 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
     return result;
 }
 
-static void save_all(t_info *info, char *buffer, int *position, char *c) {
-    if (info && buffer && position && c) {}
-    int len = mx_strlen(buffer);
+static void print_and_realloc_line(t_info *info, char **buffer, int *bufsize
+                                   , int position) {
+    mx_print_line(info, *buffer, position);
+    if ((size_t)position + 1 >= malloc_size(*buffer)
+        || malloc_size(*buffer) <= (size_t)mx_strlen(*buffer) + 1)
+        *buffer = realloc(*buffer, (*bufsize += MX_USH_RL_BUFSIZE));
+}
 
-    for (int i = 0; i < 4; i++) {
-        if (buffer[0])
-            for (int i = len; i > *position; i--)
-                buffer[i] = buffer[i - 1];
-        buffer[*position] = c[i];
-        buffer[len + 1] = '\0';
-        (*position)++;
-        len++;
+char *mx_ush_read_line(t_info *info) {
+    int bufsize = MX_USH_RL_BUFSIZE;
+    int position = 0;
+    char *buffer = mx_strnew(bufsize);
+    unsigned int ch = 0;
+    int fds[2];
+
+    fds[0] = dup(1);
+    fds[1] = open("/dev/tty", O_WRONLY);
+    dup2(fds[1], 1);
+    mx_push_history_front(&info->history_pack->history, buffer);
+    info->history_pack->pos = info->history_pack->history;
+    mx_print_ush(info);
+    while (1) {
+        ch = mx_getchar();
+        if (!input_work(info, &buffer, &position, ch) && dup2(fds[0], 1) >= 0
+            && close(fds[0]) >= 0 && close(fds[1]) >= 0)
+            return buffer;
+        print_and_realloc_line(info, &buffer, &bufsize, position);
     }
 }

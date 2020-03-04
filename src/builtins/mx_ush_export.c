@@ -7,6 +7,15 @@ static bool print_error(char *arg) {
     return 1;
 }
 
+/*
+* if (value)
+*     for (int i = 0; value[i]; i++)
+*         if (!((value[i] >= 'a' && value[i] <= 'z')
+*             || (value[i] >= 'A' && value[i] <= 'Z')
+*             || mx_get_char_index(MX_EXPORT_VALUE_ALLOW, value[i]) != -1))
+*             return print_error(arg);
+*/
+
 static bool check_arg(char *arg, char *key, char *value) {
     if (!((key[0] >= 'a' && key[0] <= 'z') || (key[0] >= 'A' && key[0] <= 'Z')
         || key[0] == '_' || key[0] == '$')) {
@@ -17,12 +26,6 @@ static bool check_arg(char *arg, char *key, char *value) {
             || (key[i] >= 'A' && key[i] <= 'Z')
             || key[i] == '_' || key[i] == '$'))
             return print_error(arg);
-    // if (value)
-    //     for (int i = 0; value[i]; i++)
-    //         if (!((value[i] >= 'a' && value[i] <= 'z')
-    //             || (value[i] >= 'A' && value[i] <= 'Z')
-    //             || mx_get_char_index(EXPORT_VALUE_ALLOW, value[i]) != -1))
-    //             return print_error(arg);
     return 0;
 }
 
@@ -52,7 +55,6 @@ static void go_export(t_info *info, char **key, char **value) {
         find = NULL;
     }
     if (*value == NULL) {
-        mx_update_key_value(&(info->variables), key, value);
         mx_update_key_value(&(info->to_export), key, value);
     }
     else {
@@ -60,7 +62,6 @@ static void go_export(t_info *info, char **key, char **value) {
         mx_update_key_value(&(info->to_export), key, value);
         setenv(*key, *value, 1);
     }
-
 }
 
 bool mx_update_key_value(t_export **list, char **key, char **value) {
@@ -83,11 +84,10 @@ bool mx_update_key_value(t_export **list, char **key, char **value) {
 
 int mx_ush_export(t_info *info) {
     int exit_code = 0;
+    char *key = NULL;
+    char *value = NULL;
 
-    if (info->args[1]) {
-        char *key = NULL;
-        char *value = NULL;
-
+    if (info->args[1])
         for (int i = 1; info->args[i]; i++) {
             if (!check_arg_and_take_key_value(info->args[i], &key, &value))
                 go_export(info, &key, &value);
@@ -96,20 +96,11 @@ int mx_ush_export(t_info *info) {
             mx_strdel(&key);
             mx_strdel(&value);
         }
-    }
-    else
+    else {
+        mx_sort_print(&(info->to_export));
         for (t_export *tmp = info->to_export; tmp; tmp = tmp->next)
             printf("%s=%s\n", tmp->key, tmp->value ? tmp->value : "");
+    }
     mx_save_PATH(info, getenv("PATH"));
     return exit_code;
 }
-// a-z
-// A-Z
-// 0-9
-// _$
-// 
-// a-z
-// A-Z
-// 0-9
-// _ $ + - # ( ) ? : < > | & = . , / ~
-// EXPORT_VALUE_ALLOW

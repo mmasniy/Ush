@@ -89,7 +89,7 @@ bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid) {
     char *new_line = NULL;
     char *tmp_line = NULL;
 
-    for (t_tok *tmp = *tok; tmp; tmp = tmp->next, pos = 0) {
+    for (t_tok *tmp = *tok; tmp; tmp = tmp->next, pos = 0)
         if (tmp->type == 0 && tmp->token) {
             new_line = mx_strnew(strlen(tmp->token));
             if (work_with_line(&tmp_line, &new_line, &pos, tmp->token)) {
@@ -104,7 +104,6 @@ bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid) {
             mx_strdel(&new_line);
             mx_strdel(&tmp_line);
         }
-    }
     return 0;
 }
 

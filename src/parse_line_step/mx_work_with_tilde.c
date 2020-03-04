@@ -1,45 +1,18 @@
 #include "../../inc/ush.h"
 
 static bool before_tilde(char *line, int pos) {
-    if (pos == 0
-        || (mx_strchr(TYPE, line[pos - 1])
-            && (pos == 1 || line[pos - 2] != '\\')))
+    if (pos == 0 || (mx_strchr(MX_TYPE, line[pos - 1])
+        && (pos == 1 || line[pos - 2] != '\\')))
         return 1;
     return 0;
 }
 
-static void find_tilde_content_file(char *search_line, char **tilde_change) {
-    char *passwd_data = mx_file_to_str("/etc/passwd");
+static void read_user(char *user, char **tilde_change) {
+    struct passwd *find = getpwnam(user);
 
-    if (passwd_data) {
-        char **splitted_lines = mx_strsplit(passwd_data, '\n');
-
-        for (int i = 0; splitted_lines[i]; i++) {
-            if (mx_str_head(splitted_lines[i], search_line) == 0) {
-                char **final_line = mx_strsplit(splitted_lines[i], ':');
-
-                *tilde_change = strdup(final_line[5]);
-                mx_del_strarr(&final_line);
-                break;
-            }
-        }
-        mx_del_strarr(&splitted_lines);
-        mx_strdel(&passwd_data);
-    }
-}
-
-static void tilde_content_in_Users(char *search_line, char **tilde_change) {
-    DIR *f = opendir("/Users");
-    struct dirent *d = NULL;
-
-    if (f) {
-        while ((d = readdir(f))) {
-            if (strcmp(d->d_name, search_line) == 0) {
-                *tilde_change = mx_strjoin("/Users/", d->d_name);
-                break;
-            }
-        }
-        closedir(f);
+    if (find) {
+        mx_strdel(tilde_change);
+        *tilde_change = mx_strdup(find->pw_dir);
     }
 }
 
@@ -48,57 +21,62 @@ static bool read_tilde_content(char *line, int *pos, char **tilde_change) {
     int size = 1;
 
     for (int i = *pos + 1; line[i + size]; size++)
-        if (line[i + size] == '/' || mx_strchr(TYPE, line[i + size]))
+        if (line[i + size] == '/' || mx_strchr(MX_TYPE, line[i + size]))
             break;
     check_line = strndup(&(line[*pos + 1]), size);
     if (!(*tilde_change))
-    find_tilde_content_file(check_line, tilde_change);
-    if (!(*tilde_change))
-        tilde_content_in_Users(check_line, tilde_change);
+        read_user(check_line, tilde_change);
     mx_strdel(&check_line);
     *pos += size;
     return 0;
 }
 
+static void check_what_want(t_info *info, char *craft, char **new, int *pos) {
+    char *tilde_change = NULL;
+
+    if (!craft[*pos + 1] || mx_strchr(MX_TYPE, craft[*pos + 1])
+        || craft[*pos + 1] == '/')
+        tilde_change = strdup(getenv("HOME"));
+    else if (craft[*pos + 1] == '-'&& ((!craft[*pos + 2])
+        || mx_isspace(craft[*pos + 2])) && (++(*pos)))
+        tilde_change = strdup(info->oldpwd);
+    else if (craft[*pos + 1] == '+' && ((!craft[*pos + 2])
+        || mx_isspace(craft[*pos + 2])) && (++(*pos)))
+        tilde_change = strdup(info->pwd);
+    else
+        read_tilde_content(craft, pos, &tilde_change);
+    if (tilde_change)
+        mx_del_and_set(new, mx_strjoin(*new, tilde_change));
+    mx_strdel(&tilde_change);
+}
+
+/*
+* end = '/', ' ', '\0'
+* can be : a-z, A-Z, -, _, 0-9 and just like all sub (+).
+* ~   = /Users/vkmetyk
+* ~/  = /Users/vkmetyk/
+* ~-  = old_pwd
+* ~+  = this_folder
+* ~file_in_Users_folder
+* if (~file_in_Users_folder == not exist)
+* print = u$h: no such user or named directory: file_in_Users_folder
+*/
+
 int mx_tilde_work(t_info *info, char **line, char *craft) {
     int pos = 0;
     char *new_line = mx_strnew(strlen(*line));
-    char *tilde_change = NULL;
 
     for (int i = 0; (i = mx_get_char_index(&(craft[pos]), '~')) >= 0; pos++) {
         strncat(new_line, &(craft[pos]), i);
         pos += i;
-        if (before_tilde(craft, pos)) {
-            if (!craft[pos + 1] || mx_strchr(TYPE, craft[pos + 1]) || craft[pos + 1] == '/')
-                tilde_change = strdup(getenv("HOME"));
-            else if (craft[pos + 1] == '-' && ((!craft[pos + 2]) || mx_isspace(craft[pos + 2])) && (++pos))
-                tilde_change = strdup(info->oldpwd);
-            else if (craft[pos + 1] == '+' && ((!craft[pos + 2]) || mx_isspace(craft[pos + 2])) && (++pos))
-                tilde_change = strdup(info->pwd);
-            else {
-                read_tilde_content(craft, &pos, &tilde_change);
-            }
-            if (tilde_change) {
-                new_line = realloc(new_line, malloc_size(new_line) + strlen(tilde_change));
-                mx_del_and_set(&new_line, mx_strjoin(new_line, tilde_change));
-            }
+        if (mx_is_quotes(craft, pos) != '\'' && before_tilde(craft, pos)) {
+            check_what_want(info, craft, &new_line, &pos);
         }
+        else
+            strcat(new_line, "~");
     }
     strcat(new_line, &(craft[pos]));
-    free(*line);
-    *line = strdup(new_line);
+    mx_del_and_set(line, strdup(new_line));
     mx_strdel(&new_line);
     return 0;
 }
-
-// end = '/', ' ', '\0'
-
-// can be : a-z, A-Z, -, _, 0-9 and just like all sub (+).
-
-// ~   = /Users/vkmetyk
-// ~/  = /Users/vkmetyk/
-// ~-  = old_pwd
-// ~+  = this_folder
-// ~file_in_Users_folder
-// if (~file_in_Users_folder == not exist)
-// print = u$h: no such user or named directory: file_in_Users_folder

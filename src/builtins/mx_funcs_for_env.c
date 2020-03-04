@@ -1,6 +1,23 @@
 #include "../../inc/ush.h"
 
-static bool file_check(t_info *info, char *arg, char **path);
+static bool file_check(t_info *info, char *arg, char **path) {
+    char *binary_file = NULL;
+
+    if (path[0]) {
+        binary_file = mx_find_in_PATH(path, arg, 1);
+        if (binary_file) {
+            free(binary_file);
+            return 1;
+        }
+    }
+    else {
+        if ((binary_file = mx_find_in_PATH(info->paths, arg, 1))) {
+            free(binary_file);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int mx_check_to_execute(t_info *info, char **path, int position) {
     int res = 0;
@@ -49,13 +66,13 @@ t_export *mx_save_env_as_list(char **environ) {
 
 char **mx_save_env_as_massive(t_export *env) {
     int size = 0;
-
-    for (t_export *tmp = env; tmp; tmp = tmp->next)
-        size++;
-    char **env_massive = (char**)malloc(sizeof(char *) * (size + 1));
+    char **env_massive = NULL;
     char *tmp_line;
     int i = 0;
 
+    for (t_export *tmp = env; tmp; tmp = tmp->next)
+        size++;
+    env_massive = (char**)malloc(sizeof(char *) * (size + 1));
     for (t_export *tmp = env; tmp; tmp = tmp->next, i++) {
         tmp_line = mx_strjoin(tmp->key, "=");
         env_massive[i] = mx_strjoin(tmp_line, tmp->value);
@@ -64,23 +81,4 @@ char **mx_save_env_as_massive(t_export *env) {
     }
     env_massive[size] = NULL;
     return env_massive;
-}
-
-static bool file_check(t_info *info, char *arg, char **path) {
-    char *binary_file = NULL;
-
-    if (path[0]) {
-        binary_file = mx_find_in_PATH(path, arg, 1);
-        if (binary_file) {
-            free(binary_file);
-            return 1;
-        }
-    }
-    else {
-        if ((binary_file = mx_find_in_PATH(info->paths, arg, 1))) {
-            free(binary_file);
-            return 1;
-        }
-    }
-    return 0;
 }

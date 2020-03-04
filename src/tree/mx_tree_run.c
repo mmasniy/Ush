@@ -23,8 +23,6 @@ int mx_tree_run(t_ast *tree, t_info *info, int f) {
 }
 
 void mx_tok_to_tree(t_tok *tok, t_info *i) {
-    // t_ast *tree = NULL;
-
     if (!tok)
         return;
     i->flag_for_valid = 0;
@@ -38,4 +36,3 @@ void mx_tok_to_tree(t_tok *tok, t_info *i) {
     if (i->t)
         mx_free_tree(&(i->t));
 }
-

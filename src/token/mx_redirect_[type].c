@@ -1,6 +1,5 @@
 #include "../../inc/ush.h"
 
-//auditor
 int mx_redirect_int(char *s, int i) {
     if (mx_isdigit(s[i])) {
         while (mx_isdigit(s[i]))
@@ -10,8 +9,9 @@ int mx_redirect_int(char *s, int i) {
         if (s[i] == '>' && s[i + 1] == '>' && s[i + 2] == '&')
             return i + 3;
         if ((s[i] == '>' || s[i] == '<') && ((s[i + 1] != '<')
-            || s[i + 1] != '>'))
+            || s[i + 1] != '>')){
             return ++i;
+    }
         if (s[i] == '>' && s[i + 1] == '>')
             return i + 2;
     }

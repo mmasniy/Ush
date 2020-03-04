@@ -75,6 +75,7 @@ void mx_print_tab_list(t_info *info) {
                     j += sub_r + 1;
                 temp_line = strdup(tmp->data + j);
                 mx_push_history_back(&print_lst, temp_line);
+                mx_strdel(&temp_line);
             }
         }
         j = sub_r = 0;

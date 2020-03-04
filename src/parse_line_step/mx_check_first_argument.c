@@ -3,29 +3,26 @@
 static bool check_file_or_folder(t_info *info, char *head) {
     DIR *f = NULL;
     struct dirent *d = NULL;
+    int return_value = 0;
 
     if ((f = opendir(head))) {
-        closedir(f);
         mx_print_error(info, head, ": is a directory\n");
-        return (info->status = 126);
+        return_value = 126;
     }
     else {
         char *up_to_one = mx_up_to_one(head);
         char *file = mx_strdup(head + strlen(up_to_one));
 
         if ((f = opendir(up_to_one))) {
-            while ((d = readdir(f))) {
-                if (strcmp(file, d->d_name) == 0) {
-                    closedir(f);
-                    return 0;
-                }
-            }
-            closedir(f);
+            while ((d = readdir(f)))
+                if (strcmp(file, d->d_name) == 0)
+                    break;
             mx_print_error(info, head, ": No such file or directory\n");
-            return (info->status = 127);
+            return_value = (info->status = 127);
         }
     }
-    return 0;
+    f ? closedir(f) : 0;
+    return (info->status = return_value);
 }
 
 bool mx_check_first_argument(t_info *info, char *head) {

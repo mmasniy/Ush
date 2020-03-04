@@ -29,9 +29,8 @@ int mx_create_file(t_ast *t, t_info *i) {
 }
 
 int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
-    if (i->fd_r == -1 && (t->type == 13 || t->type == 16)) {
+    if (i->fd_r == -1 && (t->type == 13 || t->type == 16))
         close(mx_atoi(t->command[0]));
-    }
     else if (i->fd_r > 0 && (t->type == 17 || t->type == 19)){
         dup2(i->fd_r, 0);
         dup2(i->fd_r, 1);
@@ -43,9 +42,8 @@ int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
             close(i->fd_r);
         }
     }
-    else if (i->fd_r > 0 && (t->type == 4 || t->type == 8)) {
+    else if (i->fd_r > 0 && (t->type == 4 || t->type == 8))
         dup2(i->fd_r, 0);
-    }
     return (mx_start_red(t->left, i, pid));
 }
 
@@ -64,3 +62,9 @@ void mx_multi_line_enter(t_info *info, char *key_word) {
     fclose(f);
 }
 
+int mx_start_red(t_ast *t, t_info *info, pid_t pid) {
+    if (mx_check_buildin(info, 1) == -1) {
+        mx_execute_red(t, info, pid);
+    }
+    return 0;
+}

@@ -57,8 +57,8 @@ char *mx_find_in_PATH(char **paths, char *word, bool full) {
                     if (strcmp(d->d_name, ".") && strcmp(d->d_name, "..")
                         && mx_str_head(d->d_name, word) == 0) {
                         tmp = mx_strjoin(all_paths, ":");
-                        mx_strdel(&all_paths);
-                        all_paths = mx_strjoin(tmp, d->d_name);
+                        mx_del_and_set(&all_paths, mx_strjoin(tmp, d->d_name));
+                        mx_strdel(&tmp);
                     }
                 closedir(f);
             }

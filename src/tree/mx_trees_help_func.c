@@ -19,7 +19,6 @@ t_ast *mx_create_ast(t_tok *max) {
     if (max) {
         tree = (t_ast*)malloc(sizeof(t_ast));
         tree->command = NULL;
-        // tree->token = *max;
         tree->type = max->prio;
         tree->father = NULL;
         tree->right = NULL;
@@ -34,8 +33,6 @@ char **mx_merge_command(t_tok *t) {
     int i = 0;
     char **cmd = NULL;
 
-    // if (new->next && new->next->type == 3)
-    //     count++;
     while (new->prev && new->prev->type == 0) {
         count++;
         new = new->prev;
@@ -47,7 +44,6 @@ char **mx_merge_command(t_tok *t) {
         new->type = 2;
     }
     cmd[i] = NULL;
-    // mx_printf_strarr(cmd);
     return cmd;
 }
 

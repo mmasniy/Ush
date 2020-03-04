@@ -1,5 +1,13 @@
 #include "../../inc/ush.h"
 
+static void print_clean(char s) {
+    char *symbol = &s;
+
+    write(STDOUT_FILENO, "\b", 1);
+    write(1, symbol, 1);
+    write(1, "[J", 2);
+}
+
 int mx_getchar() {
     unsigned int ch = 0;
 
@@ -16,9 +24,8 @@ void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {
             for (int i = *position; i < len; i++)
                 buffer[i - 1] = buffer[i];
             buffer[len - 1] = '\0';
-            mx_print_line(info, buffer, mx_strlen(buffer));
-            write(STDOUT_FILENO, " ", 1);
             (*position)--;
+            print_clean(27);
         }
     }
     else if (c[0] >= 32 && c[0] <= 126) {
@@ -28,11 +35,12 @@ void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {
         buffer[*position] = c[0];
         buffer[len + 1] = '\0';
         (*position)++;
+        write(STDOUT_FILENO, " ", 1);
     }
 }
 
 void mx_print_line(t_info *info, char *buffer, int position) {
-    for (unsigned int i = 0; i < strlen(buffer) + info->name_len; i++) {
+    for (unsigned int i = 0; i < strlen(buffer); i++) {
         mx_printstr("\b\x1b[2K");
     }
     mx_print_ush(info);

@@ -28,7 +28,3 @@ char *mx_strarr_to_str(char **strarr, int i) {
 	}
 	return str;
 }
-// alias go="clang"
-// alias gs="go -std=11"
-// alias gsw="gs -Wextra -Werror"
-// alias gs="go"

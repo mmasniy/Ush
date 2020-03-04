@@ -3,13 +3,14 @@ SRCS = src/mx_work_with_termios.c \
 	src/mx_winsize.c \
 	src/mx_work_with_PATH.c \
 	src/mx_signal.c \
-	src/mx_split_line.c \
 	src/mx_info_prepare.c \
 	src/mx_print_errors.c \
 	src/mx_error_message.c \
 	src/mx_create_strarr.c \
 	src/mx_buildin_funcs.c \
 	src/mx_wait.c \
+	src/mx_wait2.c \
+	src/mx_wait3.c \
 	src/main.c \
 	\
 	src/parse_line_step/mx_shell_functions.c \
@@ -19,6 +20,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_find_key_and_insert_value.c \
 	src/parse_line_step/mx_work_with_tilde.c \
 	src/parse_line_step/mx_substitutions.c \
+	src/parse_line_step/mx_substitutions_2.c \
 	src/parse_line_step/mx_check_first_argument.c \
 	src/parse_line_step/mx_check_open_close_symbols.c \
 	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
@@ -46,7 +48,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_ush_set.c \
 	src/builtins/mx_ush_echo.c \
 	src/builtins/mx_ush_cd.c \
-	src/builtins/mx_ush_true_and_false.c \
+	src/builtins/mx_ush_true_false_return.c \
 	src/builtins/mx_ush_custom.c \
 	src/builtins/mx_funcs_for_env.c \
 	src/builtins/mx_funcs_for_env_3.c \
@@ -55,6 +57,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_funcs_for_cd_2.c \
 	src/builtins/mx_funcs_for_cd_3.c \
 	src/builtins/mx_work_with_fg.c \
+	src/builtins/mx_ush_jobs.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_work_with_history_2.c \
@@ -64,6 +67,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/all_for_read_line/mx_read_line.c \
 	src/all_for_read_line/mx_print_ush.c \
 	src/all_for_read_line/mx_line_hot_key.c \
+	src/all_for_read_line/mx_ctrl_r.c \
 	src/all_for_read_line/mx_funcs_for_read_line.c \
 	src/all_for_read_line/mx_arrow_keys_for_read_line.c \
 	\
@@ -74,6 +78,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/token/mx_check_variable.c \
 	\
 	src/tree/mx_work_with_tree.c \
+	src/tree/mx_work_with_tree2.c \
 	src/tree/mx_trees_help_func.c \
 	src/tree/mx_tree_run.c \
 	src/tree/mx_tree_pipe.c \

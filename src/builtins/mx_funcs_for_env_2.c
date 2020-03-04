@@ -1,45 +1,14 @@
 #include "../../inc/ush.h"
 
-static bool del_el(t_export **env, char **args, int i, int pos);
-static bool print_error_flag(int *flags, char symbol, int flag_id, char *arg);
-static int check_flag_u(int *index, int i, char **args, int *flags);
-static int check_flags(int *index, char **args, int *flags, char **path);
-
-bool mx_check_args(t_export *env, char **args, int *flags, char **path) {
-    bool flag_check = 1;
-
-    for (int i = 1; args[i]; i++) {
-        if (args[i][0] == '-' && flag_check) {
-            if (!strcmp(args[i], "--") && !(flag_check = 0))
-                continue;
-            if (!strcmp(args[i], "-"))
-                flags[0] = 1;
-            else
-                if (!del_el(&env, args, i, check_flags(&i, args, flags, path)))
-                    return 0;
-        }
-        else {
-            return mx_check_variable_create(env, args, i, flags);
-        }
-    }
-    return 0;
-}
-
 static bool del_el(t_export **env, char **args, int i, int pos) {
     if (!pos)
         return 0;
-    if (pos == -1) {
+    if (pos == -1 && (++i))
         pos = 0;
-        i++;
-    }
-    if (mx_strcmp(&(args[i][pos]), (*env)->key) == 0) {
-        mx_strdel(&((*env)->key));
-        mx_strdel(&((*env)->value));
-        free(*env);
-        *env = (*env)->next;
-    }
+    if (mx_strcmp(&(args[i][pos]), (*env)->key) == 0)
+        mx_del_env_elem(env);
     else
-        for (t_export *tmp = (*env); tmp->next; tmp = tmp->next) {
+        for (t_export *tmp = (*env); tmp->next; tmp = tmp->next)
             if (mx_strcmp(&(args[i][pos]), tmp->next->key) == 0) {
                 t_export *tmp2 = tmp->next;
 
@@ -50,7 +19,6 @@ static bool del_el(t_export **env, char **args, int i, int pos) {
                 free(tmp2);
                 break;
             }
-        }
     return 1;
 }
 
@@ -104,4 +72,24 @@ static int check_flags(int *index, char **args, int *flags, char **path) {
             return print_error_flag(flags, 0, 4, &(args[*index][i]));
     }
     return -10;
+}
+
+bool mx_check_args(t_export *env, char **args, int *flags, char **path) {
+    bool flag_check = 1;
+
+    for (int i = 1; args[i]; i++) {
+        if (args[i][0] == '-' && flag_check) {
+            if (!strcmp(args[i], "--") && !(flag_check = 0))
+                continue;
+            if (!strcmp(args[i], "-"))
+                flags[0] = 1;
+            else
+                if (!del_el(&env, args, i, check_flags(&i, args, flags, path)))
+                    return 0;
+        }
+        else {
+            return mx_check_variable_create(env, args, i, flags);
+        }
+    }
+    return 0;
 }

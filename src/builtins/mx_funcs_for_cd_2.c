@@ -1,6 +1,26 @@
 #include "../../inc/ush.h"
 
-static void save_link_path(char **res_line);
+static void save_link_path(char **res_line) {
+    char *link_path = mx_strnew(1024);
+
+    readlink(*res_line, link_path, 1024);
+    mx_strdel(res_line);
+    if (link_path && link_path[0] == '.'
+        && (link_path[1] == '/' || !link_path[1])) {
+        char *cwd_path = getcwd(NULL, 0);
+
+        *res_line = mx_strjoin(cwd_path, &(link_path[1]));
+        mx_strdel(&cwd_path);
+    }
+    else {
+        char *tmp = mx_up_to_one(*res_line);
+
+        *res_line = tmp == NULL || strcmp(tmp, "/") == 0
+        ? mx_strjoin("/", link_path) : strdup(link_path);
+        mx_strdel(&tmp);
+    }
+    mx_strdel(&link_path);
+}
 
 void mx_dots_for_path(char **arg, char flag, bool up) {
     if (flag == 'P') {
@@ -72,26 +92,4 @@ char *mx_save_without_links(char *path) {
     }
     mx_del_strarr(&steps);
     return res_line;
-}
-
-static void save_link_path(char **res_line) {
-    char *link_path = mx_strnew(1024);
-
-    readlink(*res_line, link_path, 1024);
-    mx_strdel(res_line);
-    if (link_path && link_path[0] == '.'
-        && (link_path[1] == '/' || !link_path[1])) {
-        char *cwd_path = getcwd(NULL, 0);
-
-        *res_line = mx_strjoin(cwd_path, &(link_path[1]));
-        mx_strdel(&cwd_path);
-    }
-    else {
-        char *tmp = mx_up_to_one(*res_line);
-
-        *res_line = tmp == NULL || strcmp(tmp, "/") == 0
-        ? mx_strjoin("/", link_path) : strdup(link_path);
-        mx_strdel(&tmp);
-    }
-    mx_strdel(&link_path);
 }

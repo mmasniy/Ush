@@ -1,33 +1,5 @@
 #include "../../inc/ush.h"
 
-static void print_error(char *arg);
-static bool check_arg(char *arg);
-static void del_elem_form_list(t_export **list, char *key);
-
-int mx_ush_unset(t_info *info) {
-    bool exit_code = 0;
-    // printf("=================\n");
-    // for (t_export *tmp = info->variables; tmp; tmp = tmp->next)
-    //     printf("key = %s, value = %s\n", tmp->key, tmp->value);
-    // printf("=================\n");
-    // for (t_export *tmp = info->to_export; tmp; tmp = tmp->next)
-    //     printf("key = %s, value = %s\n", tmp->key, tmp->value);
-    // printf("=================\n");
-    if (info->args[1]) {
-        for (int i = 1; info->args[i]; i++) {
-            if (check_arg(info->args[i]) == 0) {
-                del_elem_form_list(&(info->to_export), info->args[i]);
-                del_elem_form_list(&(info->variables), info->args[i]);
-                unsetenv(info->args[i]);
-            }
-            else
-                exit_code = 1;
-        }
-    }
-    mx_save_PATH(info, getenv("PATH"));
-    return exit_code;
-}
-
 static void print_error(char *arg) {
     mx_printerr("u$h: unset: `");
     mx_printerr(arg);
@@ -72,4 +44,22 @@ static void del_elem_form_list(t_export **list, char *key) {
             free(*list);
             *list = NULL;     
         }
+}
+
+int mx_ush_unset(t_info *info) {
+    bool exit_code = 0;
+
+    if (info->args[1]) {
+        for (int i = 1; info->args[i]; i++) {
+            if (check_arg(info->args[i]) == 0) {
+                del_elem_form_list(&(info->to_export), info->args[i]);
+                del_elem_form_list(&(info->variables), info->args[i]);
+                unsetenv(info->args[i]);
+            }
+            else
+                exit_code = 1;
+        }
+    }
+    mx_save_PATH(info, getenv("PATH"));
+    return exit_code;
 }

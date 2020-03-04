@@ -1,100 +1,74 @@
 #include "../../inc/ush.h"
 
-void mx_free_lst(t_tok *lst) {
-    lst->next ? lst->next->prev = lst->prev : 0;
-    lst->prev ? lst->prev->next = lst->next : 0;
-    lst->next = NULL;
-    lst->prev = NULL;
-    if (lst->token)
-        mx_strdel(&lst->token);
-    free(lst);
-}
+static int check_rep(t_tok **tok, t_info *i) {
+    t_tok *tmp1 = *tok;
 
-void mx_add_num(t_tok **root, char *num, int i) {
-    mx_strdel(&(*root)->token);
-    if (num[i] == '>' && num[i + 1] == num[i] && num[i + 2] == '&') // >>&
-        (*root)->prio = 16;
-    else if (num[i] == num[i + 1] && (num[i] == '>' || num[i] == '<')) // >> || <<
-        (*root)->prio = (num[i] == '<' ? 8 : 9);
-    else if ((num[i] == '>' || num[i] == '<') && num[i + 1] == '&') // <& || >&
-        (*root)->prio = (num[i] == '<' ? 12 : 13);
-    else if ((num[i] == '>' || num[i] == '<')) // < || >
-        (*root)->prio = (num[i] == '<' ? 4 : 5);
-    (*root)->type = 1;
-    (*root)->token = (i == 0 ? mx_strdup("1") : mx_strndup(num, i)); 
-}
-
-void mx_add_ampersand(t_tok **root, char *num) {
-    if (num[1] == num[2] && (num[1] == '>' || num[1] == '<'))
-        (*root)->prio = (num[1] == '>' ? 19 : 20); // &>> || &<<
-    else if (num[1] == '>' || num[1] == '<')
-        (*root)->prio = (num[1] == '<' ? 17 : 18); //&> || &<
-    (*root)->token = mx_strdup("&");
-}
-
-void mx_check_tok(t_tok **tok, char *str, int i) {
-    char *number = mx_strdup(str);
-
-    while(mx_isdigit(str[i]))
-        i++;
-    if (number[i] == '>' || number[i] == '<') {
-        mx_add_num(tok, number, i);
-        mx_strdel(&number);
-        return;
+    while (tmp1) {
+        if (tmp1 && tmp1->next && tmp1->type == 1 && tmp1->prio
+            == tmp1->next->prio && tmp1->prio != 10 && tmp1->prio != 15) {
+            mx_error_mes_tree(tmp1->prio, i);
+            mx_free_toks(tok);
+            return 0;
+        }
+        tmp1 = tmp1->next;
     }
-    else if (number[0] == '&' && number[1] != '&') {
-        mx_add_ampersand(tok, number);
-        mx_strdel(&number);
-        return;
-    }
-    mx_strdel(&number);
+    return 1;
 }
 
-int mx_valid_red(t_tok **tok) {
-    t_tok *tmp = *tok;
-    // int start = 0;
-    // t_tok *tmp1 = *tok;
-    // int prio = 0;
+static int check_oper(t_tok **tok, t_info *i) {
+    t_tok *tmp1 = *tok;
+    int flag = 0;
 
+    while (tmp1) {
+        if (tmp1 && tmp1->next && mx_redirection(tmp1->prio)) {
+            flag++;
+        }
+        tmp1 = tmp1->next;
+    }
+    if (flag > 1) {
+        mx_printerr(MX_RED);
+        mx_free_toks(tok);
+        return 0;
+    }
+    return 1;
+}
+
+static int valid_red(t_tok **tok, t_info *i, int flag) {
+    t_tok *tmp = NULL;
+
+    tmp = *tok;
     while (tmp) {
         mx_check_tok(&tmp, tmp->token, 0);
         tmp = tmp->next;
     }
-    // printf("1\n");
-    // while (tmp1) {
-    //     // printf("2\n");
-    //     // printf("tmp1->token = %s\n", tmp1->token);
-    //     if (tmp1 && tmp1->type == 1 && start == 0) {
-    //         prio = tmp1->prio;
-    //         start++;
-    //     }
-    //     if (prio == 8 && tmp1->prio == 5)
-    //         continue;
-    //     if (tmp1 && tmp1->type == 1 && tmp1->prio == prio && (tmp1->prio == 4
-    //         || tmp1->prio == 5 || tmp1->prio == 8 || tmp1->prio == 9
-    //         || (tmp1->prio > 10 && tmp1->prio < 15) || (tmp1->prio > 15
-    //         && tmp1->prio < 21))) {
-    //         mx_free_toks(tok);
-    //         mx_print_red_err(1);
-    //         return 0;
-    //     }
-    //     // printf("4\n");
-    //     if (tmp1 && tmp1->type == 1 && tmp1->prio != prio)
-    //         start--;
-    //     // printf("5\n");
-    //     tmp1 = tmp1->next; 
-    // }
-    // if (tok) {
-    //     printf("yeap!!\n");
-    // }
+    if (!check_rep(tok, i))
+        return 0;
+    if (!check_oper(tok, i))
+        return 0;
     return 1;
 }
 
-int mx_work_w_toks(char *line, t_tok **tok) {
+static int end_work(t_tok **tok, t_info *info, char **tmp) {
+    bool not_valid = 0;
+
+    while (*tok && (*tok)->prev)
+        *tok = (*tok)->prev;
+    mx_del_slash_and_quotes_in_list(tok, &not_valid);
+    if (!(*tok) || !((*tok)->token)
+        || strcmp((*tok)->token, "" ) == 0 || not_valid) {
+        mx_strdel(tmp);
+        return 0;
+    }
+    mx_strdel(tmp);
+    if (tok && !valid_red(tok, info, 0))
+            return 0;
+    return 1;
+}
+
+int mx_work_w_toks(char *line, t_tok **tok, t_info *info) {
     int size = 1;
     int i = 0;
     char *tmp;
-    bool not_valid = 0;
 
     if (!line)
         return 0;
@@ -108,31 +82,7 @@ int mx_work_w_toks(char *line, t_tok **tok) {
             mx_add_tok(tok, tmp + i, size);
         i += size;
     }
-    while (*tok && (*tok)->prev)
-        *tok = (*tok)->prev;
-    // printf("%slist: %s\n", GRN, RESET);
-    // printf("%s---------------------------------------------%s\n", MAG, RESET);
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
-    // }
-    // printf("\n\n");
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
-    // }
-    // printf("\n\n");
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
-    // }
-    // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
-    // printf("\n");
-    mx_del_slash_and_quotes_in_list(tok, &not_valid);
-    if (!(*tok) || !((*tok)->token)
-        || strcmp((*tok)->token, "" ) == 0 || not_valid) {
-        mx_strdel(&tmp);
-        return 0;
-    }
-    mx_strdel(&tmp);
-    if (!mx_valid_red(tok))
+    if (!end_work(tok, info, &tmp))
         return 0;
     // printf("%slist: %s\n", GRN, RESET);
     // printf("%s---------------------------------------------%s\n", MAG, RESET);
