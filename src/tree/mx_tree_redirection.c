@@ -48,6 +48,7 @@ int mx_run_redirection(t_ast *t, t_info *i, pid_t pid) {
 }
 
 void mx_multi_line_enter(t_info *info, char *key_word) {
+    mx_custom_termios(info, STDIN_FILENO);
     char *line = NULL;
     char *copy = strdup(key_word);
     FILE *f = fopen("/tmp/.system_ush.txt", "w+");
@@ -60,6 +61,7 @@ void mx_multi_line_enter(t_info *info, char *key_word) {
     mx_del_and_set(&(info->name), USH);
     fflush(f);
     fclose(f);
+    mx_origin_termios(info, STDIN_FILENO);
 }
 
 int mx_start_red(t_ast *t, t_info *info, pid_t pid) {

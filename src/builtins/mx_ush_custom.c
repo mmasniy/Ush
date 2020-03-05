@@ -19,12 +19,7 @@ static bool parse_and_check_line(t_info *info, char **line, int *type) {
 }
 
 static bool change_view(t_info *info, char *line) {
-    if (line && strcmp(line, "unicorn") == 0) {
-        mx_del_and_set(&(info->color_name), "\033[1;35m");
-        mx_del_and_set(&(info->name), USH);
-        info->def_name = 1;
-    }
-    else if (line && strcmp(line, "default") == 0) {
+    if (line && strcmp(line, "default") == 0) {
         mx_strdel(&(info->color_name));
         mx_del_and_set(&(info->name), USH);
     }
@@ -57,7 +52,7 @@ int mx_ush_custom(t_info *info) {
         else
             return 1;
     }
-    line && strcmp(line, "unicorn") ? info->def_name = 0 : 0;
+    line ? info->def_name = 0 : 0;
     mx_strdel(&line);
     return 0;
 }

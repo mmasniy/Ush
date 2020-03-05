@@ -42,14 +42,9 @@ bool mx_parse_line(t_info *info, char **line) {
     if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
         return 1;
     mx_tilde_work(info, line, *line);
-    if (info->status)
-        return 1;
-    mx_execute_substitutions(info, line);
-    if (info->status)
+    if (mx_execute_substitutions(info, line))
         return 1;
     if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
-        return 1;
-    if (info->status)
         return 1;
     return 0;
 }

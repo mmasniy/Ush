@@ -1,12 +1,7 @@
 #include "../inc/ush.h"
 
 static void mx_init_shell(t_info *info) {
-    if (getenv("TERM"))
-        mx_info_start(info);
-    else {
-        mx_error_message(TERM_ENV_NOT_EXIST);
-        exit(EXIT_FAILURE);
-    }
+    mx_info_start(info);
     if (getenv("PATH") == NULL) {
         mx_push_export_back(&(info->variables), "PATH"
             , "/usr/local/bin:/usr/bin:/bin:/usr/sbin");
@@ -19,7 +14,6 @@ static void mx_init_shell(t_info *info) {
 static void run_command(t_info *info, char **line) {
     t_tok *tok = NULL;
 
-    info->status = 0;
     if (mx_parse_line(info, line) == 0) {
         if (mx_work_w_toks(*line, &tok, info))
             mx_tok_to_tree(tok, info);
@@ -59,10 +53,7 @@ static void run_shell(t_info *info) {
             mx_origin_termios(info, STDIN_FILENO);
             info->name_len = 0;
             mx_check_history(info, line);
-            if (info->ctrl_c) {
-                mx_save_all_history(info);
-                exit(0);
-            }
+            mx_cntr_key(info);
             run_command(info, &line);
         }
     }
