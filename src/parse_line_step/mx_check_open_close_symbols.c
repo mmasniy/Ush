@@ -6,25 +6,53 @@ static bool error_return(t_info *info, char c) {
     return 1;
 }
 
-bool mx_check_open_close_symbols(t_info *info, char *line) {
-    char *close = ")'\"";
-    int symbol = -1;
-    int pos = -1;
+static int num_of_brackets_inside(char *line, int max_pos) {
+    int num = 0;
+    int pos = 0;
 
-    for (int i = 0; line[i]; i++) {
-        if ((symbol = mx_get_char_index(MX_OPEN_CHECK, line[i])) >= 0
-            && (i == 0 || line[i - 1] != '\\')) {
-            if ((pos = mx_char_block(line + i + 1, '\\', close[symbol], '\0'))
-                == -1 || !(i += pos + 1))
-                return error_return(info, close[symbol]);
+    for (int i = 0; (i = mx_char_block(line + pos, '\\', '(', '\0'))
+                     >= 0 && i < max_pos; num++) {
+        pos += i + 1;
+    }
+    return num;
+}
+
+bool mx_check_bracket(char *line, int *pos_in_line) {
+    int pos = 0;
+    int inside_num = -1;
+    int close_num = 0;
+    int close_pos = mx_char_block(line, '\\', ')', '\0');
+
+    if (close_pos >= 0) {
+        if ((inside_num = num_of_brackets_inside(line, close_pos))) {
+            for (int i = 0; (i = mx_char_block(line + close_pos
+                , '\\', ')', '\0')) >= 0; close_num++)
+                close_pos += i + 1;
+            close_pos--;
+            if (inside_num != close_num - 1) {
+                return 1;
+            }
         }
-        else if (i > 0 && line[i] == '{' && line[i - 1] == '$') {
-            if ((pos = mx_char_block(line + i + 1, '\\', '}', '\0')) == -1
+        *pos_in_line += close_pos + 1;
+    }
+    else
+        return 1;
+    return 0;
+}
+
+bool mx_check_open_close_symbols(t_info *info, char *ln, int symbol, int pos) {
+    for (int i = 0; ln[i]; i++) {
+         if (ln[i] == '(') {
+            if (mx_check_bracket(ln + i + 1, &i))
+                return error_return(info, '(');
+        }
+        else if (i > 0 && ln[i] == '{' && ln[i - 1] == '$') {
+            if ((pos = mx_char_block(ln + i + 1, '\\', '}', '\0')) == -1
                 || !(i += pos + 1))
                 return error_return(info, '}');
         }
-        else if (line[i] == ')' && (i == 0 || line[i - 1] != '\\'))
-            return error_return(info, line[i]);
+        else if (ln[i] == ')' && (i == 0 || ln[i - 1] != '\\'))
+            return error_return(info, ln[i]);
     }
     return 0;
 }

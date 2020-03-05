@@ -36,7 +36,10 @@ char mx_is_quotes(char *line, int pos) {
 }
 
 bool mx_parse_line(t_info *info, char **line) {
-    if (mx_check_open_close_symbols(info, *line) == 1)
+    int symbol = -1;
+    int pos = -1;
+
+    if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
         return 1;
     mx_tilde_work(info, line, *line);
     if (info->status)
@@ -44,13 +47,8 @@ bool mx_parse_line(t_info *info, char **line) {
     mx_execute_substitutions(info, line);
     if (info->status)
         return 1;
-    if (mx_check_open_close_symbols(info, *line) == 1)
+    if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
         return 1;
-    // mx_shell_functions(info, line);
-    if (mx_get_char_index(*line, '$') >= 0)
-        mx_insert_value(info, line, *line);
-    // if (mx_get_char_index(*line, '=') >= 0) //////// don't work as need
-    //     mx_save_ush_key_value(info, line, *line);
     if (info->status)
         return 1;
     return 0;

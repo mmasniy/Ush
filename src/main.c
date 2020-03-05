@@ -49,22 +49,7 @@ static bool check_open_type(t_info *info) {
     return false;
 }
 
-void mx_cntr_key(t_info *i) {
-    if (i->ctrl_d) {
-        if (i->process && i->d == 0) {
-            fprintf(stderr, "%s\n", "u$h: you have suspended jobs.");
-            i->d++;
-        }
-        else {
-            mx_save_all_history(i);
-            for (t_process *p = i->process; p; p = p->next)
-                kill(p->pid, SIGHUP);
-            exit(0);
-        }
-    }
-}
-
-void run_shell(t_info *info) {
+static void run_shell(t_info *info) {
     if (check_open_type(info)) {
         char *line = NULL;
 
@@ -74,7 +59,10 @@ void run_shell(t_info *info) {
             mx_origin_termios(info, STDIN_FILENO);
             info->name_len = 0;
             mx_check_history(info, line);
-            mx_cntr_key(info);
+            if (info->ctrl_c) {
+                mx_save_all_history(info);
+                exit(0);
+            }
             run_command(info, &line);
         }
     }
@@ -85,7 +73,6 @@ int main(int argc, char **argv) {
 
     (void)argc;
     (void)argv;
-    // setvbuf(stdout, NULL, _IONBF, 0);
     memset(info, 0, sizeof(t_info));
     mx_init_shell(info);
     run_shell(info);

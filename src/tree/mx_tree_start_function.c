@@ -11,7 +11,7 @@ static void execute_binary_file(t_ast *t, t_info *i, pid_t pid) {
         path = mx_find_in_PATH(i->paths, t->command[0], 1);
         path ? setenv("_", path, 1) : 0;
         if (execv(path, t->command) == -1)
-            mx_check_error(i, MX_ER, t->command[0]);
+            mx_print_error(i, MX_ER, t->command[0]);
         mx_dup_2(i, 1);
         exit(EXIT_FAILURE);
     }
@@ -24,7 +24,7 @@ int mx_start_function(t_ast *t, t_info *i, char **tree) {
             mx_exec_for_file(t, i);
         }
         else {
-            if (mx_check_buildin(i, 1) == -1){
+            if (mx_check_buildin(i, i->args[0], 1) == -1){
                 mx_add_alias(t, i, 0);
                 mx_execute_binary_file(t, i);
             }
@@ -42,7 +42,7 @@ void mx_execute_binary_file(t_ast *t, t_info *i) {
         execute_binary_file(t, i, pid);
     }
     else if (pid < 0)
-        mx_check_error(i, MX_ER, t->command[0]);
+        mx_print_error(i, MX_ER, t->command[0]);
     else {
         int status = 0;
 

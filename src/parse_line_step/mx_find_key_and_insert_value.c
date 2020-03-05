@@ -2,7 +2,7 @@
 
 static bool is_allow(char c) {
     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
-        || (c >= '0' && c <= '9'))
+        || (c >= '0' && c <= '9') || c == '?')
         return 1;
     return 0;
 }
@@ -39,6 +39,7 @@ static bool test_1(char *craft, int *pos, char **check) {
 
 void find_variable(t_info *info, char **check, char **new_line, int *pos) {
     t_export *find = NULL;
+    char *tmp;
 
     if ((find = mx_search_key_in_list(info->variables, *check))) {
         if (find->value) {
@@ -46,6 +47,13 @@ void find_variable(t_info *info, char **check, char **new_line, int *pos) {
                 , malloc_size(*new_line) + strlen(find->value));
             strcat(*new_line, find->value);
         }
+    }
+    else if (strcmp(*check, "?") == 0) {
+        tmp = mx_itoa(info->status);
+        *new_line = realloc(*new_line,
+                            malloc_size(*new_line) + strlen(tmp));
+        strcat(*new_line, tmp);
+        mx_strdel(&tmp);
     }
     *pos += strlen(*check) + 1;
     mx_strdel(check);

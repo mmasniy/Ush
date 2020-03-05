@@ -63,7 +63,7 @@ void mx_multi_line_enter(t_info *info, char *key_word) {
 }
 
 int mx_start_red(t_ast *t, t_info *info, pid_t pid) {
-    if (mx_check_buildin(info, 1) == -1) {
+    if (mx_check_buildin(info, info->args[0], 1) == -1) {
         mx_execute_red(t, info, pid);
     }
     return 0;

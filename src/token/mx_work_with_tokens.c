@@ -84,20 +84,5 @@ int mx_work_w_toks(char *line, t_tok **tok, t_info *info) {
     }
     if (!end_work(tok, info, &tmp))
         return 0;
-    // printf("%slist: %s\n", GRN, RESET);
-    // printf("%s---------------------------------------------%s\n", MAG, RESET);
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
-    // }
-    // printf("\n\n");
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
-    // }
-    // printf("\n\n");
-    // for (t_tok *temp = *tok; temp; temp = temp->next) {
-    //      printf("%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
-    // }
-    // printf("\n%s---------------------------------------------%s\n", MAG, RESET);
-    // printf("\n");
     return 1;
 }

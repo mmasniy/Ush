@@ -44,10 +44,12 @@ void mx_exec_substitutions_command(t_info *info
     t_tok *tok = NULL;
     char *line_from_file = NULL;
     short fl = 0;
+    int status = info->status;
 
     info->file = 1;
     if (mx_work_w_toks(*sub_line, &tok, info))
         mx_tok_to_tree(tok, info);
+    info->status = status == 0 ? 0 : info->status;
     info->file = 0;
     mx_strdel(sub_line);
     mx_del_strarr(&info->args);

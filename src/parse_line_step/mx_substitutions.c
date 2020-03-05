@@ -24,8 +24,8 @@ static void del_slash_for_substitutions(char **line) {
 static bool find_start_finish(char *ln, int *srt, int *f, char c) {
     if (c == '`') {
         if ((*srt = mx_char_block(ln, '\\', c, '\0')) >= 0)
-            return (*f = mx_char_block(&(ln[*srt + 1]), '\\'
-                                       , c, '\0')) >= 0 ? 0 : 1;
+            return (*f = mx_char_block(&(ln[*srt + 1]), '\\',
+                    c, '\0')) >= 0 ? 0 : 1;
     }
     else {
         int pos = 0;
@@ -33,10 +33,9 @@ static bool find_start_finish(char *ln, int *srt, int *f, char c) {
         for (int i = -1; (i = mx_get_substr_index(&(ln[pos]), "$(")) >= 0; ) {
             pos += i;
             if (pos == 0 || ln[pos - 1] != '\\' && ((*srt = pos) || 1)) {
-                if ((*f = mx_char_block(&(ln[pos + 1]), '\\', ')', '\0')) >= 0)
-                    i = mx_get_substr_index(&(ln[pos + 1]), "$(");
-                return ((*f = mx_char_block(&(ln[pos + 1]), '\\', ')'
-                                            , '\0')) >= 0) ? 0 : 1;
+                mx_check_bracket(ln + pos + 2, f);
+                *f >= 0 ? (*f)++ : 0;
+                return *f >= 0 ? 0 : 1;
             }
             pos++;
         }

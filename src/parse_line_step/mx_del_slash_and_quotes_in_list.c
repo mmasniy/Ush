@@ -70,7 +70,7 @@ static bool work_with_line(char **tmp_line, char **new, int *pos, char *line) {
         strcat(*new, *tmp_line);
         *pos += i + 1;
         if ((i = find_quote(line + *pos, &type)) == -1) {
-            printf("Quotes (%c) must have a pair !\n", type);
+            fprintf(stderr, "Quotes (%c) must have a pair !\n", type);
             return 1;
         }
         else if (type == '"') {
@@ -106,51 +106,3 @@ bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid) {
         }
     return 0;
 }
-
-// bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid) {
-//     int pos = 0;
-//     char type = 0;
-//     char *new_line = mx_strnew(strlen(tmp->token));
-//     char *tmp_line = NULL;
-
-//     for (t_tok *tmp = *tok; tmp; tmp = tmp->next) {
-//         if (tmp->type == 0 && tmp->token) {
-//             pos = type = 0;
-//             new_line = mx_strnew(strlen(tmp->token));
-//             for (int i = 0; (i = find_quote(tmp->token + pos, &type)) >= 0; ) {
-//                 tmp_line = strndup(tmp->token + pos, i);
-//                 search_just_slash(&tmp_line);
-//                 strcat(new_line, tmp_line);
-//                 pos += i + 1;
-//                 if ((i = find_quote(tmp->token + pos, &type)) == -1) {
-//                     *not_valid = 1;
-//                     printf("Quotes (%c) must have a pair !\n", type);
-//                     return;
-//                 }
-//                 else if (type == '\'')
-//                     strncat(new_line, tmp->token + pos, i);
-//                 else if (type == '"') {
-//                     mx_del_and_set(&tmp_line, strndup(tmp->token + pos, i));
-//                     del_slash_for_double_quotes(&tmp_line);
-//                     strcat(new_line, tmp_line);
-//                 }
-//                 pos += i + 1;
-//                 mx_strdel(&tmp_line);
-//                 type = 0;
-//             }
-//             tmp_line = strdup(tmp->token + pos);
-//             search_just_slash(&tmp_line);
-//             strcat(new_line, tmp_line);
-//             mx_strdel(&(tmp->token));
-//             tmp->token = strdup(new_line);
-//             mx_strdel(&new_line);
-//         }
-//     }
-// }
-
-/*
-шукаємо ' або " кавички в залежності від того, що йде першим
-після того і цих кавичках починаємо затирати \ при умові, що це " кавички
-
-індекс кінцевої кавички + 1, стає індексом пошуку і таким чином ми знатимемо
-, що необхідно перевірити перед новими кавичками*/

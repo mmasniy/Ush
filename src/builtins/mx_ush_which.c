@@ -18,7 +18,7 @@ static void find_binary_files(t_info *info, char *word, t_history **list) {
     struct dirent *d = NULL;
     char *tmp;
 
-    if (mx_check_buildin(info, 0) == 0) {
+    if (mx_check_buildin(info, word, 0) >= 0) {
         tmp = mx_strjoin(word, ": shell built-in command");
         mx_push_history_back(list, tmp);
         mx_strdel(&tmp);
@@ -60,7 +60,7 @@ static int check_flags(char **args, bool *flags) {
                     || (args[i][j] == 's' && (flags[1] = 1)));
                 else {
                     fprintf(stderr, "which: illegal option -- %c\n"
-                        , args[i][j]);
+                            , args[i][j]);
                     return 0;
                 }
             }
@@ -75,7 +75,7 @@ static int check_flags(char **args, bool *flags) {
 
 int mx_ush_which(t_info *info) {
     if (info->args[1]) {
-        int pos = 0;
+        int pos = 1;
         bool flags[2] = {0, 0};
 
         if ((pos = check_flags(info->args, flags)))

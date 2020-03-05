@@ -21,7 +21,6 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_work_with_tilde.c \
 	src/parse_line_step/mx_substitutions.c \
 	src/parse_line_step/mx_substitutions_2.c \
-	src/parse_line_step/mx_check_first_argument.c \
 	src/parse_line_step/mx_check_open_close_symbols.c \
 	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
 	\

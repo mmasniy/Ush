@@ -34,9 +34,9 @@
 * Defines for tokens
 */
 
-#define MX_OPEN_CHECK "('\""
-#define MX_CHECK "-_/~.:\"\\"
-#define MX_CHECK2 "+-_/~:'\".\\="
+#define MX_CHECK "$-_/~.:\"\\"
+#define MX_Q "'\""
+#define MX_CHECK2 "?$+-_/~:'\".\\="
 #define MX_TYPE "; | & &> <& &>> <<& < > << >> && ||"
 #define MX_EXPORT_VALUE_ALLOW "_$+-#()?:<>|&=.,/~"
 
@@ -223,8 +223,11 @@ typedef struct  s_info {
 
 // All parse --------------------------------|
 
+void mx_cntr_key(t_info *i);
+
 // File: mx_check_open_close_symbols.c
-bool mx_check_open_close_symbols(t_info *info, char *line);
+bool mx_check_bracket(char *line, int *pos_in_line);
+bool mx_check_open_close_symbols(t_info *info, char *ln, int symbol, int pos);
 
 // File: mx_check_first_argument.c
 bool mx_check_first_argument(t_info *info, char *head);
@@ -257,7 +260,7 @@ bool mx_parse_line(t_info *info, char **line);
 // File: mx_del_slash_and_quotes_in_list.c
 bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
 
-// ------------------------------------------|
+// End parse------------------------------------------|
 
 // File: mx_multi_line_enter.c
 void mx_multi_line_enter(t_info *info, char *key_word);
@@ -269,7 +272,7 @@ void mx_print_red_err(int i, t_info *info);
 
 // File: mx_buildin_funcs.c
 int mx_run_buildin(t_info *info);
-int mx_check_buildin(t_info *info, bool exec);
+int mx_check_buildin(t_info *info, char *arg, bool exec);
 char *mx_find_similar_buildin(char *what_check);
 
 // File: mx_funcs_for_cd.c

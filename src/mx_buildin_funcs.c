@@ -20,30 +20,27 @@ int mx_run_buildin(t_info *info) {
     !strcmp(info->args[0], "return") ? exit_code = mx_ush_return(info) : 0;
     !strcmp(info->args[0], "fg") ? exit_code = mx_fg(info, 0) : 0;
     !strcmp(info->args[0], "jobs") ? exit_code = mx_jobs(info) : 0;
-    return exit_code;
+    return (info->status = exit_code);
 }
 
-int mx_check_buildin(t_info *info, bool exec) {
+int mx_check_buildin(t_info *info, char *arg, bool exec) {
     int return_value;
 
-    if ((!strcmp(info->args[0], "pwd")) || (!strcmp(info->args[0], "cd"))
-        || (!strcmp(info->args[0], "help"))
-        || (!strcmp(info->args[0], "exit"))
-        || (!strcmp(info->args[0], "history"))
-        || (!strcmp(info->args[0], "env")) || (!strcmp(info->args[0], "set"))
-        || (!strcmp(info->args[0], "unset"))
-        || (!strcmp(info->args[0], "export"))
-        || (!strcmp(info->args[0], "which")) || (!strcmp(info->args[0], "fg"))
-        || (!strcmp(info->args[0], "echo")) || (!strcmp(info->args[0], "true"))
-        || (!strcmp(info->args[0], "false")) 
-        || (!strcmp(info->args[0], "return"))
-        || (!strcmp(info->args[0], "jobs"))
-        || (!strcmp(info->args[0], "custom")))  {
-        return_value = exec ? mx_run_buildin(info) : 1;
+    if ((!strcmp(arg, "pwd")) || (!strcmp(arg, "cd"))
+        || (!strcmp(arg, "help")) || (!strcmp(arg, "exit"))
+        || (!strcmp(arg, "history"))
+        || (!strcmp(arg, "env")) || (!strcmp(arg, "set"))
+        || (!strcmp(arg, "unset"))
+        || (!strcmp(arg, "export"))
+        || (!strcmp(arg, "which")) || (!strcmp(arg, "fg"))
+        || (!strcmp(arg, "echo")) || (!strcmp(arg, "true"))
+        || (!strcmp(arg, "false")) 
+        || (!strcmp(arg, "return"))
+        || (!strcmp(arg, "jobs"))
+        || (!strcmp(arg, "custom")))  {
+        return exec ? mx_run_buildin(info) : 1;
     }
-    else
-        return (-1);
-    return (return_value == 1 ? 0 : 1);
+    return -1;
 }
 
 char *mx_find_similar_buildin(char *what_check) {
@@ -67,4 +64,19 @@ char *mx_find_similar_buildin(char *what_check) {
         || (!mx_str_head(what_check, "jobs") && (res = strdup("jobs")))
         || (!mx_str_head(what_check, "fg") && (res = strdup("fg"))) || 1)
         return res;
+}
+
+void mx_cntr_key(t_info *i) {
+    if (i->ctrl_d) {
+        if (i->process && i->d == 0) {
+            fprintf(stderr, "%s\n", "u$h: you have suspended jobs.");
+            i->d++;
+        }
+        else {
+            mx_save_all_history(i);
+            for (t_process *p = i->process; p; p = p->next)
+                kill(p->pid, SIGHUP);
+            exit(0);
+        }
+    }
 }
