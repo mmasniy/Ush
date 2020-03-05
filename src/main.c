@@ -13,6 +13,7 @@ static void mx_init_shell(t_info *info) {
     }
     mx_save_PATH(info, getenv("PATH"));
     info->PWD = getenv("PWD");
+    info->d = 0;
 }
 
 static void run_command(t_info *info, char **line) {
@@ -48,6 +49,21 @@ static bool check_open_type(t_info *info) {
     return false;
 }
 
+void mx_cntr_key(t_info *i) {
+    if (i->ctrl_d) {
+        if (i->process && i->d == 0) {
+            fprintf(stderr, "%s\n", "u$h: you have suspended jobs.");
+            i->d++;
+        }
+        else {
+            mx_save_all_history(i);
+            for (t_process *p = i->process; p; p = p->next)
+                kill(p->pid, SIGHUP);
+            exit(0);
+        }
+    }
+}
+
 void run_shell(t_info *info) {
     if (check_open_type(info)) {
         char *line = NULL;
@@ -58,10 +74,7 @@ void run_shell(t_info *info) {
             mx_origin_termios(info, STDIN_FILENO);
             info->name_len = 0;
             mx_check_history(info, line);
-            if (info->ctrl_c) {
-                mx_save_all_history(info);
-                exit(0);
-            }
+            mx_cntr_key(info);
             run_command(info, &line);
         }
     }

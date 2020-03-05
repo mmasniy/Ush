@@ -214,6 +214,9 @@ typedef struct  s_info {
 
     // Variable for counting redirection in tree
     int num_of_red;
+
+    // For ctrl+d
+    int d;
 }               t_info;
 
 // Functions --------------------------------------------------------------|
@@ -260,6 +263,7 @@ bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
 void mx_multi_line_enter(t_info *info, char *key_word);
 
 // mx_print_errors.c
+void mx_check_error(t_info *i, char *error, char *arg);
 void mx_print_error(t_info *i, char *error, char *arg);
 void mx_print_red_err(int i, t_info *info);
 

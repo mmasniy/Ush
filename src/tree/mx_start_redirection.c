@@ -14,7 +14,7 @@ static void end_work_exec(t_ast *t, t_info *info, char **path) {
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname, info);
         else if (execv(*path, t->command) == -1)
-            mx_print_error(info, MX_ER, t->command[0]);
+            mx_check_error(info, MX_ER, t->command[0]);
     }
     mx_dup_2(info, 1);
     exit(EXIT_FAILURE);
@@ -27,7 +27,7 @@ void mx_execute_file(t_ast *t, t_info *info, pid_t pid) {
         end_work_exec(t, info, &path);
     }
     else if (pid < 0)
-            mx_print_error(info, MX_ER, t->command[0]);
+            mx_check_error(info, MX_ER, t->command[0]);
     else {
         int status;
         
@@ -69,12 +69,12 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname, info);
         else if (execv(path, t->command) == -1)
-            mx_print_error(info, MX_ER, t->command[0]);
+            mx_check_error(info, MX_ER, t->command[0]);
         mx_dup_2(info, 1);
         exit(EXIT_FAILURE);
     }
     else if (pid < 0)
-            mx_print_error(info, MX_ER, t->command[0]);
+            mx_check_error(info, MX_ER, t->command[0]);
     else
         mx_waitpid(info, t, status, pid);
     mx_strdel(&path);
