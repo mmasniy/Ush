@@ -63,7 +63,7 @@
 // Errors
 
 #define EXIT_FAILURE 1
-#define TERM_ENV_NOT_EXIST "TERM variable in env not exist"
+#define TERM_ENV_NOT_EXIST " TERM variable in env not exist\n"
 #define ERROR_PARSE_TREE "u$h: syntax error near after token `"
 #define MX_ER ": command not found"
 #define MX_NOT_FOUND " no such file or directory: "
