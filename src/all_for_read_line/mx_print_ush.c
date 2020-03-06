@@ -23,7 +23,7 @@ void mx_print_ush(t_info *info) {
     mx_printstr(info->name);
     info->color_name ? mx_printstr(RESET) : 0;
     write(1, " ", 1);
-    if (info->PWD) {
+    if (info->pwd) {
         mx_printstr("\033[1;29m");
         write(1, "(", 1);
         mx_printstr(&(info->pwd[strlen(info->pwd)

@@ -60,6 +60,6 @@ int mx_ush_unset(t_info *info) {
                 exit_code = 1;
         }
     }
-    mx_save_PATH(info, getenv("PATH"));
+    mx_save_PATH(info);
     return exit_code;
 }

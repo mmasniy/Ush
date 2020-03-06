@@ -165,9 +165,7 @@ typedef struct  s_info {
     char *color_name;
     bool def_name;
     unsigned int name_len;
-    char        **args;
-    char        *PWD;
-    char        *OLDPWD;
+    char **args;
     struct s_history_pack *history_pack;
     struct termios origin_termios;
     int history_pos;
@@ -363,7 +361,7 @@ void mx_tab_work(t_info *info, char **buffer, int *position);
 void mx_replace_special_symbols(t_info *info);
 
 // File: mx_save_PATH.c
-void mx_save_PATH(t_info *info, char *paths);
+void mx_save_PATH(t_info *info);
 char *mx_find_in_PATH(char **paths, char *word, bool full);
 
 // File: mx_arr_copy.c

@@ -101,6 +101,6 @@ int mx_ush_export(t_info *info) {
         for (t_export *tmp = info->to_export; tmp; tmp = tmp->next)
             printf("%s=%s\n", tmp->key, tmp->value ? tmp->value : "");
     }
-    mx_save_PATH(info, getenv("PATH"));
+    mx_save_PATH(info);
     return exit_code;
 }

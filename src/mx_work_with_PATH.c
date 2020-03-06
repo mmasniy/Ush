@@ -21,11 +21,19 @@ static char *check_full_path(char **paths, char *word) {
     return path;
 }
 
-void mx_save_PATH(t_info *info, char *all_paths) {
+static char *get_path(t_info *info) {
+    if (info->variables)
+        for (t_export *tmp = info->variables; tmp; tmp = tmp->next)
+            if (tmp->key && strcmp(tmp->key, "PATH") == 0)
+                return tmp->value;
+    return NULL;
+}
+
+void mx_save_PATH(t_info *info) {
     if (info->paths)
         mx_del_strarr(&(info->paths));
-    if (all_paths) {
-        char **splitted_paths = mx_strsplit(all_paths, ':');
+    if (get_path(info)) {
+        char **splitted_paths = mx_strsplit(get_path(info), ':');
         char *tmp;
 
         for (int i = 0; splitted_paths[i]; i++) {

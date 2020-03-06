@@ -8,7 +8,7 @@ static void execute_binary_file(t_ast *t, t_info *i, pid_t pid) {
         mx_run_redirection(t, i, pid);
     }
     else {
-        path = mx_find_in_PATH(i->paths, t->command[0], 1);
+        path = i->paths ? mx_find_in_PATH(i->paths, t->command[0], 1) : NULL;
         path ? setenv("_", path, 1) : 0;
         if (execv(path, t->command) == -1)
             mx_print_error(i, MX_ER, t->command[0]);

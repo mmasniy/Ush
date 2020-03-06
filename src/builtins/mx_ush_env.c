@@ -37,7 +37,7 @@ static bool step_to_exec(t_info *i, char **path, int *f, t_export *env) {
         if (res == 1)
             exec_program(i, f[3], env_massive, *path);
         else if (res == 2) {
-            mx_save_PATH(i, getenv("PATH"));
+            mx_save_PATH(i);
             path_in_env = mx_find_in_PATH(i->paths, i->args[f[3]], 1);
             exec_program(i, f[3], env_massive, path_in_env);
             mx_strdel(&path_in_env);
@@ -54,7 +54,7 @@ static bool step_to_exec(t_info *i, char **path, int *f, t_export *env) {
 static bool result(t_info *info, bool res, t_export **env) {
     while (*env)
         mx_pop_export_front(env);
-    mx_save_PATH(info, getenv("PATH"));
+    mx_save_PATH(info);
     return res;
 }
 

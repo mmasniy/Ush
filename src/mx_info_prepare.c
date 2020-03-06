@@ -45,6 +45,8 @@ static void set_pwd(t_info *info) {
     mx_strdel(&check);
     info->pwd = strdup(getenv("PWD"));
     info->oldpwd = strdup(getenv("PWD"));
+    mx_push_export_back(&(info->to_export), "PWD", getenv("PWD"));
+    mx_push_export_back(&(info->variables), "PWD", getenv("PWD"));
     // name for transport file
     info->path_f = "/tmp/.system_ush.txt";
     info->history_path = "/tmp/.history_ush.txt";
@@ -76,7 +78,6 @@ void mx_info_start(t_info *info) {
     extern char **environ;
 
     info->args = NULL;
-    info->OLDPWD = NULL;
     info->history_pack = (t_history_pack *)malloc(sizeof(t_history_pack));
     mx_memset(info->history_pack, 0, sizeof(t_history_pack));
     info->to_export = mx_save_env_as_list(environ);
