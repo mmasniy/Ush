@@ -14,9 +14,10 @@ static void mx_init_shell(t_info *info) {
 static void run_command(t_info *info, char **line) {
     t_tok *tok = NULL;
 
-    if (mx_parse_line(info, line) == 0) {
-        if (mx_work_w_toks(*line, &tok, info))
+    if (line && *line && mx_parse_line(info, line) == 0) {
+        if (mx_work_w_toks(*line, &tok, info)) {
             mx_tok_to_tree(tok, info);
+        }
         if (tok)
             mx_free_toks(&tok);
     }
@@ -27,7 +28,7 @@ static void run_command(t_info *info, char **line) {
 }
 
 static bool check_open_type(t_info *info) {
-    char *line = NULL;
+    char *line = malloc(1);
     size_t linecap = 0;
     ssize_t linelen = 0;
 
@@ -39,6 +40,9 @@ static bool check_open_type(t_info *info) {
         if (line[linelen - 1] == '\n')
             line[linelen - 1] = '\0';
         run_command(info, &line);
+        line = malloc(1);
+        linecap = 0;
+        linelen = 0;
     }
     return false;
 }

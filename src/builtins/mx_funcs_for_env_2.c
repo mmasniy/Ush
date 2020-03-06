@@ -25,7 +25,7 @@ static bool del_el(t_export **env, char **args, int i, int pos) {
 static bool print_error_flag(int *flags, char symbol, int flag_id, char *arg) {
     if (flag_id < 4) {
         mx_printerr("env: option requires an argument -- ");
-        mx_printerr(&symbol);
+        write(2, &symbol, 1);
     }
     else {
         mx_printerr("env: illegal option -- ");
@@ -74,22 +74,25 @@ static int check_flags(int *index, char **args, int *flags, char **path) {
     return -10;
 }
 
-bool mx_check_args(t_export *env, char **args, int *flags, char **path) {
+bool mx_check_args(t_export **env, char **args, int *flags, char **path) {
     bool flag_check = 1;
 
-    for (int i = 1; args[i]; i++) {
+    for (int i = 1; args[i]; i++)
         if (args[i][0] == '-' && flag_check) {
             if (!strcmp(args[i], "--") && !(flag_check = 0))
                 continue;
-            if (!strcmp(args[i], "-"))
-                flags[0] = 1;
-            else
-                if (!del_el(&env, args, i, check_flags(&i, args, flags, path)))
+            if (!strcmp(args[i], "-") && (flags[0] = 1))
+                while (*env)
+                    mx_pop_export_front(env);
+            else {
+                if (!del_el(env, args, i, check_flags(&i, args, flags, path)))
                     return 0;
+                else if (flags[0])
+                    while (*env)
+                        mx_pop_export_front(env);
+            }
         }
-        else {
+        else
             return mx_check_variable_create(env, args, i, flags);
-        }
-    }
     return 0;
 }

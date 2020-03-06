@@ -296,12 +296,12 @@ char **mx_save_env_as_massive(t_export *env);
 int mx_check_to_execute(t_info *info, char **path, int position);
 
 // File: mx_funcs_for_env_2.c
-bool mx_check_args(t_export *env, char **args, int *flags, char **path);
+bool mx_check_args(t_export **env, char **args, int *flags, char **path);
 
 // File: mx_funcs_for_env_3.c
 void mx_del_env_elem(t_export **env);
 void mx_sort_print(t_export **list_to_sort);
-int mx_check_variable_create(t_export *env, char **args, int pos, int *flags);
+int mx_check_variable_create(t_export **env, char **args, int pos, int *fgs);
 
 // File: mx_work_with_environ.c
 t_export *mx_search_key_in_list(t_export *list, char *key);

@@ -2,7 +2,7 @@
 
 static bool is_allow(char c) {
     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
-        || (c >= '0' && c <= '9') || c == '?')
+        || (c >= '0' && c <= '9') || c == '?' || c == '$')
         return 1;
     return 0;
 }
@@ -42,19 +42,18 @@ void find_variable(t_info *info, char **check, char **new_line, int *pos) {
     char *tmp;
 
     if ((find = mx_search_key_in_list(info->variables, *check))) {
-        if (find->value) {
-            *new_line = realloc(*new_line
-                , malloc_size(*new_line) + strlen(find->value));
-            strcat(*new_line, find->value);
-        }
+        if (find->value)
+            mx_del_and_set(new_line, mx_strjoin(*new_line, find->value));
     }
     else if (strcmp(*check, "?") == 0) {
         tmp = mx_itoa(info->status);
-        *new_line = realloc(*new_line,
-                            malloc_size(*new_line) + strlen(tmp));
-        strcat(*new_line, tmp);
-        mx_strdel(&tmp);
+        mx_del_and_set(new_line, mx_strjoin(*new_line, tmp));        
     }
+    else if (strcmp(*check, "$") == 0) {
+        tmp = mx_itoa(getpid());
+        mx_del_and_set(new_line, mx_strjoin(*new_line, tmp));
+    }
+    mx_strdel(&tmp);
     *pos += strlen(*check) + 1;
     mx_strdel(check);
 }
