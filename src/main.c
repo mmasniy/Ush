@@ -4,7 +4,6 @@ static void mx_init_shell(t_info *info) {
     int shlvl = getenv("SHLVL") ? atoi(getenv("SHLVL")) : -1;
     char *shlvl_char = shlvl == -1 ? "1\0" : mx_itoa(shlvl + 1);
 
-    mx_info_start(info);
     if (getenv("PATH") == NULL) {
         mx_push_export_back(&(info->variables), "PATH",
             "/usr/local/bin:/usr/bin:/bin:/usr/sbin");
@@ -12,8 +11,7 @@ static void mx_init_shell(t_info *info) {
     else
         mx_push_export_back(&(info->variables), "PATH", getenv("PATH"));
     setenv("SHLVL", shlvl_char, 1);
-    mx_push_export_back(&(info->to_export), "SHLVL", shlvl_char);
-    mx_push_export_back(&(info->variables), "SHLVL", shlvl_char);
+    mx_info_start(info);
     mx_strdel(&shlvl_char);
     mx_save_PATH(info);
     info->d = 0;

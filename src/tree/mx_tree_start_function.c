@@ -24,6 +24,7 @@ int mx_start_function(t_ast *t, t_info *i, char **tree) {
             mx_exec_for_file(t, i);
         }
         else {
+            setenv("_", t->command[mx_arr_size(t->command) - 1], 1);
             if (mx_check_buildin(i, i->args[0], 1) == -1) {
                 mx_add_alias(t, i, 0);
                 mx_execute_binary_file(t, i);

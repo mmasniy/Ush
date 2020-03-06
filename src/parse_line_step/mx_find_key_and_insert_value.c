@@ -53,6 +53,8 @@ void find_variable(t_info *info, char **check, char **new_line, int *pos) {
         tmp = mx_itoa(getpid());
         mx_del_and_set(new_line, mx_strjoin(*new_line, tmp));
     }
+    else if (getenv(*check))
+        mx_del_and_set(new_line, mx_strjoin(*new_line, getenv(*check)));
     mx_strdel(&tmp);
     *pos += strlen(*check) + 1;
     mx_strdel(check);

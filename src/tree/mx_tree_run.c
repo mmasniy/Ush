@@ -12,8 +12,8 @@ int mx_tree_run(t_ast *tree, t_info *info, int f) {
     else if (tree && tree->type == 3)
         mx_run_pipe(tree, info);
     else if (tree && tree->type == 1) {
-        f = mx_tree_run(tree->left, info, 0);
-        f = mx_tree_run(tree->right, info, 0);
+        tree->left ? f = mx_tree_run(tree->left, info, 0) : 0;
+        tree->right ? f = mx_tree_run(tree->right, info, 0) : 0;
     }
     else if (tree && tree->type == 6) {
         f = mx_tree_run(tree->left, info, 0);
