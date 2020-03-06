@@ -1,7 +1,5 @@
 #include "../../inc/ush.h"
 
-void printKLP(t_ast* root);
-
 t_ast *mx_start_tree(t_tok *tok, t_info *i) {
     t_tok *tmp = mx_search_first(tok);
     t_ast *tree = mx_create_ast(tmp);

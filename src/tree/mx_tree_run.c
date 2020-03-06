@@ -1,8 +1,48 @@
 #include "../../inc/ush.h"
 
+static void trim(char **str) {
+    if (str && *str) {
+        int len = mx_strlen(*str);
+        int start = 0;
+        int end = 0;
+        char *res;
+
+        for (; (*str)[start] && mx_isspace((*str)[start]); start++);
+        for (int j = len - 1; (*str)[j] && mx_isspace((*str)[j]); j--, end++);
+
+        if (start + end >= len) {
+            mx_del_and_set(str, mx_strnew(0));
+            return;
+        }
+        res = mx_strnew(len - start - end);
+        mx_strncpy(res, (*str) + start, len - start - end);
+        mx_strdel(str);
+        *str = strdup(res);
+        mx_strdel(&res);
+    }
+}
+
 static void exec_tilde(t_info *info, t_ast *tree) {
+    int size = 0;
+
     for (int i = 0; tree->command[i]; i++)
         mx_insert_value(info, &(tree->command[i]), tree->command[i]);
+    for (int i = 0; tree->command[i]; i++)
+        trim(&(tree->command[i]));
+    for (int i = 0; tree->command[i]; i++)
+        if (tree->command[i][0])
+            size++;
+    if (size) {
+        int pos = 0;
+        char **massiv = (char **)malloc(sizeof(char *) * (size + 1));
+
+        massiv[size] = NULL;
+        for (int i = 0; tree->command[i]; i++)
+            if (tree->command[i][0])
+                massiv[pos++] = strdup(tree->command[i]);
+        mx_del_strarr(&(tree->command));
+        tree->command = massiv;
+    }
 }
 
 int mx_tree_run(t_ast *tree, t_info *info, int f) {

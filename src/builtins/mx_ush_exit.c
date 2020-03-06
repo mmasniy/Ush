@@ -29,7 +29,6 @@ static void work_with_more_args(t_info *i) {
 
 int mx_ush_exit(t_info *i) {
     mx_save_all_history(i);
-    printf("exit\n");
     if (mx_arr_size(i->args) == 1)
         exit(i->status);
     if (mx_arr_size(i->args) == 2)

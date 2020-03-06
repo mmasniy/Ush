@@ -1,18 +1,11 @@
 #include "../../inc/ush.h"
 
-static bool is_allow(char c) {
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
-        || (c >= '0' && c <= '9') || c == '?' || c == '$')
-        return 1;
-    return 0;
-}
-
 static int key_len(char *line) {
     int i = 0;
 
     if (line[0] >= '0' && line[0] <= '9')
         return 1;
-    while (line[i] && is_allow(line[i])) {
+    while (line[i] && mx_is_allow(line[i])) {
         i++;
     }
     return i;
@@ -21,12 +14,13 @@ static int key_len(char *line) {
 static bool test_1(char *craft, int *pos, char **check) {
     bool result = 0;
 
+    mx_strdel(check);
     if (craft[*pos + 1] == '{'
         && mx_get_char_index(craft + *pos + 1, '}') >= 0) {
-        *check = strndup(craft + *pos + 2
-            , mx_get_char_index(craft + *pos, '}') - 2);
+        *check = strndup(craft + *pos + 2,
+            mx_get_char_index(craft + *pos, '}') - 2);
         for (int c = 0; (*check)[c]; c++)
-            if (is_allow((*check)[c]) == 0) {
+            if (mx_is_allow((*check)[c]) == 0) {
                 fprintf(stderr, "${%s}: bad substitution\n", *check);
                 result = 1;
             }
@@ -35,6 +29,13 @@ static bool test_1(char *craft, int *pos, char **check) {
     if (result == 1)
         mx_strdel(check);
     return result;
+}
+
+bool mx_is_allow(char c) {
+    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
+        || (c >= '0' && c <= '9') || c == '?' || c == '$')
+        return 1;
+    return 0;
 }
 
 void find_variable(t_info *info, char **check, char **new_line, int *pos) {
@@ -66,9 +67,10 @@ bool mx_insert_value(t_info *info, char **line, char *craft) {
     int pos = 0;
 
     for (int i = 0; (i = mx_char_block(craft + pos, '\\', '$', '\0')) >= 0; ) {
-        strncat(new_line, craft + pos, i);
+        check = strndup(craft + pos, i);
+        mx_del_and_set(&new_line, mx_strjoin(new_line, check));
         pos += i;
-        if (mx_is_quotes(craft, pos) == '\'' && strcat(new_line, "$") && pos++)
+        if (mx_check_is_continue(craft, &pos, &new_line))
             continue;
         if (test_1(craft, &pos, &check))
             return 1;

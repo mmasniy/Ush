@@ -34,9 +34,7 @@
 * Defines for tokens
 */
 
-#define MX_CHECK "$-_/~.:\"\\"
 #define MX_Q "'\""
-#define MX_CHECK2 "?$+-_/~:'\".\\="
 #define MX_TYPE "; | & &> <& &>> <<& < > << >> && ||"
 #define MX_EXPORT_VALUE_ALLOW "_$+-#()?:<>|&=.,/~"
 
@@ -221,6 +219,8 @@ typedef struct  s_info {
 
 // All parse --------------------------------|
 
+bool mx_is_allow(char c);
+
 void mx_cntr_key(t_info *i);
 
 // File: mx_check_open_close_symbols.c
@@ -306,6 +306,7 @@ t_export *mx_search_key_in_list(t_export *list, char *key);
 t_export *mx_create_new_export(char *key, char *value);
 void mx_push_export_back(t_export **list, char *key, char *value);
 void mx_pop_export_front(t_export **head);
+bool mx_check_is_continue(char *craft, int *pos, char **new_line);
 
 // File: mx_replace_pack.c
 int mx_count_substr_without_symbol(const char *str, const char *sub

@@ -8,11 +8,9 @@ static void mx_init_shell(t_info *info) {
         mx_push_export_back(&(info->variables), "PATH",
             "/usr/local/bin:/usr/bin:/bin:/usr/sbin");
     }
-    else
-        mx_push_export_back(&(info->variables), "PATH", getenv("PATH"));
     setenv("SHLVL", shlvl_char, 1);
-    mx_info_start(info);
     mx_strdel(&shlvl_char);
+    mx_info_start(info);
     mx_save_PATH(info);
     info->d = 0;
 }
@@ -39,6 +37,7 @@ static bool check_open_type(t_info *info) {
     ssize_t linelen = 0;
 
     if (isatty(STDIN_FILENO)) {
+        mx_strdel(&line);
         return true;
     }
     while ((linelen = getline(&line, &linecap, stdin)) > 0) {
@@ -50,6 +49,7 @@ static bool check_open_type(t_info *info) {
         linecap = 0;
         linelen = 0;
     }
+    mx_strdel(&line);
     return false;
 }
 

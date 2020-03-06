@@ -9,8 +9,8 @@ static void end_work_exec(t_ast *t, t_info *info, char **path) {
         close(info->fd_f);
     }
     if (mx_check_buildin(info, info->args[0], 1) == -1) {
-        *path = mx_find_in_PATH(info->paths, t->command[0], 1);
-        setenv("_", *path, 1);
+        *path = info->paths ? mx_find_in_PATH(info->paths,
+                                              t->command[0], 1) : NULL;
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname, info);
         else if (execv(*path, t->command) == -1)
@@ -64,8 +64,8 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
 
     if (pid == 0) {
         mx_dup_2(info, 0);
-        path = mx_find_in_PATH(info->paths, t->command[0], 1);
-        setenv("_", path, 1);
+        path = info->paths ? mx_find_in_PATH(info->paths,
+                                             t->command[0], 1) : NULL;
         if (info->fd_r < 0 && info->file != 1)
             mx_file_not_found(info->fname, info);
         else if (execv(path, t->command) == -1)
