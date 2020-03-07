@@ -66,7 +66,7 @@ bool mx_insert_value(t_info *info, char **line, char *craft) {
         check = strndup(craft + pos, i);
         mx_del_and_set(&new_line, mx_strjoin(new_line, check));
         pos += i;
-        if (mx_check_is_continue(craft, &pos, &new_line))
+        if (mx_check_is_continue(craft, &pos, &new_line, &check))
             continue;
         if (test_1(craft, &pos, &check))
             return 1;

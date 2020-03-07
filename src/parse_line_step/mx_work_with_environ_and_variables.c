@@ -55,11 +55,12 @@ void mx_pop_export_front(t_export **head) {
     }
 }
 
-bool mx_check_is_continue(char *craft, int *pos, char **new_line) {
+bool mx_check_is_continue(char *craft, int *pos, char **new_line, char **chk) {
     if (mx_is_quotes(craft, *pos) == '\'' || !craft[*pos + 1]
         || mx_is_allow(craft[*pos + 1]) == 0) {
         mx_del_and_set(new_line, mx_strjoin(*new_line, "$"));
         (*pos)++;
+        mx_strdel(chk);
         return 1;
     }
     return 0;

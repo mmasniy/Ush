@@ -28,14 +28,17 @@ static bool find_argument(t_info *info, char **arg, char flag) {
     struct dirent *d = NULL;
     bool res = 0;
     char *tmp = mx_strjoin(info->pwd, "/");
+    char *tmp2 = mx_strjoin(tmp, *arg);
 
     if ((*arg)[0] == '/' && (f = opendir(*arg)))
         res = 1;
-    else if ((f = opendir(mx_strjoin(mx_strjoin(info->pwd, "/"), *arg)))) {
+    else if ((f = opendir(tmp2))) {
+        mx_del_and_set(&tmp, mx_strjoin(info->pwd, "/"));
         mx_del_and_set(arg, mx_strjoin(tmp, *arg));
         res = 1;
     }
     mx_strdel(&tmp);
+    mx_strdel(&tmp2);
     f ? closedir(f) : 0;
     if (res)
         parse_argument(arg, flag);
@@ -43,9 +46,8 @@ static bool find_argument(t_info *info, char **arg, char flag) {
 }
 
 static bool check_argument(t_info *info, char **arg, char *flag) {
-    if (strcmp(*arg, "-") == 0 || strcmp(*arg, "--") == 0) {
+    if (strcmp(*arg, "-") == 0 || strcmp(*arg, "--") == 0)
         return 1;
-    }
     else if (find_argument(info, arg, *flag)) {
         char *path_without_links = mx_save_without_links(*arg);
 

@@ -63,4 +63,5 @@ void mx_error_mes_tree(int type, t_info *i) {
     mx_printerr(str);
     mx_printerr("'\n");
     i->status = 1;
+    mx_strdel(&str);
 }

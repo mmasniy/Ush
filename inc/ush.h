@@ -305,7 +305,7 @@ t_export *mx_search_key_in_list(t_export *list, char *key);
 t_export *mx_create_new_export(char *key, char *value);
 void mx_push_export_back(t_export **list, char *key, char *value);
 void mx_pop_export_front(t_export **head);
-bool mx_check_is_continue(char *craft, int *pos, char **new_line);
+bool mx_check_is_continue(char *craft, int *pos, char **new_line, char **chk);
 
 // File: mx_replace_pack.c
 int mx_count_substr_without_symbol(const char *str, const char *sub
