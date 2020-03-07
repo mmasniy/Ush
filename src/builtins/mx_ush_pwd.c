@@ -45,5 +45,7 @@ int mx_ush_pwd(t_info *info) {
         }
         write(1, "\n", 1);
     }
+    else
+        return 1;
     return 0;
 }

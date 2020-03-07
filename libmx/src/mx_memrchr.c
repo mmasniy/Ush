@@ -1,4 +1,5 @@
 #include "libmx.h"
+#include <stdio.h>
 
 void *mx_memrchr(const void *s, int c, size_t n) {
     const unsigned char *str = (unsigned char *)s + n;
@@ -9,5 +10,7 @@ void *mx_memrchr(const void *s, int c, size_t n) {
         else
             str--;
     }
+    if (*str == c)
+        return (void *)str;
     return NULL;
 }

@@ -27,19 +27,15 @@ static bool find_argument(t_info *info, char **arg, char flag) {
     DIR *f = NULL;
     struct dirent *d = NULL;
     bool res = 0;
-    char *tmp = NULL;
+    char *tmp = mx_strjoin(info->pwd, "/");
 
     if ((*arg)[0] == '/' && (f = opendir(*arg)))
         res = 1;
-    else if ((f = opendir(info->pwd)))
-        while ((d = readdir(f)))
-            if (mx_str_head(d->d_name, *arg) == 0
-                && (d->d_type == 4 || d->d_type == DT_LNK) && (res = 1)) {
-                tmp = (info->pwd)[strlen(info->pwd) - 1] != '/'
-                ? mx_strjoin("/", *arg) : strdup(*arg);
-                mx_del_and_set(arg, mx_strjoin(info->pwd, tmp));
-                mx_strdel(&tmp);
-            }
+    else if ((f = opendir(mx_strjoin(mx_strjoin(info->pwd, "/"), *arg)))) {
+        mx_del_and_set(arg, mx_strjoin(tmp, *arg));
+        res = 1;
+    }
+    mx_strdel(&tmp);
     f ? closedir(f) : 0;
     if (res)
         parse_argument(arg, flag);

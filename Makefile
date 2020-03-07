@@ -25,6 +25,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/parse_line_step/mx_del_slash_and_quotes_in_list.c \
 	\
 	src/help_functions/mx_str_head.c \
+	src/help_functions/mx_del_and_set.c \
 	src/help_functions/mx_up_to_one.c \
 	src/help_functions/mx_str_char_in_str.c \
 	src/help_functions/mx_print_char_loop.c \

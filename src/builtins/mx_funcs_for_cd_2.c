@@ -1,5 +1,18 @@
 #include "../../inc/ush.h"
 
+static bool is_link_in_path(char *check_line, char **final_line) {
+    struct stat line_stat;
+
+    lstat(check_line, &line_stat);
+    if ((line_stat.st_mode & S_IFMT) == S_IFLNK) {
+        check_line = realloc(check_line, 1024);
+        char *test = getcwd(check_line, 256);
+        mx_del_and_set(final_line, mx_strjoin(test, *final_line));
+        return 1;
+    }
+    return 0;
+}
+
 static void save_link_path(char **res_line) {
     char *link_path = mx_strnew(1024);
 
@@ -43,22 +56,13 @@ void mx_dots_for_path(char **arg, char flag, bool up) {
             (*arg)[strlen(*arg) - 1] = '\0';
 }
 
-char *mx_del_and_set(char **str, char *new_str) {
-    mx_strdel(str);
-    if (new_str)
-        *str = strdup(new_str);
-    mx_strdel(&new_str);
-    return *str;
-}
-
 void mx_find_last_slash(char **str) {
     int pos = 0;
     char *craft = *str;
     char *new_str = NULL;
 
-    for (int i = strlen(craft) - 1; i > 1 && craft[i] == '/'; ) {
+    for (int i = strlen(craft) - 1; i > 1 && craft[i] == '/'; )
         craft[i] = '\0';
-    }
     for (; mx_get_char_index(&(craft[pos]), '/') >= 0; pos++);
     if (pos > 0) {
         pos = pos == 1 ? pos + 1 : pos;
@@ -74,22 +78,25 @@ void mx_find_last_slash(char **str) {
 }
 
 char *mx_save_without_links(char *path) {
-    char *res_line = mx_strnew(strlen(path));
-    char **steps = NULL;
+    int size = 0;
+    char *slash = path + strlen(path);
+    char *check_line = NULL;
+    char *final_line = NULL;
 
-    if ((steps = mx_strsplit(path, '/'))) {
-        if (path[0] == '/')
-            res_line[0] = '/';
-        for (int i = 0; steps[i]; i++) {
-            mx_del_and_set(&res_line, mx_strjoin(res_line, steps[i]));
-            if (readlink(res_line, NULL, 0) >= 0) {
-                save_link_path(&res_line);
-            }
-            mx_del_and_set(&res_line, mx_strjoin(res_line, "/"));
+    while (slash) {
+        slash = mx_memrchr(path, '/', slash - path - 1);
+        if (slash - path == 0)
+            mx_del_and_set(&check_line, strndup(path, 1));
+        else
+            mx_del_and_set(&check_line, strndup(path, slash - path));
+        if (is_link_in_path(check_line, &final_line))
+            break;
+        else {
+            mx_del_and_set(&final_line, strdup(slash));
         }
-        if (path[strlen(path) - 1] != '/')
-            res_line[strlen(res_line) - 1] = '\0';
+        if (slash - path <= 0)
+            break;
     }
-    mx_del_strarr(&steps);
-    return res_line;
+    mx_strdel(&check_line);
+    return final_line;
 }

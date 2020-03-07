@@ -49,16 +49,8 @@ static int valid_red(t_tok **tok, t_info *i, int flag) {
 }
 
 static int end_work(t_tok **tok, t_info *info, char **tmp) {
-    bool not_valid = 0;
-
     while (*tok && (*tok)->prev)
         *tok = (*tok)->prev;
-    mx_del_slash_and_quotes_in_list(tok, &not_valid);
-    if (!(*tok) || !((*tok)->token)
-        || strcmp((*tok)->token, "" ) == 0 || not_valid) {
-        mx_strdel(tmp);
-        return 0;
-    }
     mx_strdel(tmp);
     if (tok && !valid_red(tok, info, 0))
             return 0;

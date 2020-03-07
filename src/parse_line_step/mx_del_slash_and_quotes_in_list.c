@@ -84,25 +84,24 @@ static bool work_with_line(char **tmp_line, char **new, int *pos, char *line) {
     return 0;
 }
 
-bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid) {
+bool mx_del_slash_and_quotes_in_list(t_ast *tree, bool *not_valid) {
     int pos = 0;
     char *new_line = NULL;
     char *tmp_line = NULL;
 
-    for (t_tok *tmp = *tok; tmp; tmp = tmp->next, pos = 0)
-        if (tmp->type == 0 && tmp->token) {
-            new_line = mx_strnew(strlen(tmp->token));
-            if (work_with_line(&tmp_line, &new_line, &pos, tmp->token)) {
-                mx_strdel(&new_line);
-                mx_strdel(&tmp_line);
-                return (*not_valid = 1);
-            }
-            tmp_line = strdup(tmp->token + pos);
-            search_just_slash(&tmp_line);
-            strcat(new_line, tmp_line);
-            mx_del_and_set(&(tmp->token), strdup(new_line));
+    for (int i = 0; tree->command[i]; i++, pos = 0) {
+        new_line = mx_strnew(strlen(tree->command[i]));
+        if (work_with_line(&tmp_line, &new_line, &pos, tree->command[i])) {
             mx_strdel(&new_line);
             mx_strdel(&tmp_line);
+            return (*not_valid = 1);
         }
+        tmp_line = strdup(tree->command[i] + pos);
+        search_just_slash(&tmp_line);
+        strcat(new_line, tmp_line);
+        mx_del_and_set(&(tree->command[i]), strdup(new_line));
+        mx_strdel(&new_line);
+        mx_strdel(&tmp_line);
+    }
     return 0;
 }

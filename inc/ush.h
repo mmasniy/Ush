@@ -256,7 +256,7 @@ char mx_is_quotes(char *line, int pos);
 bool mx_parse_line(t_info *info, char **line);
 
 // File: mx_del_slash_and_quotes_in_list.c
-bool mx_del_slash_and_quotes_in_list(t_tok **tok, bool *not_valid);
+bool mx_del_slash_and_quotes_in_list(t_ast *tree, bool *not_valid);
 
 // End parse------------------------------------------|
 
@@ -279,7 +279,6 @@ bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
 // File: mx_funcs_for_cd_2.c
 void mx_dots_for_path(char **arg, char flag, bool up);
 void mx_find_last_slash(char **str);
-char *mx_del_and_set(char **str, char *new_str);
 char *mx_save_without_links(char *path);
 
 // File: mx_funcs_for_cd_3.c
@@ -334,6 +333,9 @@ bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c);
 void mx_up_lines(t_info *info, char *str, unsigned int add);
 void mx_print_posible_history(t_info *info, t_history **result);
 t_history *mx_search_for_ctrl_r(t_info *info, char *search_line);
+
+// File: mx_del_and_set.c
+char *mx_del_and_set(char **str, char *new_str);;
 
 // File: mx_ctrl_r.c
 void mx_ctrl_r(t_info *info, char **buffer, int *position);

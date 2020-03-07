@@ -45,8 +45,19 @@ static void exec_tilde(t_info *info, t_ast *tree) {
     }
 }
 
-int mx_tree_run(t_ast *tree, t_info *info, int f) {
+static bool parse_before_exec(t_info *info, t_ast *tree) {
+    bool not_valid = 0;
+
     exec_tilde(info, tree);
+    mx_del_slash_and_quotes_in_list(tree, &not_valid);
+    if (!tree || !(tree->command[0])
+        || strcmp(tree->command[0], "") == 0 || not_valid) {
+        return 0;
+    }
+    return 1;
+}
+
+int mx_tree_run(t_ast *tree, t_info *info, int f) {
     if (tree && (tree->type == 10 ||  mx_redirection(tree->type)))
         f = mx_start_function(tree, info, tree->command);
     else if (tree && tree->type == 3)
@@ -77,8 +88,10 @@ void mx_tok_to_tree(t_tok *tok, t_info *i) {
     i->fd_r = -2;
     i->fd_f = -1;
     i->t = mx_start_tree(tok, i);
-    if (i->t)
-        mx_tree_run(i->t, i, 0);
+    if (i->t) {
+        if (parse_before_exec(i, i->t))
+            mx_tree_run(i->t, i, 0);
+    }
     if (i->t)
         mx_free_tree(&(i->t));
 }

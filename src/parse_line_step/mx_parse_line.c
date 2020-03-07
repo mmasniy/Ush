@@ -15,10 +15,6 @@ static char findchar(char c) {
     t = c == '\\' ? 92 : t;
     t = c == '\0' ? 0 : t;
 
-    if (t == -1) {
-        if (c >= 32 && c <= 126)
-            t = c;
-    }
     return t;
 }
 

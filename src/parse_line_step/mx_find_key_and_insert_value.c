@@ -33,7 +33,7 @@ static bool test_1(char *craft, int *pos, char **check) {
 
 bool mx_is_allow(char c) {
     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
-        || (c >= '0' && c <= '9') || c == '?' || c == '$')
+        || (c >= '0' && c <= '9') || c == '?' || c == '{')
         return 1;
     return 0;
 }
@@ -49,10 +49,6 @@ void find_variable(t_info *info, char **check, char **new_line, int *pos) {
     else if (strcmp(*check, "?") == 0) {
         tmp = mx_itoa(info->status);
         mx_del_and_set(new_line, mx_strjoin(*new_line, tmp));        
-    }
-    else if (strcmp(*check, "$") == 0) {
-        tmp = mx_itoa(getpid());
-        mx_del_and_set(new_line, mx_strjoin(*new_line, tmp));
     }
     else if (getenv(*check))
         mx_del_and_set(new_line, mx_strjoin(*new_line, getenv(*check)));
