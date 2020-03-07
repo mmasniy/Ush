@@ -43,7 +43,7 @@ static void check_for_file(t_info *info, char *wrd, DIR *f, struct dirent *d) {
     char *snt = NULL;
     int ln = strlen(file);
 
-    for (int i = 0; (i = mx_get_char_index(wrd + ln, '/')) >= 0; ln += i + 1) ;
+    for (int i = 0; (i = mx_get_char_index(wrd + ln, '/')) >= 0; ln += i + 1);
     if (mx_get_char_index(wrd, '/') != -1 && (f = opendir(file))) {
         while ((d = readdir(f)))
             if (!mx_str_head(d->d_name, &wrd[ln])) {
@@ -84,24 +84,25 @@ static void create_new_tab_list(t_info *i, char *check, char **buf, int *pos) {
         i->tab_list && i->tab_list->next ? mx_tab_work(i, buf, pos) : 0;
 }
 
-void mx_tab_work(t_info *info, char **buffer, int *position) {
-    int pos = *position - 1;
+void mx_tab_work(t_info *i, char **b, int *position) {
+    int p = *position - 1;
     int len = 1;
-    char *what_check = NULL;
+    char *w = NULL;
 
-    for (; pos > 0 && (!mx_isspace((*buffer)[pos - 1]) || (pos > 1 && (*buffer)[pos - 2] == '\\')); pos--, len++);
-    what_check = strndup(&(*buffer)[pos], len);
-    if (info->tab_list && info->tab_list->next && !strcmp(what_check, info->tab_pos->data)) { // If exist
-        info->tab_pos = info->tab_pos->next;
-        if (!info->tab_pos)
-            info->tab_pos = info->tab_list->next;
-        for (char c = 127; *position > pos; )
-            mx_str_edit(info, *buffer, position, &c);
-        for (int i = 0; i < mx_strlen(info->tab_pos->data); i++)
-            mx_str_edit(info, *buffer, &pos, &(info->tab_pos->data[i]));
-        *position += mx_strlen(info->tab_pos->data);
+    for (; p > 0 && (!mx_isspace((*b)[p - 1])
+         || (p > 1 && (*b)[p - 2] == '\\')); p--, len++);
+    w = strndup(&(*b)[p], len);
+    if (i->tab_list && i->tab_list->next && !strcmp(w, i->tab_pos->data)) {
+        i->tab_pos = i->tab_pos->next;
+        if (!i->tab_pos)
+            i->tab_pos = i->tab_list->next;
+        for (char c = 127; *position > p; )
+            mx_str_edit(i, *b, position, &c);
+        for (int j = 0; j < mx_strlen(i->tab_pos->data); j++)
+            mx_str_edit(i, *b, &p, &(i->tab_pos->data[j]));
+        *position += mx_strlen(i->tab_pos->data);
     }
     else // Create new
-        create_new_tab_list(info, what_check, buffer, position);
-    mx_strdel(&what_check);
+        create_new_tab_list(i, w, b, position);
+    mx_strdel(&w);
 }

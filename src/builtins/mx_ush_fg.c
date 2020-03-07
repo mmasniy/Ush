@@ -50,21 +50,15 @@ void mx_wait_process(t_info *i, int status, pid_t child) {
 int mx_fg(t_info *i, int status) {
     pid_t child;
 
-    printf_proc(i->process);
-    
     if (!check_command(&(i->args[1])))
         return 1;
     if (i->process) {
         if (mx_continue_process(i, i->args, 1) == 0) {
             child = waitpid(-1, &status, WUNTRACED);
-            if (!MX_WIFEXIT(status)){
+            if (!MX_WIFEXIT(status))
                 mx_wait_process(i, status, child);
-            }
-            else {
-                // mx_del_procces_by_pid(&(i->process), child);
+            else
                 i->status = MX_WEXITSTATUS(status);
-                printf_proc(i->process);
-            }
         }
     }
     else {

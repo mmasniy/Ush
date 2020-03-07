@@ -52,8 +52,8 @@ static bool find_start_finish(char *ln, int *srt, int *f, char c) {
 * printf("===================\n");
 */
 
-static void recursion_substitutions(t_info *info, char **line
-    , int start, int finish) {
+static void recursion_substitutions(t_info *info, char **line,
+                                    int start, int finish) {
     char *tmp = NULL;
     char *before = strndup(*line, start - 1);
     char *sub_line = strndup(&((*line)[start]), finish);
@@ -76,8 +76,8 @@ static void recursion_substitutions(t_info *info, char **line
         }
 }
 
-static bool execute_substitutions_end(t_info *info, char **line
-                                      , int start, int finish) {
+static bool execute_substitutions_end(t_info *info, char **line,
+                                      int start, int finish) {
     if ((info->quotes = mx_check_quotes(*line, start, finish)) == 1)
         return (info->status = 1);
     if (info->quotes != '\'')

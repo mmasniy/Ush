@@ -17,9 +17,9 @@ int mx_get_size_tok(char *s) {
 int mx_size_str(char *s, int f, int i) {
     if (f == 1)
         while (s[i] && (mx_isalpha(s[i]) || mx_isdigit(s[i])
-            || (s[i] >= 33 && s[i] <= 126
-                && mx_get_char_index(MX_TYPE, s[i]) == -1)
-            || (s[i] == ' ' && i > 0 && s[i - 1] == '\\'))) {
+               || (s[i] >= 33 && s[i] <= 126
+               && mx_get_char_index(MX_TYPE, s[i]) == -1)
+               || (s[i] == ' ' && i > 0 && s[i - 1] == '\\'))) {
             if (s[i] == '"' || s[i] == '\'') {
                 if (mx_char_block(s + i + 1, '\\', s[i], '\0') >= 0)
                     i += mx_char_block(s + i + 1, '\\', s[i], '\0') + 2;
@@ -31,8 +31,8 @@ int mx_size_str(char *s, int f, int i) {
         }
     else
         while (s[i] && (mx_isalpha(s[i]) || mx_isdigit(s[i]) || s[i] == '_'
-                || s[i] == '\\' || s[i] == '$' || s[i] == '\"'
-                || (s[i] == ' ' && i > 0 && s[i - 1] == '\\')))
+               || s[i] == '\\' || s[i] == '$' || s[i] == '\"'
+               || (s[i] == ' ' && i > 0 && s[i - 1] == '\\')))
             i += (s[i] == '\\' || s[i] == '\"') &&  s[i + 1] ? 2 : 1;
     return i;
 }

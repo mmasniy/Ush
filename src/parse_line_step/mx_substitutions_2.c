@@ -1,16 +1,16 @@
 #include "../../inc/ush.h"
 
 static char find(char *line, int *pair_pos, int start, int end) {
-    if ((*pair_pos = mx_char_block(&(line[1])
-        , '\\', *line, '\0')) >= 0) {
+    if ((*pair_pos = mx_char_block(&(line[1]),
+        '\\', *line, '\0')) >= 0) {
         *pair_pos += 1;
         if (*pair_pos > start + end)
             return *line;
         else if (*pair_pos > start && *pair_pos < start + end) {
-            if (mx_char_block(&(line[*pair_pos + 1]), '\\'
-                , *line, '\0') <= start + end
-                && mx_char_block(&(line[start + end])
-                , '\\', *line, '\0') >= 0)
+            if (mx_char_block(&(line[*pair_pos + 1]), '\\',
+                *line, '\0') <= start + end
+                && mx_char_block(&(line[start + end]),
+                '\\', *line, '\0') >= 0)
                 return *line;
             return 1;
         }

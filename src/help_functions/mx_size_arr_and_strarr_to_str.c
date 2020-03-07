@@ -26,5 +26,7 @@ char *mx_strarr_to_str(char **strarr, int i) {
 			mx_strdel(&tmp);
 			i++;
 	}
+	mx_strdel(&tmp1);
+	mx_strdel(&tmp);
 	return str;
 }

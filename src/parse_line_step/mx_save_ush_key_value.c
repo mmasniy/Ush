@@ -43,12 +43,12 @@ static bool take_key_value(t_export **tmp_values, char *line, int *i) {
     return del_variables(1, &argument, &key, &value);
 }
 
-static void end_step(t_info *info, char **line
-                     , t_export **tmp_values, int pos) {
+static void end_step(t_info *info, char **line,
+                     t_export **tmp_values, int pos) {
     for (t_export *tmp = *tmp_values; tmp; tmp = tmp->next)
         if (tmp->key && tmp->value)
-            mx_update_key_value(&(info->variables)
-                , &(tmp->key), &(tmp->value));
+            mx_update_key_value(&(info->variables),
+                                &(tmp->key), &(tmp->value));
         else
             fprintf(stderr, "We don't have key or value.\n");
     mx_del_and_set(line, strdup((*line) + pos));

@@ -1,7 +1,7 @@
 #include "../../inc/ush.h"
 
-static char *exit_cycle(t_info *info, char **search_line, t_history **result
-                       , char *symbol) {
+static char *exit_cycle(t_info *info, char **search_line, t_history **result,
+                        char *symbol) {
     mx_up_lines(info, *search_line, info->name_len);
     write(1, "\r", 1);
     mx_print_char_loop(' ', strlen(*search_line) + info->name_len + 2);
@@ -18,8 +18,8 @@ static char *exit_cycle(t_info *info, char **search_line, t_history **result
     return symbol;
 }
 
-static void print_cycle(t_info *info, t_history **result
-                        , char **search_line) {
+static void print_cycle(t_info *info, t_history **result,
+                        char **search_line) {
     char escape = 27;
 
     write(1, "\n\r", 2);
@@ -34,8 +34,8 @@ static void print_cycle(t_info *info, t_history **result
     write(1, "[J", 2);
 }
 
-static char *cycle_for_ctrl_r(t_info *info, char *search_line
-                             , t_history **result) {
+static char *cycle_for_ctrl_r(t_info *info, char *search_line,
+                              t_history **result) {
     int pos = 0;
     char symbol[4];
 
@@ -66,10 +66,10 @@ void mx_ctrl_r(t_info *info, char **buffer, int *position) {
 
         mx_print_posible_history(info, &result);
         mx_print_ush(info);
-        symbol = cycle_for_ctrl_r(info, search_line, &result); // Exit loop
+        symbol = cycle_for_ctrl_r(info, search_line, &result);
         if (result) // If found something in history
             mx_change_hry(info, position, buffer, result);
-        if ((symbol[0] == 27 && symbol[2] >= 65 && symbol[2] <= 68))///// If user entered arrow key
+        if ((symbol[0] == 27 && symbol[2] >= 65 && symbol[2] <= 68))
             mx_arrows_exec(info, buffer, position, symbol[2]);
         free(search_line);
     }

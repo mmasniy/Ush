@@ -8,7 +8,7 @@ static void key_up(t_info *i, char **buffer, int *position) {
         char *what_check = NULL;
 
         if (pos >= 0 && mx_strcmp(*buffer, i->history_pack->pos->data)) {
-            for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++) ;
+            for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++);
             what_check = strndup(&(*buffer)[pos], len);
             for (t_history *search = i->history_pack->pos->next;
                 search; search = search->next)
@@ -31,10 +31,10 @@ static void key_down(t_info *i, char **buffer, int *position) {
         char *what_check = NULL;
 
         if (pos >= 0 && mx_strcmp(*buffer, i->history_pack->pos->data)) {
-            for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++) ;
+            for (; pos > 0 && !mx_isspace((*buffer)[pos - 1]); pos--, len++);
             what_check = strndup(&(*buffer)[pos], len);
             for (t_history *search = i->history_pack->pos->prev;
-                search; search = search->prev)
+                 search; search = search->prev)
                 if (mx_str_head(search->data, what_check) == 0) {
                     exist = 1;
                     mx_change_hry(i, position, buffer, search);

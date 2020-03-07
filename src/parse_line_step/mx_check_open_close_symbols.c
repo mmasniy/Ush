@@ -25,8 +25,8 @@ bool mx_check_bracket(char *line, int *pos_in_line) {
 
     if (close_pos >= 0) {
         if ((inside_num = num_of_brackets_inside(line, close_pos))) {
-            for (int i = 0; (i = mx_char_block(line + close_pos
-                , '\\', ')', '\0')) >= 0; close_num++)
+            for (int i = 0; (i = mx_char_block(line + close_pos,
+                 '\\', ')', '\0')) >= 0; close_num++)
                 close_pos += i + 1;
             close_pos--;
             if (inside_num != close_num - 1) {

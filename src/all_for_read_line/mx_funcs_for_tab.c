@@ -10,8 +10,8 @@ void mx_replace_special_symbols(t_info *info) {
         for (int i = 0; i < 8; i++) {
             tmp_symbols[0] = symbols[i];
             tmp_replace_symbols[1] = replace_symbols[i];
-            mx_del_and_set(&(tmp->data), mx_replace_substr(tmp->data
-                , tmp_symbols, tmp_replace_symbols));
+            mx_del_and_set(&(tmp->data), mx_replace_substr(tmp->data,
+                           tmp_symbols, tmp_replace_symbols));
         }
         mx_del_and_set(&(tmp->data), mx_replace_substr(tmp->data, " ", "\\ "));
     }

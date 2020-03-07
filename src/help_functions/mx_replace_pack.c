@@ -1,7 +1,7 @@
 #include "../../inc/ush.h"
 
-int mx_count_substr_without_symbol(const char *str, const char *sub
-    , char sym) {
+int mx_count_substr_without_symbol(const char *str, const char *sub,
+                                   char sym) {
     int num = 0;
     long len = strlen(sub);
 
@@ -16,8 +16,8 @@ int mx_count_substr_without_symbol(const char *str, const char *sub
     return num;
 }
 
-char *mx_replace_substr_without_symbol(const char *str
-    , const char *sub, const char *replace, char symbol) {
+char *mx_replace_substr_without_symbol(const char *str, const char *sub,
+                                       const char *replace, char symbol) {
     if (str && sub && replace) {
         int sub_len = mx_strlen(sub);
         int replace_len = mx_strlen(replace);
@@ -36,8 +36,8 @@ char *mx_replace_substr_without_symbol(const char *str
     return NULL;
 }
 
-int mx_get_substr_index_without_symbol(const char *str, const char *sub
-    , char symbol) {
+int mx_get_substr_index_without_symbol(const char *str, const char *sub,
+                                       char symbol) {
     int i = 0;
     int len = 0;
 

@@ -33,8 +33,8 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
     return result;
 }
 
-static void print_and_realloc_line(t_info *info, char **buffer, int *bufsize
-                                   , int position) {
+static void print_and_realloc_line(t_info *info, char **buffer, int *bufsize,
+                                   int position) {
     mx_print_line(info, *buffer, position);
     if ((size_t)position + 1 >= malloc_size(*buffer)
         || malloc_size(*buffer) <= (size_t)mx_strlen(*buffer) + 1)

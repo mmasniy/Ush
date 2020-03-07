@@ -308,12 +308,12 @@ void mx_pop_export_front(t_export **head);
 bool mx_check_is_continue(char *craft, int *pos, char **new_line, char **chk);
 
 // File: mx_replace_pack.c
-int mx_count_substr_without_symbol(const char *str, const char *sub
-    , char symbol);
-char *mx_replace_substr_without_symbol(const char *str
-    , const char *sub, const char *replace, char symbol);
-int mx_get_substr_index_without_symbol(const char *str, const char *sub
-    , char symbol);
+int mx_count_substr_without_symbol(const char *str, const char *sub,
+                                   char symbol);
+char *mx_replace_substr_without_symbol(const char *str,const char *sub,
+                                       const char *replace, char symbol);
+int mx_get_substr_index_without_symbol(const char *str, const char *sub,
+                                       char symbol);
 
 // File: mx_get_char_index_without_symbols.c
 int mx_char_block(const char *str, char prev, char c, char next);
@@ -358,7 +358,7 @@ char *mx_up_to_one(char *str);
 void mx_print_tab_list(t_info *info);
 
 // File: mx_tab_work.c
-void mx_tab_work(t_info *info, char **buffer, int *position);
+void mx_tab_work(t_info *i, char **b, int *position);
 
 // File: mx_funcs_for_tab.c
 void mx_replace_special_symbols(t_info *info);
@@ -546,7 +546,6 @@ void printKLP(t_ast* root);
 void mx_printf_strarr(char **str);
 void print_all(t_ast *tree, t_tok *tok);
 void mx_print_pr(t_process *p);
-void printf_proc(t_process *pp);
 
 #endif
 

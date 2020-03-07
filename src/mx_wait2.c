@@ -13,17 +13,6 @@ t_process *mx_get_name_procces(t_process *process, pid_t pid) {
     return NULL;
 }
 
-void printf_proc(t_process *pp) {
-    t_process *p = pp;
-
-    if (p) {
-        while (p){
-            printf("%s | %d |\n", p->cmd, p->pid);
-            p = p->next;
-        }
-    }
-}
-
 void mx_print_added_new_node(t_process *p, pid_t pid) {
     t_process *tmp = NULL;
 
