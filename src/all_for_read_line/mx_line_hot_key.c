@@ -1,9 +1,19 @@
 #include "../../inc/ush.h"
 
+static void ctrl_d(t_info *info, char **buffer, int *position, char *c) {
+    c[0] = BACKSPACE;
+    (*position)++;
+    mx_str_edit(info, *buffer, position, c);
+    mx_print_line(info, *buffer, *position);
+}
+
 bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c) {
     if (c[0] == TAB && *position > 0 && !mx_isspace((*buffer)[*position - 1]))
         mx_tab_work(info, buffer, position);
-    else if (c[0] == CTRL_D || c[0] == CTRL_C || c[0] == 13 || c[0] == '\n') {
+    else if (c[0] == CTRL_D && strlen(*buffer))
+        ctrl_d(info, buffer, position, c);
+    else if (c[0] == CTRL_D
+        || c[0] == CTRL_C || c[0] == 13 || c[0] == '\n') {
         write(1, "\n\r", 2);
         if (c[0] == CTRL_D)
             info->ctrl_d = 1;

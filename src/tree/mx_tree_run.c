@@ -9,7 +9,6 @@ static void trim(char **str) {
 
         for (; (*str)[start] && mx_isspace((*str)[start]); start++);
         for (int j = len - 1; (*str)[j] && mx_isspace((*str)[j]); j--, end++);
-
         if (start + end >= len) {
             mx_del_and_set(str, mx_strnew(0));
             return;
@@ -58,6 +57,7 @@ static bool parse_before_exec(t_info *info, t_ast *tree) {
 }
 
 int mx_tree_run(t_ast *tree, t_info *info, int f) {
+    parse_before_exec(info, tree);
     if (tree && (tree->type == 10 ||  mx_redirection(tree->type)))
         f = mx_start_function(tree, info, tree->command);
     else if (tree && tree->type == 3)
@@ -89,8 +89,7 @@ void mx_tok_to_tree(t_tok *tok, t_info *i) {
     i->fd_f = -1;
     i->t = mx_start_tree(tok, i);
     if (i->t) {
-        if (parse_before_exec(i, i->t))
-            mx_tree_run(i->t, i, 0);
+        mx_tree_run(i->t, i, 0);
     }
     if (i->t)
         mx_free_tree(&(i->t));
