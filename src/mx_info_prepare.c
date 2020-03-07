@@ -1,11 +1,16 @@
 #include "../inc/ush.h"
 
 static void init_continue(t_info *info) {
+    char *key = "PWD";
+    char *value = getenv("PWD");
+
     signal(SIGINT, mx_sigio_handler);
     signal(SIGIO, mx_sigio_handler);
     signal(SIGQUIT, SIG_IGN);
     signal(SIGTSTP, mx_sigio_handler);
     info->name = strdup(USH);
+    mx_update_key_value(&(info->to_export), &key, &value);
+    mx_update_key_value(&(info->variables), &key, &value);
 }
 
 static void take_path(char *tmp, char **path, char **pwd_path) {
@@ -45,8 +50,6 @@ static void set_pwd(t_info *info) {
     mx_strdel(&check);
     info->pwd = strdup(getenv("PWD"));
     info->oldpwd = strdup(getenv("PWD"));
-    mx_push_export_back(&(info->to_export), "PWD", getenv("PWD"));
-    mx_push_export_back(&(info->variables), "PWD", getenv("PWD"));
     // name for transport file
     info->path_f = "/tmp/.system_ush.txt";
     info->history_path = "/tmp/.history_ush.txt";

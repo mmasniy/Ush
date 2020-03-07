@@ -98,7 +98,6 @@ all: install
 
 install: $(NAME)
 $(NAME): $(LIB) $(OBJS)
-	@echo "Make ush"
 	@clang $(FLAGS) $(OBJS) $(LIB) -o $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRCS)
@@ -106,7 +105,6 @@ $(OBJ_DIR)/%.o: $(SRCS)
 	@clang $(FLAGS) -o $@ -c $< $(HEADER)
 
 $(LIB):
-	@echo "Make libmx"
 	@make -C ./libmx/
 clean:
 	@rm -rf $(OBJS)
@@ -116,7 +114,7 @@ uninstall: clean
 	@rm -f $(NAME)
 	@make -C ./libmx/ uninstall
 
-reinstall: uninstall all
+reinstall: uninstall install
 
-.PHONY:     reinstall all clean uninstall
+# .PHONY:     reinstall all clean uninstall
 	

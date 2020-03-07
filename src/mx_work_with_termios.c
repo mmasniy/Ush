@@ -13,7 +13,7 @@ bool mx_custom_termios(t_info *info, int fd) {
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
     raw.c_cc[VMIN] = 1;
     raw.c_cc[VTIME] = 0;
-    if (tcsetattr(1, TCSAFLUSH, &raw) < 0)
+    if (tcsetattr(0, TCSAFLUSH, &raw) < 0)
         return 0;
     return 1;
 }
