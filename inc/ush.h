@@ -532,9 +532,9 @@ int mx_fg(t_info *i, int status);
 void mx_wait_process(t_info *i, int status, pid_t child);
 
 //mx_work_with_fg.c
-t_process *mx_search_by_char(char *cmd, t_process *processes);
-t_process *mx_search_by_id(int pos, t_process *processes);
-t_process *mx_get_process(t_process *process, char *cmd);
+t_process *mx_search_by_char(t_info *i, char *cmd, t_process *processes);
+t_process *mx_search_by_id(t_info *i, int pos, t_process *processes);
+t_process *mx_get_process(t_info *i, t_process *process, char *cmd);
 t_process *get_last_process(t_process *p);
 int mx_continue_process(t_info *i, char **argv, int fd);
 

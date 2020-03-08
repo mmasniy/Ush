@@ -1,6 +1,6 @@
 #include "../../inc/ush.h"
 
-t_process *mx_search_by_char(char *cmd, t_process *processes) {
+t_process *mx_search_by_char(t_info *i, char *cmd, t_process *processes) {
     t_process *tmp = NULL;
 
     if (processes) {
@@ -12,23 +12,27 @@ t_process *mx_search_by_char(char *cmd, t_process *processes) {
         }
     }
     fprintf(stderr, "fg: %s: no such job\n", cmd);
+    i->status = 127;
     return NULL;
 }
 
-t_process *mx_search_by_id(int pos, t_process *processes) {
+t_process *mx_search_by_id(t_info *i, int pos, t_process *processes) {
     t_process *tmp = NULL;
 
     if (processes) {
         tmp = processes;
-        while (tmp && tmp->pos != pos)
+        while (tmp) {
+            if (tmp->pos == pos)
+                return tmp;
             tmp = tmp->next;
-        return tmp;
+        }
     }
     fprintf(stderr, "fg: %d: no such job\n", pos);
+    i->status = 127;
     return NULL;
 }
 
-t_process *mx_get_process(t_process *process, char *cmd) {
+t_process *mx_get_process(t_info *i, t_process *process, char *cmd) {
     bool num_or_char = true;
     unsigned int len = 0;
     t_process *p = process;
@@ -44,8 +48,8 @@ t_process *mx_get_process(t_process *process, char *cmd) {
         }
     }
     if (num_or_char)
-        return mx_search_by_id(atoi(cmd), p);
-    return mx_search_by_char(cmd, p);
+        return mx_search_by_id(i, atoi(cmd), p);
+    return mx_search_by_char(i, cmd, p);
 }
 
 t_process *get_last_process(t_process *p) {
@@ -55,3 +59,14 @@ t_process *get_last_process(t_process *p) {
         tmp = tmp->next;
     return tmp;
 }
+
+void mx_wait_process(t_info *i, int status, pid_t child) {
+    if (MX_WIFSIG(status)) {
+        if (MX_WTERMSIG(status) == SIGINT) {
+            i->status = 130;
+        }
+        else
+            mx_print_added_new_node(i->process, child);
+    }
+}
+
