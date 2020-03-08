@@ -1,15 +1,5 @@
 #include "../../inc/ush.h"
 
-static void mx_no_new_line(t_info *info, int line_len) {
-    int size = mx_winsize(info) - line_len - info->name_len - 1;
-    char escape = 27;
-
-    write(1, "%", 1);
-    mx_print_char_loop(' ', size);
-    write(1, &escape, 1);
-    write(1, "[J", 2);
-}
-
 static void smart_print(char *str, int *line_len) {
     mx_search_slash(&str);
     for (int i = 0; str[i]; i++) {
@@ -59,6 +49,6 @@ int mx_ush_echo(t_info *info) {
         if (info->args[i + 1])
             write(1, " ", 1);
     }
-    flags[0] ? mx_no_new_line(info, line_len) : write(1, "\n", 1);
+    !(flags[0]) ? write(1, "\n", 1) : 0;
     return 0;
 }

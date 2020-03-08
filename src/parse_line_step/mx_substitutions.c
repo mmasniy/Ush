@@ -69,11 +69,11 @@ static void recursion_substitutions(t_info *info, char **line,
     mx_strdel(&before);
     mx_strdel(&sub_line);
     mx_strdel(&after);
-    for (int i = 0; (*line)[i]; i++)
-        if ((*line)[i] >= 0 && (*line)[i] <= 127) {
-            fprintf(stderr, "u$h> Not ASCII symbol in Substitution work!\n");
-            break;
-        }
+    // for (int i = 0; (*line)[i]; i++)
+    //     if ((*line)[i] >= 0 && (*line)[i] <= 127) {
+    //         fprintf(stderr, "u$h> Not ASCII symbol in Substitution work!\n");
+    //         break;
+    //     }
 }
 
 static bool execute_substitutions_end(t_info *info, char **line,

@@ -333,6 +333,7 @@ bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c);
 void mx_up_lines(t_info *info, char *str, unsigned int add);
 void mx_print_posible_history(t_info *info, t_history **result);
 t_history *mx_search_for_ctrl_r(t_info *info, char *search_line);
+void mx_ctrl_c(t_info *info, char **buffer, int *position);
 
 // File: mx_del_and_set.c
 char *mx_del_and_set(char **str, char *new_str);;

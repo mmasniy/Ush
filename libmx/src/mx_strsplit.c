@@ -1,5 +1,4 @@
 #include "libmx.h"
-#include <stdio.h>
 
 static int count_word_len(const char *s, char c) {
 	int num = 0;

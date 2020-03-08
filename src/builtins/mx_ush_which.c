@@ -13,22 +13,20 @@ static bool print_results(t_history *paths, bool *flags) {
     return 1;
 }
 
-static void find_binary_files(t_info *info, char *word, t_history **list) {
+static void find_binary_files(t_info *info, char *word,
+                              t_history **list, char *tmp) {
     DIR *f = NULL;
     struct dirent *d = NULL;
-    char *tmp;
+    struct stat buff;
 
-    if (mx_check_buildin(info, word, 0) >= 0) {
-        tmp = mx_strjoin(word, ": shell built-in command");
-        mx_push_history_back(list, tmp);
-        mx_strdel(&tmp);
-    }
     for (int i = 0; info->paths[i]; i++)
         if ((f = opendir(info->paths[i]))) {
             while ((d = readdir(f)))
                 if (strcmp(d->d_name, word) == 0) {
                     tmp = mx_strjoin(info->paths[i], d->d_name);
-                    mx_push_history_back(list, tmp);
+                    lstat(tmp, &buff);
+                    if (buff.st_mode & S_IXOTH && !(buff.st_mode & S_ISTXT))
+                        mx_push_history_back(list, tmp);
                     mx_strdel(&tmp);
                 }
             closedir(f);
@@ -38,9 +36,15 @@ static void find_binary_files(t_info *info, char *word, t_history **list) {
 static bool exec_which(t_info *info, int pos, bool *flags) {
     t_history *paths = NULL;
     bool result = 0;
+    char *tmp;
 
     for (int i = pos; info->args[i]; i++) {
-        find_binary_files(info, info->args[i], &paths);
+        if (mx_check_buildin(info, info->args[i], 0) >= 0) {
+            tmp = mx_strjoin(info->args[i], ": shell built-in command");
+            mx_push_history_back(&paths, tmp);
+            mx_strdel(&tmp);
+        }
+        find_binary_files(info, info->args[i], &paths, tmp);
         if (print_results(paths, flags))
             result = 1;
         while (paths)

@@ -52,6 +52,8 @@ static void del_slash_for_double_quotes(char **line) {
         i += pos;
         if ((*line)[i + 1] == '\\' && strcat(new_line, "\\"))
             i++;
+        else if ((*line)[i + 1] == '$' && strcat(new_line, "$"))
+            i++;
         else
             strcat(new_line, "\\");
     }
@@ -70,7 +72,7 @@ static bool work_with_line(char **tmp_line, char **new, int *pos, char *line) {
         strcat(*new, *tmp_line);
         *pos += i + 1;
         if ((i = find_quote(line + *pos, &type)) == -1) {
-            fprintf(stderr, "Quotes (%c) must have a pair !\n", type);
+            fprintf(stderr, "u$h: %c: quotes must have a pair\n", type);
             return 1;
         }
         else if (type == '"') {

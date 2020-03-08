@@ -2,9 +2,10 @@
 
 static void ctrl_d(t_info *info, char **buffer, int *position, char *c) {
     c[0] = BACKSPACE;
-    if (*position > 1) {
-        (*position)++;
+    if (strlen(*buffer) > *position + 1) {
+        (*position) += 2;
         mx_str_edit(info, *buffer, position, c);
+        (*position)--;
         mx_print_line(info, *buffer, *position);
     }
 }
@@ -19,7 +20,7 @@ bool mx_line_hot_key(t_info *info, char **buffer, int *position, char *c) {
         if (c[0] == CTRL_D)
             info->ctrl_d = 1;
         else if (c[0] == CTRL_C)
-            info->ctrl_c = 1;
+            mx_ctrl_c(info, buffer, position);
         return 0;
     }
     else if (c[0] == CTRL_R) {

@@ -40,9 +40,8 @@ void mx_str_edit(t_info *info, char *buffer, int *position, char *c) {
 }
 
 void mx_print_line(t_info *info, char *buffer, int position) {
-    for (unsigned int i = 0; i < strlen(buffer); i++) {
-        mx_printstr("\b\x1b[2K");
-    }
+    mx_print_char_loop('\b', strlen(buffer) - 1);
+    print_clean(27);
     mx_print_ush(info);
     mx_printstr(buffer);
     mx_print_char_loop('\b', mx_strlen(buffer) - position);

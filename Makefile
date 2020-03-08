@@ -67,7 +67,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/all_for_read_line/mx_read_line.c \
 	src/all_for_read_line/mx_print_ush.c \
 	src/all_for_read_line/mx_line_hot_key.c \
-	src/all_for_read_line/mx_ctrl_r.c \
+	src/all_for_read_line/mx_ctrl_r_ctrl_c.c \
 	src/all_for_read_line/mx_funcs_for_read_line.c \
 	src/all_for_read_line/mx_arrow_keys_for_read_line.c \
 	\

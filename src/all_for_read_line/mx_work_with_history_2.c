@@ -23,7 +23,7 @@ void mx_save_all_history(t_info *info) {
 }
 
 void mx_check_history(t_info *info, char *line) {
-    if (mx_strlen(line)) {
+    if (line && mx_strlen(line)) {
         free(info->history_pack->history->data);
         info->history_pack->history->data = mx_strdup(line);
     }

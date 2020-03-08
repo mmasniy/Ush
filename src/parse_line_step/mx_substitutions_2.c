@@ -34,7 +34,7 @@ static void save_result(char **sub_line, char **line_from_file, char quotes) {
             mx_strdel(&file_elements);
         }
         else if (quotes == '\"')
-            *sub_line = strndup(*line_from_file, strlen(*line_from_file) - 1);
+            *sub_line = strdup(*line_from_file);
     }
     mx_strdel(line_from_file);
 }

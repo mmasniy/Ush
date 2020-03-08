@@ -74,3 +74,10 @@ void mx_ctrl_r(t_info *info, char **buffer, int *position) {
         free(search_line);
     }
 }
+
+void mx_ctrl_c(t_info *info, char **buffer, int *position) {
+    info->status = 130;
+    *position = 0;
+    info->ctrl_c = 1;
+    mx_strdel(buffer);
+}

@@ -61,7 +61,7 @@ int mx_work_w_toks(char *line, t_tok **tok, t_info *info) {
     int size = 1;
     int i = 0;
     char *tmp;
-
+// printf("line = %s\n", line);
     if (!line)
         return 0;
     tmp = mx_strdup(line);
@@ -74,6 +74,21 @@ int mx_work_w_toks(char *line, t_tok **tok, t_info *info) {
             mx_add_tok(tok, tmp + i, size);
         i += size;
     }
+    // fprintf(stderr, "%slist: %s\n", GRN, RESET);
+    // fprintf(stderr, "%s---------------------------------------------%s\n", MAG, RESET);
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      fprintf(stderr, "%s[%s%s%s%s%s]%s ",GRN , RESET, YEL, temp->token, RESET, GRN, RESET);
+    // }
+    // fprintf(stderr, "\n\n");
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      fprintf(stderr, "%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->type, RESET, GRN, RESET);
+    // }
+    // fprintf(stderr, "\n\n");
+    // for (t_tok *temp = *tok; temp; temp = temp->next) {
+    //      fprintf(stderr, "%s[%s%s%d%s%s]%s ",GRN , RESET, YEL, temp->prio, RESET, GRN, RESET);
+    // }
+    // fprintf(stderr, "\n%s---------------------------------------------%s\n", MAG, RESET);
+    // fprintf(stderr, "\n");
     if (!end_work(tok, info, &tmp))
         return 0;
     return 1;
