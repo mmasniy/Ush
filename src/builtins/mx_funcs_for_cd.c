@@ -1,6 +1,6 @@
 #include "../../inc/ush.h"
 
-static void parse_argument(char **arg, char flag) {
+static void parse_argument(t_info *info, char **arg, char flag) {
     char *new_arg = NULL;
     char **split = mx_strsplit(*arg, '/');
 
@@ -8,9 +8,9 @@ static void parse_argument(char **arg, char flag) {
         mx_del_and_set(&new_arg, "/");
     for (int i = 0; split[i]; i++) {
         if (strcmp(split[i], ".") == 0)
-            mx_dots_for_path(&new_arg, flag, 0);
+            mx_dots_for_path(info, &new_arg, flag, 0);
         else if (strcmp(split[i], "..") == 0)
-            mx_dots_for_path(&new_arg, flag, 1);
+            mx_dots_for_path(info, &new_arg, flag, 1);
         else
             mx_del_and_set(&new_arg, mx_strjoin(new_arg, split[i]));
         mx_del_and_set(&new_arg, mx_strjoin(new_arg, "/"));
@@ -41,7 +41,7 @@ static bool find_argument(t_info *info, char **arg, char flag) {
     mx_strdel(&tmp2);
     f ? closedir(f) : 0;
     if (res)
-        parse_argument(arg, flag);
+        parse_argument(info, arg, flag);
     return res;
 }
 
@@ -49,7 +49,7 @@ static bool check_argument(t_info *info, char **arg, char *flag) {
     if (strcmp(*arg, "-") == 0 || strcmp(*arg, "--") == 0)
         return 1;
     else if (find_argument(info, arg, *flag)) {
-        char *path_without_links = mx_save_without_links(*arg);
+        char *path_without_links = mx_save_without_links(info, *arg);
 
         if (*flag == 's') {
             if (strcmp(path_without_links, *arg)) {

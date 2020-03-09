@@ -90,7 +90,7 @@ SRCS = src/mx_work_with_termios.c \
 
 OBJ_DIR = obj
 OBJS = $(SRCS:.c=.o)
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -ltermcap# -g -fsanitize=address
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -ltermcap -g -fsanitize=address
 HEADER = inc/ush.h
 LIB = libmx/libmx.a
 

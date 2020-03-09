@@ -277,9 +277,9 @@ char *mx_find_similar_buildin(char *what_check);
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument);
 
 // File: mx_funcs_for_cd_2.c
-void mx_dots_for_path(char **arg, char flag, bool up);
+void mx_dots_for_path(t_info *info, char **arg, char flag, bool up);
 void mx_find_last_slash(char **str);
-char *mx_save_without_links(char *path);
+char *mx_save_without_links(t_info *info, char *path);
 
 // File: mx_funcs_for_cd_3.c
 void mx_change_link_for_dots_in_cd(char **arg);

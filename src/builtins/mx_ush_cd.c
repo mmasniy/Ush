@@ -1,10 +1,10 @@
 #include "../../inc/ush.h"
 
-static bool check_final_flags(char flag, char **final_pwd) {
+static bool check_final_flags(t_info *info, char flag, char **final_pwd) {
     bool return_value = 1;
 
     if (flag == 's') {
-        char *tmp = mx_save_without_links(*final_pwd);
+        char *tmp = mx_save_without_links(info, *final_pwd);
 
         if (strcmp(tmp, *final_pwd)) {
             mx_printerr("cd: not a directory: ");
@@ -15,7 +15,7 @@ static bool check_final_flags(char flag, char **final_pwd) {
         mx_strdel(&tmp);
     }
     else if (flag == 'P') {
-        mx_del_and_set(final_pwd, mx_save_without_links(*final_pwd));
+        mx_del_and_set(final_pwd, mx_save_without_links(info, *final_pwd));
     }
     return return_value;
 }
@@ -57,7 +57,7 @@ int mx_ush_cd(t_info *i) {
 
     if (mx_check_cd_args(i, i->args, &flag, &argument)) {
         return_value = change_all(argument, &old_pwd_now, &final_pwd);
-        if (check_final_flags(flag, &final_pwd) == 0)
+        if (check_final_flags(i, flag, &final_pwd) == 0)
             return del_return(1, &old_pwd_now, &final_pwd, &argument);
         if (chdir(final_pwd) >= 0) {
             mx_del_and_set(&(i->oldpwd), strdup(i->pwd));
