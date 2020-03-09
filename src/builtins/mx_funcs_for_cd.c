@@ -30,13 +30,14 @@ static bool find_argument(t_info *info, char **arg, char flag) {
     char *tmp = mx_strjoin(info->pwd, "/");
     char *tmp2 = mx_strjoin(tmp, *arg);
 
-    if ((*arg)[0] == '/' && (f = opendir(*arg)))
-        res = 1;
-    else if ((f = opendir(tmp2))) {
+    
+    if ((f = opendir(tmp2))) {
         mx_del_and_set(&tmp, mx_strjoin(info->pwd, "/"));
         mx_del_and_set(arg, mx_strjoin(tmp, *arg));
         res = 1;
     }
+    else if ((*arg)[0] == '/' && (f = opendir(*arg)))
+        res = 1;
     mx_strdel(&tmp);
     mx_strdel(&tmp2);
     f ? closedir(f) : 0;
@@ -54,13 +55,13 @@ static bool check_argument(t_info *info, char **arg, char *flag) {
         if (*flag == 's') {
             if (strcmp(path_without_links, *arg)) {
                 mx_strdel(&path_without_links);
-                return mx_cd_error(*arg, 1);
+                return mx_cd_error(*arg);
             }
         }
         mx_strdel(&path_without_links);
         return 1;
     }
-    return mx_cd_error(*arg, 2);
+    return mx_cd_error(*arg);
 }
 
 bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
@@ -71,7 +72,7 @@ bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
     for (int i = 1; args[i]; i++)
         if (flag_check && args[i][0] == '-' && strcmp(args[i], "-")) {
             if (!(res = mx_check_cd_flags(info, &find_flag, i, argument)))
-                return mx_cd_error(args[i], 0);
+                return mx_cd_error(args[i]);
             flag_check = res == 2 ? 0 : 1;
             *flag = find_flag;
         }
@@ -79,7 +80,7 @@ bool mx_check_cd_args(t_info *info, char **args, char *flag, char **argument) {
             mx_strdel(argument);
             *argument = strdup(args[i]);
             if (args[i + 1])
-                return mx_cd_error(args[i], 0);
+                return mx_cd_error(args[i]);
         }
     if (!(*argument))
         return 1;

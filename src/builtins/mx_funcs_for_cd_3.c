@@ -12,15 +12,11 @@ void mx_change_link_for_dots_in_cd(char **arg) {
     mx_strdel(&tmp);
 }
 
-bool mx_cd_error(char *arg, short error_type) {
-    if (error_type == 0)
-        mx_printerr("cd: string not in pwd: ");
-    else if (error_type == 1)
-        mx_printerr("cd: not a directory: ");
-    else if (error_type == 2)
-        mx_printerr("cd: no such file or directory: ");
-    mx_printerr(arg);
-    write(2, "\n", 1);
+bool mx_cd_error(char *arg) {
+    char *error = mx_strjoin("cd: ", arg);
+
+    perror(error);
+    mx_strdel(&error);
     return 0;
 }
 
