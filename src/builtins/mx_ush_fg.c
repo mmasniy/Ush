@@ -40,10 +40,10 @@ static void return_value(t_process **p, int flag) {
 }
 
 static int output_error(t_info *i, char **args) {
-    if (atoi(&(args[1][1])))
+    if (args && args[1] && atoi(&(args[1][1])))
         fprintf(stderr, "fg: %s: no such job\n", &(args[1][1]));
     else
-        fprintf(stderr, "%s", "fg: no current jobs\n");
+        fprintf(stderr, "fg: no current jobs\n");
     return (i->status = 127);
 }
 
@@ -69,10 +69,14 @@ int mx_fg(t_info *i, int status) {
 int mx_continue_process(t_info *i, char **argv, int fd) {
     t_process *p = i->process;
 
-    if (argv[1] == 0)
+    if (argv[1] == 0) {
+        printf("LAST\n");
         p = get_last_process(i->process);
-    else if (!mx_atoi(&(argv[1][1])) || mx_atoi(&(argv[1][1])))
+    }
+    else if (!mx_atoi(&(argv[1][1])) || mx_atoi(&(argv[1][1]))) {
+        printf("NO LAST\n");
         p = mx_get_process(i, i->process, argv[1]);
+    }
     if (p == 0)
         return 1;
     dprintf(fd, "[%d]    %d continued  %s\n", p->pos, p->pid, p->cmd);
@@ -81,6 +85,7 @@ int mx_continue_process(t_info *i, char **argv, int fd) {
         return_value(&(i->process), 1);
     else if (p->value == -1)
         return_value(&(i->process), -1);
+    printf("pid = %d\n", p->pid);
     mx_del_procces_by_pid(&(i->process), p->pid);
     return 0;
 }

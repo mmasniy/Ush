@@ -31,16 +31,25 @@ void mx_del_procces_by_pid(t_process **p, pid_t pid) {
 
     if (*p) {
         pos = *p;
-        if (!(pos->next)) {
+        if (!(pos->next) || pos->pid == pid) {
+            // printf("Delete inside\n");
             mx_pop_front_process(p);
             return;
         }
-        while (pos->next && pos->next->next && pos->next->pid != pid)
-            pos = pos->next;
-        tmp = pos->next->next;
-        mx_strdel(&(pos->next->cmd));
-        free(pos->next);
-        pos->next = tmp;
+        else {
+            // printf("pid do while = %d\n", pos->pid);
+            while (pos->next && pos->next->next) {
+                // printf("pid = %d\n", pos->pid);
+                if (pos->pid == pid)
+                    break;
+                pos = pos->next;
+            }
+            // printf("pid to delete = %d\n", pos->pid);
+            tmp = pos->next->next;
+            mx_strdel(&(pos->next->cmd));
+            free(pos->next);
+            pos->next = tmp;
+        }
     }
 }
 
