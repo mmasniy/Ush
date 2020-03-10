@@ -48,24 +48,25 @@ void mx_add_newnode_als(t_alias **als, char *alias, t_info *i) {
         *als = new;
 }
 
-void mx_replace_als_to_cmd(t_alias *als, char **line, int i) {
-    char **arr_line = NULL;
+int mx_replace_als_to_cmd(t_alias *als, char **line, int i) {
     t_alias *tmp = NULL;
+    char **arr_line = NULL;
+    int count = 0;
 
-    if (*line) {
-        arr_line = mx_strsplit(*line, ' ');
-        mx_strdel(line);
+    if (*line && (arr_line = mx_strsplit(*line, ' ')) != NULL)
         for (i = 0; arr_line[i]; i++) {
             tmp = als;
             for (; tmp; tmp = tmp->next){
                 if (mx_strcmp(arr_line[i], tmp->name) == 0) {
                     mx_strdel(&(arr_line[i]));
                     arr_line[i] = mx_strdup(tmp->value);
-                    break;
+                    count++;
                 }
             }
         }
-    }
     *line = mx_strarr_to_str(arr_line, 0);
     mx_del_strarr(&arr_line);
+    if (count == 0)
+        return 0;
+    return 1;
 }

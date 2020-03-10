@@ -5,9 +5,7 @@ static void check_number_proc(t_process **p, pid_t pid, char **cmd) {
 
     if (*p) {
         tmp = *p;
-        // printf("CONT ADD\n");
         if (tmp->pos != 1) {
-            // printf("IF POS != 1\n");
             mx_push_front_proc(p, pid, cmd);
             return;
         }
@@ -33,7 +31,6 @@ void mx_waitpid(t_info *i, t_ast *t, int status, pid_t pid) {
             i->status = 130;
         }
         else {
-            // printf("CHECK AND ADD\n");
             check_number_proc(&(i->process), pid, t->command);
             mx_print_added_new_node(i->process, pid);
         }

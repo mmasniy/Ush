@@ -66,8 +66,6 @@ void mx_push_front_proc(t_process **p, pid_t pid, char **cmd) {
         *p = new;
     }
     plus_minus(p);
-    for (t_process *q = *p; q; q = q->next)
-        printf("[%d]    %s\n", q->pos, q->cmd);
 }
 
 void mx_add_process(t_process **p, pid_t pid, char **com) {

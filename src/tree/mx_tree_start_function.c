@@ -18,17 +18,17 @@ static void execute_binary_file(t_ast *t, t_info *i, pid_t pid) {
 }
 
 int mx_start_function(t_ast *t, t_info *i, char **tree) {
+    int pos = mx_arr_size(t->command) - 1;
+
     if (i->file_not_f != 1) {
         i->args = tree;
         if (i->file == 1) {
             mx_exec_for_file(t, i);
         }
         else {
-            setenv("_", t->command[mx_arr_size(t->command) - 1], 1);
-            if (mx_check_buildin(i, i->args[0], 1) == -1) {
-                mx_add_alias(t, i, 0);
+            t->command ? setenv("_", t->command[pos], 1) : 0;
+            if (mx_check_buildin(i, i->args[0], 1) == -1)
                 mx_execute_binary_file(t, i);
-            }
         }
     }
     return 0;

@@ -57,8 +57,10 @@ int mx_fg(t_info *i, int status) {
             child = waitpid(-1, &status, WUNTRACED);
             if (!MX_WIFEXIT(status))
                 mx_wait_process(i, status, child);
-            else
+            else {
+                mx_del_procces_by_pid(&(i->process), child);
                 i->status = MX_WEXITSTATUS(status);
+            }
         }
     }
     else
@@ -83,7 +85,6 @@ int mx_continue_process(t_info *i, char **argv, int fd, pid_t last) {
     else if (p->value == -1)
         return_value(&(i->process), -1);
     last = p->pid;
-    mx_del_procces_by_pid(&(i->process), p->pid);
     kill(last, SIGCONT);
     return 0;
 }

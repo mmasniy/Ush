@@ -509,7 +509,7 @@ void mx_get_value_als(t_alias *a, char **alias, int i);
 // File: mx_work_with_alias_list.c
 t_alias *mx_create_als(t_alias **als, char *alias, t_info *i);
 void mx_add_newnode_als(t_alias **als, char *alias, t_info *i);
-void mx_replace_als_to_cmd(t_alias *als, char **line, int i);
+int mx_replace_als_to_cmd(t_alias *als, char **line, int i);
 
 // File: mx_size_arr_and_strarr_to_str.c
 int mx_arr_size(char **str);

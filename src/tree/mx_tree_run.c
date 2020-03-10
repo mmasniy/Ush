@@ -46,9 +46,15 @@ static void exec_tilde(t_info *info, t_ast *tree) {
 
 static bool parse_before_exec(t_info *info, t_ast *tree) {
     bool not_valid = 0;
+    char *line = mx_strarr_to_str(tree->command, 0);
 
+    mx_add_alias(tree, info, 0);
     exec_tilde(info, tree);
     mx_del_slash_and_quotes_in_list(tree, &not_valid);
+    if (mx_replace_als_to_cmd(info->alias, &(line), 0)) {
+        mx_del_strarr(&(tree->command));
+        tree->command = mx_strsplit(line, ' ');
+    }
     if (!tree || !(tree->command[0])
         || strcmp(tree->command[0], "") == 0 || not_valid) {
         return 0;
@@ -94,56 +100,3 @@ void mx_tok_to_tree(t_tok *tok, t_info *i) {
     if (i->t)
         mx_free_tree(&(i->t));
 }
-
-// static bool parse_before_exec(t_info *info, t_ast *tree) {
-//     bool not_valid = 0;
-
-//     exec_tilde(info, tree);
-//     mx_del_slash_and_quotes_in_list(tree, &not_valid);
-//     if (!tree || !(tree->command[0])
-//         || strcmp(tree->command[0], "") == 0 || not_valid) {
-//         info->status = 1;
-//         return 0;
-//     }
-//     return 1;
-// }
-
-// int mx_tree_run(t_ast *tree, t_info *info, int f) {
-//     if (parse_before_exec(info, tree)) {
-//         if (tree && (tree->type == 10 ||  mx_redirection(tree->type)))
-//             f = mx_start_function(tree, info, tree->command);
-//         else if (tree && tree->type == 3)
-//             mx_run_pipe(tree, info);
-//         else if (tree && tree->type == 1) {
-//             tree->left ? f = mx_tree_run(tree->left, info, 0) : 0;
-//             tree->right ? f = mx_tree_run(tree->right, info, 0) : 0;
-//         }
-//         else if (tree && tree->type == 6) {
-//             f = mx_tree_run(tree->left, info, 0);
-//             f = info->status == 0 ? mx_tree_run(tree->right, info, 0) : f;
-//         }
-//         else if (tree && tree->type == 7) {
-//             f = mx_tree_run(tree->left, info, 0);
-//             f = info->status != 0 ? mx_tree_run(tree->right, info, 0) : f;
-//         }
-//         return f;
-//     }
-//     return -10000;
-// }
-
-// void mx_tok_to_tree(t_tok *tok, t_info *i) {
-//     if (!tok)
-//         return;
-//     i->flag_for_valid = 0;
-//     i->type_e = 0;
-//     i->file_not_f = 0;
-//     i->fd_r = -2;
-//     i->fd_f = -1;
-//     i->t = mx_start_tree(tok, i);
-//     if (i->t) {
-//         if (mx_tree_run(i->t, i, 0) == -10000)
-//             return;
-//     }
-//     if (i->t)
-//         mx_free_tree(&(i->t));
-// }

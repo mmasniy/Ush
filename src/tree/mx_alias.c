@@ -1,10 +1,21 @@
 #include "../../inc/ush.h"
+static void print_alias(t_alias *a) {
+    t_alias *z = NULL;
+
+    if (a) {
+        z = a;
+        while(z) {
+            printf("[%s] = [%s]\n", z->name, z->value);
+            z = z->next;
+        }
+    }
+}
 
 void mx_get_value_als(t_alias *a, char **alias, int i) { 
     t_alias *als = NULL;
     char **temp_als = mx_strsplit(*alias, ' ');
 
-    while (temp_als[i]) {
+    for (i = 0; temp_als[i]; i++) {
         als = a;
         while (als) {
             if (mx_strcmp(temp_als[i], als->name) == 0) {
@@ -14,7 +25,6 @@ void mx_get_value_als(t_alias *a, char **alias, int i) {
             }
             als = als->next;
         }
-        i++;
     }
     mx_strdel(alias);
     *alias = mx_strarr_to_str(temp_als, 0);
@@ -28,12 +38,11 @@ char *mx_get_name_als(char **alias, t_info *i, int count) {
     while ((*alias)[count] && (*alias)[count] != '=')
         count++;
     name = mx_strndup(*alias, count);
-    tmp = mx_strndup(((*alias) + count + 1),
+    tmp = mx_strndup(((*alias) + count + 2),
         mx_strlen((*alias)) - count - 1);
     mx_strdel(alias);
-    *alias = mx_strndup(tmp, mx_strlen(tmp));
+    *alias = mx_strndup(tmp, mx_strlen(tmp) - 1);
     mx_strdel(&tmp);
-    // printf("%s\n", *alias);
     return name;
 }
 
@@ -52,4 +61,5 @@ void mx_add_alias(t_ast *t, t_info *i, int a) {
     }
     mx_strdel(&alias);
     i->alias = als;
+    print_alias(i->alias);
 }
