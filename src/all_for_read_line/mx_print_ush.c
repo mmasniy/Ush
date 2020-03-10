@@ -5,7 +5,8 @@ static void count_name_len(t_info *info) {
     if (info->pwd) {
         int i = strlen(info->pwd) - 1;
 
-        for (; info->pwd[i] && info->pwd[i] != '/'; i--);
+        for (; i && info->pwd[i] && info->pwd[i] != '/'; i--);
+        i = i < 0 ? 0 : i;
         info->name_len += strlen(&(info->pwd[i]));
     }
 }

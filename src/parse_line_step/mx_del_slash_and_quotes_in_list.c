@@ -63,7 +63,7 @@ static void del_slash_for_double_quotes(char **line) {
     mx_strdel(&new_line);
 }
 
-static bool work_with_line(char **tmp_line, char **new, int *pos, char *line) {
+bool mx_work_with_line(char **tmp_line, char **new, int *pos, char *line) {
     char type = 0;
 
     for (int i = 0; (i = find_quote(line + *pos, &type)) >= 0; *pos += i + 1) {
@@ -93,7 +93,7 @@ bool mx_del_slash_and_quotes_in_list(t_ast *tree, bool *not_valid) {
 
     for (int i = 0; tree->command[i]; i++, pos = 0) {
         new_line = mx_strnew(strlen(tree->command[i]));
-        if (work_with_line(&tmp_line, &new_line, &pos, tree->command[i])) {
+        if (mx_work_with_line(&tmp_line, &new_line, &pos, tree->command[i])) {
             mx_strdel(&new_line);
             mx_strdel(&tmp_line);
             return (*not_valid = 1);

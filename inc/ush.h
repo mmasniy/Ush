@@ -257,6 +257,7 @@ bool mx_parse_line(t_info *info, char **line);
 
 // File: mx_del_slash_and_quotes_in_list.c
 bool mx_del_slash_and_quotes_in_list(t_ast *tree, bool *not_valid);
+bool mx_work_with_line(char **tmp_line, char **new, int *pos, char *line);
 
 // End parse------------------------------------------|
 

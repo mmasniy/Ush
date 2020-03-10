@@ -38,14 +38,13 @@ char mx_is_quotes(char *line, int pos) {
 
 bool mx_parse_line(t_info *info, char **line) {
     int symbol = -1;
-    int pos = -1;
 
-    if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
+    if (mx_check_open_close_symbols(info, *line, symbol, 0) == 1)
         return 1;
     mx_tilde_work(info, line, *line);
     if (mx_execute_substitutions(info, line))
         return 1;
-    if (mx_check_open_close_symbols(info, *line, symbol, pos) == 1)
+    if (mx_check_open_close_symbols(info, *line, symbol, 0) == 1)
         return 1;
     return 0;
 }

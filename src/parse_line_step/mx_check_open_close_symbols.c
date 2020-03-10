@@ -41,18 +41,24 @@ bool mx_check_bracket(char *line, int *pos_in_line) {
 }
 
 bool mx_check_open_close_symbols(t_info *info, char *ln, int symbol, int pos) {
-    for (int i = 0; ln[i]; i++) {
-        if (ln[i] == '(' && (i == 0 || ln[i - 1] != '\\')) {
-            if (mx_check_bracket(ln + i + 1, &i))
+    char *check_ln = mx_strnew(strlen(ln));
+    char *tmp = NULL;
+
+    if (mx_work_with_line(&tmp, &check_ln, &pos, ln))
+        return 1;
+    for (int i = 0; check_ln[i]; i++) {
+        if (check_ln[i] == '(' && (i == 0 || check_ln[i - 1] != '\\')) {
+            if (mx_check_bracket(check_ln + i + 1, &i))
                 return error_return(info, '(');
         }
-        else if (i > 0 && ln[i] == '{' && ln[i - 1] == '$') {
-            if ((pos = mx_char_block(ln + i + 1, '\\', '}', '\0')) == -1
+        else if (i > 0 && check_ln[i] == '{' && check_ln[i - 1] == '$') {
+            if ((pos = mx_char_block(check_ln + i + 1, '\\', '}', '\0')) == -1
                 || !(i += pos + 1))
                 return error_return(info, '}');
         }
-        else if (ln[i] == ')' && (i == 0 || ln[i - 1] != '\\'))
-            return error_return(info, ln[i]);
+        else if (check_ln[i] == ')' && (i == 0 || check_ln[i - 1] != '\\'))
+            return error_return(info, check_ln[i]);
     }
+    mx_strdel(&check_ln);
     return 0;
 }
