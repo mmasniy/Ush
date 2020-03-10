@@ -12,6 +12,7 @@ static bool is_link_in_path(t_info *i, char *check_line, char **final_line) {
         test = getcwd(check_line, 1024);
         mx_del_and_set(final_line, mx_strjoin(test, *final_line));
         chdir(i->pwd);
+        mx_strdel(&test);
         return 1;
     }
     return 0;

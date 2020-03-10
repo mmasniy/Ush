@@ -13,43 +13,24 @@ static void init_continue(t_info *info) {
     mx_update_key_value(&(info->variables), &key, &value);
 }
 
-static void take_path(char *tmp, char **path, char **pwd_path) {
-    if ((path = mx_strsplit(getenv("PWD"), '/')))
-        for (int i = 0; path[i]; i++) {
-            tmp = mx_strjoin(*pwd_path, path[i]);
-            mx_strdel(pwd_path);
-            if (readlink(tmp, NULL, 0) >= 0) {
-                *pwd_path = mx_strnew(1024);
-                readlink(tmp, *pwd_path, 1024);
-                if (strcmp(*pwd_path, "..") == 0) {
-                    mx_find_last_slash(&tmp);
-                    mx_find_last_slash(&tmp);
-                }
-                else if (strcmp(*pwd_path, ".") == 0)
-                    mx_find_last_slash(&tmp);
-                else
-                    mx_del_and_set(&tmp, strdup(*pwd_path));
-            }
-            mx_del_and_set(pwd_path, mx_strjoin(tmp, "/"));
-            mx_strdel(&tmp);
-        }
-    mx_del_strarr(&path);
-}
-
 static void set_pwd(t_info *info) {
-    char *pwd_path = strdup("/");
-    char *check = getcwd(NULL, 0);
-    char **path = NULL;
-    char *tmp = NULL;
+    char *pwd_path = getenv("PWD");
+    char *cwd = getcwd(NULL, 0);
+    char *path = NULL;
 
-    take_path(tmp, path, &pwd_path);
-    pwd_path[strlen(pwd_path) - 1] = '\0';
-    if (strcmp(pwd_path, check))
-        setenv("PWD", check, 1);
+    if (pwd_path == NULL || chdir(pwd_path) < 0)
+        setenv("PWD", cwd, 1);
+    else {
+        path = mx_save_without_links(info, pwd_path);
+        if (strcmp(path, cwd))
+            setenv("PWD", cwd, 1);
+    }
     mx_strdel(&pwd_path);
-    mx_strdel(&check);
+    mx_strdel(&cwd);
+    mx_strdel(&path);
     info->pwd = strdup(getenv("PWD"));
     info->oldpwd = strdup(getenv("PWD"));
+    unsetenv("OLDPWD");
     // name for transport file
     info->path_f = "/tmp/.system_ush.txt";
     info->history_path = "/tmp/.history_ush.txt";
@@ -83,11 +64,11 @@ void mx_info_start(t_info *info) {
     info->args = NULL;
     info->history_pack = (t_history_pack *)malloc(sizeof(t_history_pack));
     mx_memset(info->history_pack, 0, sizeof(t_history_pack));
+    set_pwd(info);
     info->to_export = mx_save_env_as_list(environ);
     info->variables = mx_save_env_as_list(environ);
     info->alias = NULL;
     info->num_of_red = 0;
-    set_pwd(info);
     open_history_file(info);
     init_continue(info);
 }

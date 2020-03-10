@@ -61,7 +61,7 @@ int mx_work_w_toks(char *line, t_tok **tok, t_info *info) {
     int size = 1;
     int i = 0;
     char *tmp;
-// printf("line = %s\n", line);
+
     if (!line)
         return 0;
     tmp = mx_strdup(line);

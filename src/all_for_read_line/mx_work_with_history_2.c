@@ -8,7 +8,7 @@ void mx_save_all_history(t_info *info) {
         if (f) {
             t_history *tmp = info->history_pack->history;
 
-            while (tmp->next)
+            while (tmp && tmp->next)
                 tmp = tmp->next;
             for (; tmp; tmp = tmp->prev)
                 if (tmp->data)
@@ -28,9 +28,9 @@ void mx_check_history(t_info *info, char *line) {
         info->history_pack->history->data = mx_strdup(line);
     }
     else
-        mx_pop_history_front(&info->history_pack->history);
+        mx_pop_history_front(&(info->history_pack->history));
     if (info->history_pack->total_num < 250)
         (info->history_pack->total_num)++;
     else
-        mx_pop_history_back(&info->history_pack->history);
+        mx_pop_history_back(&(info->history_pack->history));
 }

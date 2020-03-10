@@ -62,8 +62,8 @@ static void run_shell(t_info *info) {
             line = mx_ush_read_line(info);
             mx_origin_termios(info, STDIN_FILENO);
             info->name_len = 0;
-            mx_check_history(info, line);
             mx_cntr_key(info);
+            mx_check_history(info, line);
             run_command(info, &line);
         }
     }
