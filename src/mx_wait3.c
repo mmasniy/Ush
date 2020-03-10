@@ -50,7 +50,6 @@ void mx_add_inside_list(t_process **p, t_process **a, pid_t pid, char **cmd) {
 }
 
 void mx_push_front_proc(t_process **p, pid_t pid, char **cmd) {
-    // printf("PUSH FRONT\n");
     t_process *new = (t_process*)malloc(sizeof(t_process));
     
     new->pos = 1;
@@ -59,19 +58,16 @@ void mx_push_front_proc(t_process **p, pid_t pid, char **cmd) {
     new->value = 1;
     new->last_value = 0;
     if (*p){
-        // printf("1\n");
         new->next = *p;
         *p = new;
     }
     else {
-        // printf("2\n");
         new->next = NULL;
         *p = new;
     }
     plus_minus(p);
     for (t_process *q = *p; q; q = q->next)
         printf("[%d]    %s\n", q->pos, q->cmd);
-    // printf("END\n");
 }
 
 void mx_add_process(t_process **p, pid_t pid, char **com) {

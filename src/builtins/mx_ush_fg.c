@@ -53,7 +53,7 @@ int mx_fg(t_info *i, int status) {
     if (!check_command(i, &(i->args[1])))
         return i->status;
     if (i->process) {
-        if (mx_continue_process(i, i->args, 1) == 0) {
+        if (mx_continue_process(i, i->args, 1, 0) == 0) {
             child = waitpid(-1, &status, WUNTRACED);
             if (!MX_WIFEXIT(status))
                 mx_wait_process(i, status, child);
@@ -66,26 +66,24 @@ int mx_fg(t_info *i, int status) {
     return 0;
 }
 
-int mx_continue_process(t_info *i, char **argv, int fd) {
+int mx_continue_process(t_info *i, char **argv, int fd, pid_t last) {
     t_process *p = i->process;
 
     if (argv[1] == 0) {
-        printf("LAST\n");
         p = get_last_process(i->process);
     }
     else if (!mx_atoi(&(argv[1][1])) || mx_atoi(&(argv[1][1]))) {
-        printf("NO LAST\n");
         p = mx_get_process(i, i->process, argv[1]);
     }
     if (p == 0)
         return 1;
     dprintf(fd, "[%d]    %d continued  %s\n", p->pos, p->pid, p->cmd);
-    kill(p->pid, SIGCONT);
     if (p->value == 1)
         return_value(&(i->process), 1);
     else if (p->value == -1)
         return_value(&(i->process), -1);
-    printf("pid = %d\n", p->pid);
+    last = p->pid;
     mx_del_procces_by_pid(&(i->process), p->pid);
+    kill(last, SIGCONT);
     return 0;
 }

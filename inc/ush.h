@@ -537,7 +537,7 @@ t_process *mx_search_by_char(t_info *i, char *cmd, t_process *processes);
 t_process *mx_search_by_id(t_info *i, int pos, t_process *processes);
 t_process *mx_get_process(t_info *i, t_process *process, char *cmd);
 t_process *get_last_process(t_process *p);
-int mx_continue_process(t_info *i, char **argv, int fd);
+int mx_continue_process(t_info *i, char **argv, int fd, pid_t last);
 
 // mx_ush_jobs.c
 int mx_jobs(t_info *i);
