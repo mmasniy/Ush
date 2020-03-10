@@ -28,11 +28,12 @@ char *mx_get_name_als(char **alias, t_info *i, int count) {
     while ((*alias)[count] && (*alias)[count] != '=')
         count++;
     name = mx_strndup(*alias, count);
-    tmp = mx_strndup(((*alias) + count + 2),
+    tmp = mx_strndup(((*alias) + count + 1),
         mx_strlen((*alias)) - count - 1);
     mx_strdel(alias);
-    *alias = mx_strndup(tmp, mx_strlen(tmp) - 1);
+    *alias = mx_strndup(tmp, mx_strlen(tmp));
     mx_strdel(&tmp);
+    // printf("%s\n", *alias);
     return name;
 }
 

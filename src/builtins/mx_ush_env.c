@@ -8,23 +8,43 @@ static void print_env(char **env) {
 }
 
 static void exec_program(t_info *info, int pos, char **env, char *path) {
-    pid_t pid = fork();
+    // pid_t pid = fork();
 
+    // if (pid == 0) {
+    //     if (execve(path, &(info->args[pos]), env) == -1)
+    //         perror(USH);
+    //     exit(EXIT_FAILURE);
+    // }
+    // else if (pid < 0)
+    //     perror(USH);
+    // else {
+    //     int status;
+    //     pid_t wpid = waitpid(pid, &status, WUNTRACED); 
+
+    //     while (!WIFEXITED(status)
+    //         && !WIFSIGNALED(status)) {
+    //         wpid = waitpid(pid, &status, WUNTRACED);
+    //     }
+    // }
+    pid_t pid;
+
+    pid = fork();
     if (pid == 0) {
-        if (execve(path, &(info->args[pos]), env) == -1)
-            perror(USH);
-        exit(EXIT_FAILURE);
-    }
-    else if (pid < 0)
-        perror(USH);
-    else {
-        int status;
-        pid_t wpid = waitpid(pid, &status, WUNTRACED); 
-
-        while (!WIFEXITED(status)
-            && !WIFSIGNALED(status)) {
-            wpid = waitpid(pid, &status, WUNTRACED);
+        if (mx_redirection(t->type)) {
+            i->fd_r = mx_create_file(t, i);
+            mx_run_redirection(t, i, pid);
         }
+        else {
+            path = i->paths ? mx_find_in_PATH(i->paths, t->command[0], 1) : NULL;
+            if (execve(path, &(info->args[pos]), env) == -1)
+                perror(USH);
+            exit(info->status);
+        }
+    }
+    else {
+        int status = 0;
+
+        mx_waitpid(i, t, status, pid);
     }
 }
 

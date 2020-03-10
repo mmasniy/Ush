@@ -17,7 +17,7 @@ static void end_work_exec(t_ast *t, t_info *info, char **path) {
             mx_print_error(info, MX_ER, t->command[0]);
     }
     mx_dup_2(info, 1);
-    exit(EXIT_FAILURE);
+    exit(info->status);
 }
 
 void mx_execute_file(t_ast *t, t_info *info, pid_t pid) {
@@ -71,7 +71,7 @@ void mx_execute_red(t_ast *t, t_info *info, pid_t pid) {
         else if (execv(path, t->command) == -1)
             mx_print_error(info, MX_ER, t->command[0]);
         mx_dup_2(info, 1);
-        exit(EXIT_FAILURE);
+        exit(info->status);
     }
     else if (pid < 0)
             mx_print_error(info, MX_ER, t->command[0]);
