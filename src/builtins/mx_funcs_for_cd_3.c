@@ -35,7 +35,6 @@ int mx_check_cd_flags(t_info *info
             if (info->args[i + 1] && strcmp(*argument, "--"))
                 return 0;
             return 2;
-            break;
         }
     }
     return 1;

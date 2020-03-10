@@ -115,6 +115,3 @@ uninstall: clean
 	@make -C ./libmx/ uninstall
 
 reinstall: uninstall install
-
-# .PHONY:     reinstall all clean uninstall
-	

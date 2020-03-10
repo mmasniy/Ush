@@ -65,17 +65,19 @@ static void check_what_want(t_info *info, char *craft, char **new, int *pos) {
 int mx_tilde_work(t_info *info, char **line, char *craft) {
     int pos = 0;
     char *new_line = mx_strnew(strlen(*line));
+    char *tmp = NULL;
 
     for (int i = 0; (i = mx_get_char_index(&(craft[pos]), '~')) >= 0; pos++) {
-        strncat(new_line, &(craft[pos]), i);
+        tmp = strndup(&(craft[pos]), i);
+        mx_del_and_set(&new_line, mx_strjoin(new_line, tmp));
+        mx_strdel(&tmp);
         pos += i;
-        if (mx_is_quotes(craft, pos) != '\'' && before_tilde(craft, pos)) {
+        if (mx_is_quotes(craft, pos) != '\'' && before_tilde(craft, pos))
             check_what_want(info, craft, &new_line, &pos);
-        }
         else
-            strcat(new_line, "~");
+            mx_del_and_set(&new_line, mx_strjoin(new_line, "~"));
     }
-    strcat(new_line, &(craft[pos]));
+    mx_del_and_set(&new_line, mx_strdup(&(craft[pos])));
     mx_del_and_set(line, strdup(new_line));
     mx_strdel(&new_line);
     return 0;

@@ -7,59 +7,35 @@ static void print_env(char **env) {
     }
 }
 
-static void exec_program(t_info *info, int pos, char **env, char *path) {
-    // pid_t pid = fork();
-
-    // if (pid == 0) {
-    //     if (execve(path, &(info->args[pos]), env) == -1)
-    //         perror(USH);
-    //     exit(EXIT_FAILURE);
-    // }
-    // else if (pid < 0)
-    //     perror(USH);
-    // else {
-    //     int status;
-    //     pid_t wpid = waitpid(pid, &status, WUNTRACED); 
-
-    //     while (!WIFEXITED(status)
-    //         && !WIFSIGNALED(status)) {
-    //         wpid = waitpid(pid, &status, WUNTRACED);
-    //     }
-    // }
+static int exec_program(t_info *info, int pos, char **env, char *path) {
     pid_t pid;
 
     pid = fork();
     if (pid == 0) {
-        if (mx_redirection(t->type)) {
-            i->fd_r = mx_create_file(t, i);
-            mx_run_redirection(t, i, pid);
-        }
-        else {
-            path = i->paths ? mx_find_in_PATH(i->paths, t->command[0], 1) : NULL;
-            if (execve(path, &(info->args[pos]), env) == -1)
-                perror(USH);
-            exit(info->status);
-        }
+        if (execve(path, &(info->args[pos]), env) == -1)
+            perror(USH);
+        exit(info->status);
     }
     else {
         int status = 0;
 
-        mx_waitpid(i, t, status, pid);
+        mx_waitpid(info, info->t, status, pid);
     }
+    return info->status;
 }
 
-static bool step_to_exec(t_info *i, char **path, int *f, t_export *env) {
+static int step_to_exec(t_info *i, char **path, int *f, t_export *env) {
     int res = 0;
     char **env_massive = mx_save_env_as_massive(env);
     char *path_in_env = NULL;
 
     if ((res = mx_check_to_execute(i, path, f[3]))) {
         if (res == 1)
-            exec_program(i, f[3], env_massive, *path);
+            res = exec_program(i, f[3], env_massive, *path);
         else if (res == 2) {
             mx_save_PATH(i);
             path_in_env = mx_find_in_PATH(i->paths, i->args[f[3]], 1);
-            exec_program(i, f[3], env_massive, path_in_env);
+            res = exec_program(i, f[3], env_massive, path_in_env);
             mx_strdel(&path_in_env);
         }
     }
@@ -68,7 +44,7 @@ static bool step_to_exec(t_info *i, char **path, int *f, t_export *env) {
         return 1;
     }
     mx_del_strarr(&env_massive);
-    return 0;
+    return res;
 }
 
 static bool result(t_info *info, bool res, t_export **env) {
