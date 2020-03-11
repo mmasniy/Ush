@@ -1,11 +1,11 @@
 #include "../../inc/ush.h"
 
 static int check_command(t_info *i, char **args) {
-	if (!mx_arr_size(args)) {
-		fprintf(stderr, "kill: not enough arguments\n");
+    if (!mx_arr_size(args)) {
+        fprintf(stderr, "kill: not enough arguments\n");
         i->status = 1;
         return 0;
-	}
+    }
     if (mx_arr_size(args) > 1) {
         fprintf(stderr, "kill: too many arguments\n");
         i->status = 1;
@@ -20,23 +20,23 @@ static int check_command(t_info *i, char **args) {
 }
 
 t_process *mx_get_process_kill(t_info *i, t_process *p, char *cmd) {
-	t_process *tmp = NULL;
+    t_process *tmp = NULL;
 
-	if (p) {
-		tmp = p;
-		while (tmp) {
-			if (cmd && tmp->pid == atoi(cmd))
-				return tmp;
-			tmp = tmp->next;
-		}
-	}
-	fprintf(stderr, "kill: %s: No such process \n", cmd);
+    if (p) {
+        tmp = p;
+        while (tmp) {
+            if (cmd && tmp->pid == atoi(cmd))
+                return tmp;
+            tmp = tmp->next;
+        }
+    }
+    fprintf(stderr, "kill: %s: No such process \n", cmd);
     i->status = 1;
     return NULL;
 }
 
 static int mx_term_process(t_info *i, char **argv, int fd) {
-	t_process *p = i->process;
+    t_process *p = i->process;
 
     if (mx_atoi(argv[1])) {
         p = mx_get_process_kill(i, i->process, argv[1]);
@@ -53,20 +53,20 @@ static int mx_term_process(t_info *i, char **argv, int fd) {
 }
 
 int mx_kill(t_info *i) {
-	t_process *p = i->process;
-	pid_t pid;
+    t_process *p = i->process;
+    pid_t pid;
 
-	if (!check_command(i, &(i->args[1])))
-		return i->status;
-	pid = atoi(i->args[1]);
-	while (p) {
-		if (p->pid == pid) {
-			mx_term_process(i, i->args, 1);
-			mx_del_procces_by_pid(&(i->process), pid);
-			return 0;
-		}
-		p = p->next;
-	}
-	fprintf(stderr, "kill: %s: No such process \n", i->args[1]);
-	return 1;
+    if (!check_command(i, &(i->args[1])))
+        return 1;
+    pid = atoi(i->args[1]);
+    while (p) {
+        if (p->pid == pid) {
+            mx_term_process(i, i->args, 1);
+            mx_del_procces_by_pid(&(i->process), pid);
+            return 0;
+        }
+        p = p->next;
+    }
+    fprintf(stderr, "kill: %s: No such process \n", i->args[1]);
+    return 1;
 }

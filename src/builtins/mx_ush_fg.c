@@ -17,11 +17,15 @@ static int check_command(t_info *i, char **cmd) {
 }
 
 static int output_error(t_info *i, char **args) {
-    if (args && args[1] && atoi(&(args[1][1])))
+    if (args && args[1] && atoi(&(args[1][1]))) {
         fprintf(stderr, "fg: %s: no such job\n", &(args[1][1]));
-    else
+        i->status = 127;
+    }
+    else {
+        i->status = 1;
         fprintf(stderr, "fg: no current jobs\n");
-    return (i->status = 127);
+    }
+    return i->status;
 }
 
 void return_value(t_process **p, int flag) {

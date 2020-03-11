@@ -1,10 +1,10 @@
 #include "../inc/ush.h"
 
-static int cont_run_built(t_info *info, int exit_code) {
-    !strcmp(info->args[0], "fg") ? exit_code = mx_fg(info, 0) : 0;
-    !strcmp(info->args[0], "jobs") ? exit_code = mx_jobs(info) : 0;
-    !strcmp(info->args[0], "kill") ? exit_code = mx_kill(info) : 0;
-    return (info->status = exit_code);
+static int cont_run_built(t_info *info, int *exit_code) {
+    !strcmp(info->args[0], "fg") ? *exit_code = mx_fg(info, 0) : 0;
+    !strcmp(info->args[0], "jobs") ? *exit_code = mx_jobs(info) : 0;
+    !strcmp(info->args[0], "kill") ? *exit_code = mx_kill(info) : 0;
+    return (info->status = *exit_code);
 }
 
 int mx_run_buildin(t_info *info) {
@@ -25,7 +25,7 @@ int mx_run_buildin(t_info *info) {
     !strcmp(info->args[0], "true") ? exit_code = mx_ush_true(info) : 0;
     !strcmp(info->args[0], "false") ? exit_code = mx_ush_false(info) : 0;
     !strcmp(info->args[0], "return") ? exit_code = mx_ush_return(info) : 0;
-    cont_run_built(info, exit_code);
+    cont_run_built(info, &exit_code);
     return (info->status = exit_code);
 }
 
