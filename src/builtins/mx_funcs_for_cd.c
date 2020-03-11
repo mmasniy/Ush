@@ -55,7 +55,7 @@ static bool check_argument(t_info *info, char **arg, char *flag) {
         if (*flag == 's') {
             if (strcmp(path_without_links, *arg)) {
                 mx_strdel(&path_without_links);
-                return mx_cd_error(*arg);
+                return 1;
             }
         }
         mx_strdel(&path_without_links);

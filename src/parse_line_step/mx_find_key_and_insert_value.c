@@ -74,7 +74,7 @@ bool mx_insert_value(t_info *info, char **line, char *craft) {
             check = mx_strndup(&(craft[pos + 1]), key_len(&(craft[pos + 1])));
         find_variable(info, &check, &new_line, &pos);
     }
-    strcat(new_line, craft + pos);
+    mx_del_and_set(&new_line, mx_strjoin(new_line, craft + pos));
     mx_del_and_set(line, new_line);
     mx_strdel(&new_line);
     return 0;

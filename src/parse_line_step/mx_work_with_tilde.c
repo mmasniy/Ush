@@ -7,13 +7,15 @@ static bool before_tilde(char *line, int pos) {
     return 0;
 }
 
-static void read_user(char *user, char **tilde_change) {
+static bool read_user(char *user, char **tilde_change) {
     struct passwd *find = getpwnam(user);
 
     if (find) {
         mx_strdel(tilde_change);
         *tilde_change = mx_strdup(find->pw_dir);
+        return 0;
     }
+    return 1;
 }
 
 static bool read_tilde_content(char *line, int *pos, char **tilde_change) {
@@ -25,7 +27,8 @@ static bool read_tilde_content(char *line, int *pos, char **tilde_change) {
             break;
     check_line = strndup(&(line[*pos + 1]), size);
     if (!(*tilde_change))
-        read_user(check_line, tilde_change);
+        if (read_user(check_line, tilde_change))
+            mx_del_and_set(tilde_change, mx_strjoin("~", check_line));
     mx_strdel(&check_line);
     *pos += size;
     return 0;
@@ -77,7 +80,7 @@ int mx_tilde_work(t_info *info, char **line, char *craft) {
         else
             mx_del_and_set(&new_line, mx_strjoin(new_line, "~"));
     }
-    mx_del_and_set(&new_line, mx_strdup(&(craft[pos])));
+    mx_del_and_set(&new_line, mx_strjoin(new_line, mx_strdup(&(craft[pos]))));
     mx_del_and_set(line, strdup(new_line));
     mx_strdel(&new_line);
     return 0;

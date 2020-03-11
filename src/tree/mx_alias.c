@@ -1,15 +1,4 @@
 #include "../../inc/ush.h"
-static void print_alias(t_alias *a) {
-    t_alias *z = NULL;
-
-    if (a) {
-        z = a;
-        while(z) {
-            printf("[%s] = [%s]\n", z->name, z->value);
-            z = z->next;
-        }
-    }
-}
 
 void mx_get_value_als(t_alias *a, char **alias, int i) { 
     t_alias *als = NULL;
@@ -61,5 +50,4 @@ void mx_add_alias(t_ast *t, t_info *i, int a) {
     }
     mx_strdel(&alias);
     i->alias = als;
-    print_alias(i->alias);
 }
