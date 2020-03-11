@@ -35,10 +35,13 @@ void mx_del_procces_by_pid(t_process **p, pid_t pid) {
             mx_pop_front_process(p);
         else {
             while (pos->next && pos->next->next) {
-                if (pos->pid == pid)
+                if (pos->next->pid == pid){
+                    printf("pos = %d\n", pos->pos);
                     break;
+                }
                 pos = pos->next;
             }
+            printf("PROCESS = %d %s %d\n", pos->pos, pos->cmd, pos->pid);
             tmp = pos->next->next;
             mx_strdel(&(pos->next->cmd));
             free(pos->next);

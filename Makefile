@@ -58,6 +58,7 @@ SRCS = src/mx_work_with_termios.c \
 	src/builtins/mx_funcs_for_cd_3.c \
 	src/builtins/mx_work_with_fg.c \
 	src/builtins/mx_ush_jobs.c \
+	src/builtins/mx_ush_kill.c \
 	\
 	src/all_for_read_line/mx_work_with_history.c \
 	src/all_for_read_line/mx_work_with_history_2.c \

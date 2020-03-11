@@ -16,7 +16,15 @@ static int check_command(t_info *i, char **cmd) {
     return 1;
 }
 
-static void return_value(t_process **p, int flag) {
+static int output_error(t_info *i, char **args) {
+    if (args && args[1] && atoi(&(args[1][1])))
+        fprintf(stderr, "fg: %s: no such job\n", &(args[1][1]));
+    else
+        fprintf(stderr, "fg: no current jobs\n");
+    return (i->status = 127);
+}
+
+void return_value(t_process **p, int flag) {
     t_process *tmp = *p;
 
     if (flag == 1) {
@@ -39,14 +47,6 @@ static void return_value(t_process **p, int flag) {
     }
 }
 
-static int output_error(t_info *i, char **args) {
-    if (args && args[1] && atoi(&(args[1][1])))
-        fprintf(stderr, "fg: %s: no such job\n", &(args[1][1]));
-    else
-        fprintf(stderr, "fg: no current jobs\n");
-    return (i->status = 127);
-}
-
 int mx_fg(t_info *i, int status) {
     pid_t child;
 
@@ -58,6 +58,7 @@ int mx_fg(t_info *i, int status) {
             if (!MX_WIFEXIT(status))
                 mx_wait_process(i, status, child);
             else {
+                printf("DELETE PROC PID = %d\n", child);
                 mx_del_procces_by_pid(&(i->process), child);
                 i->status = MX_WEXITSTATUS(status);
             }

@@ -529,19 +529,23 @@ void mx_add_inside_list(t_process **p, t_process **a, pid_t pid, char **cmd);
 void mx_push_front_proc(t_process **p, pid_t pid, char **cmd);
 void mx_add_process(t_process **p, pid_t pid, char **com);
 
-// mx_ush_fg.c
+// File: mx_ush_fg.c
 int mx_fg(t_info *i, int status);
 void mx_wait_process(t_info *i, int status, pid_t child);
+void return_value(t_process **p, int flag);
 
-//mx_work_with_fg.c
+//File: mx_work_with_fg.c
 t_process *mx_search_by_char(t_info *i, char *cmd, t_process *processes);
 t_process *mx_search_by_id(t_info *i, int pos, t_process *processes);
 t_process *mx_get_process(t_info *i, t_process *process, char *cmd);
 t_process *get_last_process(t_process *p);
 int mx_continue_process(t_info *i, char **argv, int fd, pid_t last);
 
-// mx_ush_jobs.c
+// File: mx_ush_jobs.c
 int mx_jobs(t_info *i);
+
+//File: mx_ush_kill.c
+int mx_kill(t_info *i);
 
 // Delete
 void printKLP(t_ast* root);
