@@ -1,19 +1,5 @@
 #include "../../inc/ush.h"
 
-static void save_all(t_info *info, char *buffer, int *position, char *c) {
-    int len = mx_strlen(buffer);
-
-    for (int i = 0; i < 4; i++) {
-        if (buffer[0])
-            for (int i = len; i > *position; i--)
-                buffer[i] = buffer[i - 1];
-        buffer[*position] = c[i];
-        buffer[len + 1] = '\0';
-        (*position)++;
-        len++;
-    }
-}
-
 static void home_end_page(t_info *info, char **buf, int *position, char *c) {
     if (c[2] == 72)
         *position = 0;
@@ -38,9 +24,6 @@ static int input_work(t_info *info, char **buffer, int *pos, unsigned int ch) {
             else if (c[2] == 72 || c[2] == 70 || c[2] == 53 || c[2] == 54)
                 home_end_page(info, buffer, pos, c);
         }
-        else {
-                save_all(info, *buffer, pos, c);
-            }
     }
     else if (c[0] >= 32 && c[0] <= 127) {
         mx_str_edit(info, *buffer, pos, c);
