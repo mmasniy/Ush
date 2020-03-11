@@ -58,7 +58,6 @@ int mx_fg(t_info *i, int status) {
             if (!MX_WIFEXIT(status))
                 mx_wait_process(i, status, child);
             else {
-                printf("DELETE PROC PID = %d\n", child);
                 mx_del_procces_by_pid(&(i->process), child);
                 i->status = MX_WEXITSTATUS(status);
             }
